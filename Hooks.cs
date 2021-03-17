@@ -6,46 +6,58 @@ using GungeonAPI;
 using MonoMod.RuntimeDetour;
 using UnityEngine;
 using Dungeonator;
-
+using SaveAPI;
 
 namespace Planetside
 {
-	// Token: 0x02000018 RID: 24
-	public static class Hooks
-	{
-		// Token: 0x060000B7 RID: 183 RVA: 0x00008CE4 File Offset: 0x00006EE4
-		public static void Init()
-		{
-			try
-			{
+    // Token: 0x02000018 RID: 24
+    public static class Hooks
+    {
+        // Token: 0x060000B7 RID: 183 RVA: 0x00008CE4 File Offset: 0x00006EE4
+        public static void Init()
+        {
+            try
+            {
 
-				Hook breachshrinereloadhook = new Hook(typeof(Foyer).GetMethod("Awake", BindingFlags.Instance | BindingFlags.NonPublic), typeof(PlanetsideModule).GetMethod("ReloadBreachShrinesPSOG"));
+                Hook breachshrinereloadhook = new Hook(typeof(Foyer).GetMethod("Awake", BindingFlags.Instance | BindingFlags.NonPublic), typeof(PlanetsideModule).GetMethod("ReloadBreachShrinesPSOG"));
 
-				Hook OuroborousTrappedChests = new Hook(typeof(Chest).GetMethod("Open", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Ouroborous).GetMethod("TrappedChest"));
-				Hook OuroborousMimicGunScaler = new Hook(typeof(LootEngine).GetMethod("PostprocessGunSpawn", BindingFlags.Static | BindingFlags.NonPublic), typeof(Ouroborous).GetMethod("MimicGunScaler"));
-				Hook OuroborousGunfairyScaler = new Hook(typeof(MinorBreakable).GetMethod("OnBreakAnimationComplete", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Ouroborous).GetMethod("DoFairy"));
-				Hook AngerTheGods = new Hook(typeof(PlayerController).GetMethod("DoSpinfallSpawn", BindingFlags.Instance | BindingFlags.Public), typeof(PlanetsideModule).GetMethod("aNGERgODScOMPONENT"));
+                Hook OuroborousTrappedChests = new Hook(typeof(Chest).GetMethod("Open", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Ouroborous).GetMethod("TrappedChest"));
+                Hook OuroborousMimicGunScaler = new Hook(typeof(LootEngine).GetMethod("PostprocessGunSpawn", BindingFlags.Static | BindingFlags.NonPublic), typeof(Ouroborous).GetMethod("MimicGunScaler"));
+                Hook OuroborousGunfairyScaler = new Hook(typeof(MinorBreakable).GetMethod("OnBreakAnimationComplete", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Ouroborous).GetMethod("DoFairy"));
+                Hook AngerTheGods = new Hook(typeof(PlayerController).GetMethod("DoSpinfallSpawn", BindingFlags.Instance | BindingFlags.Public), typeof(PlanetsideModule).GetMethod("aNGERgODScOMPONENT"));
 
-				Hook GalaxyChestReward = new Hook(typeof(RoomHandler).GetMethod("HandleRoomClearReward", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("GalaxyChestReward"));
+                Hook GalaxyChestReward = new Hook(typeof(RoomHandler).GetMethod("HandleRoomClearReward", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("GalaxyChestReward"));
 
-				Hook GalaxyChestRoom = new Hook(typeof(Chest).GetMethod("Initialize", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Hooks).GetMethod("GalaxyChestPls"));
+                Hook GalaxyChestRoom = new Hook(typeof(Chest).GetMethod("Initialize", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Hooks).GetMethod("GalaxyChestPls"));
 
-				//Hook LOTJ = new Hook(typeof(SuperReaperController).GetMethod("SpawnProjectiles", BindingFlags.Instance | BindingFlags.NonPublic), typeof(PlanetsideModule).GetMethod("SpawnProjectilesLOTJ"));
+                Hook MACHOOOOOO = new Hook(typeof(PlayerController).GetMethod("OnDidDamage", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("DamageHook"));
 
-				//Hook OuroborousReducedInvulnFrames = new Hook(typeof(HealthHaver).GetMethod("TriggerInvulnerabilityPeriod", BindingFlags.Instance | BindingFlags.Public), typeof(Ouroborous).GetMethod("ReducedIFrames"));
+                //Hook LOTJ = new Hook(typeof(SuperReaperController).GetMethod("SpawnProjectiles", BindingFlags.Instance | BindingFlags.NonPublic), typeof(PlanetsideModule).GetMethod("SpawnProjectilesLOTJ"));
+
+                //Hook OuroborousReducedInvulnFrames = new Hook(typeof(HealthHaver).GetMethod("TriggerInvulnerabilityPeriod", BindingFlags.Instance | BindingFlags.Public), typeof(Ouroborous).GetMethod("ReducedIFrames"));
 
 
 
-			}
-			catch (Exception e)
-			{
-				ItemAPI.Tools.PrintException(e, "FF0000");
-			}
-		}
+            }
+            catch (Exception e)
+            {
+                ItemAPI.Tools.PrintException(e, "FF0000");
+            }
+        }
+        public static void DamageHook(Action<PlayerController, float, bool, HealthHaver> orig, PlayerController self, float damagedone, bool fatal, HealthHaver target)
+        {
+            orig(self, damagedone, fatal, target);
+            if (target.IsBoss && damagedone >= 500 && fatal == true)
+            {
+                AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND, true);
+            }
+
+        }
+
 		public static void OnQuickRestart1(Action<GameManager, float, QuickRestartOptions> orig, GameManager self, float duration, QuickRestartOptions options = default(QuickRestartOptions))
 		{
 			orig(self, duration, options);
-			//Bugun.ThisIsBasicallyCelsRNGUNButTakenToASillyLevel();
+
 		}
 		public static void GalaxyChestReward(Action<RoomHandler> orig, RoomHandler self)
 		{

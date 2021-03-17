@@ -18,7 +18,6 @@ namespace Planetside
 {
 	public class StatiBlast : GunBehaviour
 	{
-		// Token: 0x06000036 RID: 54 RVA: 0x000037D8 File Offset: 0x000019D8
 		public static void Add()
 		{
 			Gun gun = ETGMod.Databases.Items.NewGun("StatiBlast", "statiblast");
@@ -74,45 +73,6 @@ namespace Planetside
 		public override void PostProcessProjectile(Projectile projectile)
 		{
 			projectile.OnDestruction += this.Zzap;
-			//projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHit));
-		}
-		private void HandleHit(Projectile projectile, SpeculativeRigidbody arg2, bool arg3)
-		{
-			PlayerController player = projectile.Owner as PlayerController;
-			bool isInCombat = player.IsInCombat;
-			if (isInCombat)
-            {
-				float num2 = 10f;
-				List<AIActor> activeEnemies = player.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
-				bool flag5 = activeEnemies == null | activeEnemies.Count <= 0;
-				{
-					AIActor nearestEnemy = this.GetNearestEnemy(activeEnemies, projectile.sprite.WorldCenter, out num2, null);
-					bool flag8 = nearestEnemy && nearestEnemy != null;
-					if (flag8)
-					{
-						Vector2 worldCenter3 = projectile.sprite.WorldCenter;
-						Vector2 unitCenter3 = nearestEnemy.specRigidbody.HitboxPixelCollider.UnitCenter;
-						float z3 = BraveMathCollege.Atan2Degrees((unitCenter3 - worldCenter3).normalized);
-						Projectile projectile3 = ((Gun)ETGMod.Databases.Items[153]).DefaultModule.projectiles[0];
-						GameObject gameObject3 = SpawnManager.SpawnProjectile(projectile3.gameObject, projectile.sprite.WorldCenter, Quaternion.Euler(0f, 0f, z3), true);
-						Projectile component3 = gameObject3.GetComponent<Projectile>();
-						bool flag15 = component3 != null;
-						bool flag16 = flag15;
-						if (flag16)
-						{
-							component3.Owner = this.gun.CurrentOwner;
-							component3.baseData.range *= 5f;
-							component3.pierceMinorBreakables = true;
-							component3.collidesWithPlayer = false;
-							PierceProjModifier spook = component3.gameObject.AddComponent<PierceProjModifier>();
-							spook.penetration = 10;
-							component3.AdditionalScaleMultiplier = 0.5f;
-							component3.baseData.damage *= 0.375f;
-						}
-					}
-				}
-			}
-				
 		}
 		private void Zzap(Projectile projectile)
         {
@@ -195,14 +155,12 @@ namespace Planetside
 		}
 		public GameObject ChainLightningVFX;
 
-		// Token: 0x040070E8 RID: 28904
 		public CoreDamageTypes ChainLightningDamageTypes;
 
 		public float ChainLightningMaxLinkDistance = 15f;
 
 		public float ChainLightningDamagePerHit = 6f;
 
-		// Token: 0x040070EB RID: 28907
 		public float ChainLightningDamageCooldown = 1f;
 
 		public GameObject ChainLightningDispersalParticles;

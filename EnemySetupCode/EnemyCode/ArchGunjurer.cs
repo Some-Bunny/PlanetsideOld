@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Gungeon;
 using ItemAPI;
 using UnityEngine;
-//using DirectionType = DirectionalAnimation.DirectionType;
 using AnimationType = ItemAPI.EnemyBuilder.AnimationType;
 using System.Collections;
 using Dungeonator;
@@ -33,7 +32,6 @@ namespace Planetside
 			bool flag2 = flag;
 			if (!flag2)
 			{
-				//float AttackAnimationThingAMaWhatIts = 0.5f;
 				prefab = EnemyBuilder.BuildPrefab("Arch Gunjurer", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 800;
@@ -45,7 +43,7 @@ namespace Planetside
 				companion.aiActor.aiAnimator.HitReactChance = 0f;
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = false;
-				//companion.aiActor.PreventFallingInPitsEver = true;
+				companion.aiActor.PreventFallingInPitsEver = true;
 				companion.aiActor.healthHaver.ForceSetCurrentHealth(90f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = true;
@@ -56,8 +54,6 @@ namespace Planetside
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("4db03291a12144d69fe940d5a01de376").ShadowObject;
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
-
-
 				{
 					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
 					CollisionLayer = CollisionLayer.EnemyCollider,
@@ -361,8 +357,6 @@ namespace Planetside
 					FireAnimation = "attack",
 					RequiresLineOfSight = true,
 					MultipleFireEvents = true,
-					//EnabledDuringAttack = new PowderSkullSpinBulletsBehavior(),
-					//StopDuring = ShootBehavior.StopType.Attack,
 					Uninterruptible = false,
 
 
@@ -403,17 +397,11 @@ namespace Planetside
 					MinRange = 0,
 					Range = 0,
 					MinHealthThreshold = 0,
-					//MaxEnemiesInRoom = 1,
 					MaxUsages = 0,
 					AccumulateHealthThresholds = true,
-					//shadowInAnim = null,
-					//shadowOutAnim = null,
 					targetAreaStyle = null,
 					HealthThresholds = new float[0],
 					MinWallDistance = 0,
-					//resetCooldownOnDamage = null,
-					//shadowSupport = (TeleportBehavior.ShadowSupport)1,
-
 				}
 				};
 				bs.MovementBehaviors = new List<MovementBehaviorBase>
@@ -447,13 +435,6 @@ namespace Planetside
 				}
 				};
 				*/
-				//BehaviorSpeculator load = EnemyDatabase.GetOrLoadByGuid("43426a2e39584871b287ac31df04b544").behaviorSpeculator;
-				//Tools.DebugInformation(load);
-
-				//companion.healthHaver.spawnBulletScript = true;
-				//companion.healthHaver.chanceToSpawnBulletScript = 1f;
-				//companion.healthHaver.bulletScriptType = HealthHaver.BulletScriptType.OnPreDeath;
-				//companion.healthHaver.bulletScript = new CustomBulletScriptSelector(typeof(EatPants));
 				
 				bs.InstantFirstTick = behaviorSpeculator.InstantFirstTick;
 				bs.TickInterval = behaviorSpeculator.TickInterval;
@@ -579,13 +560,10 @@ namespace Planetside
 					aiActor.sprite.renderer.material = mat;
 				}
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
-				//base.aiActor.HasBeenEngaged = true;
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
-				{ //new CustomBulletScriptSelector(typeof(EatPants));		
-				  //AkSoundEngine.PostEvent("Play_BOSS_mineflayer_bellshot_01", base.aiActor.gameObject);
+				{
 				  AkSoundEngine.PostEvent("Play_WPN_Life_Orb_Fade_01", base.aiActor.gameObject);
 					AkSoundEngine.PostEvent("Play_BOSS_mineflayer_belldrop_01", null);
-
 				};
 			}
 
@@ -637,7 +615,6 @@ namespace Planetside
 				{
 					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("ec6b674e0acd4553b47ee94493d66422").bulletBank.GetBullet("bigBullet"));
 				}
-				//float angle = base.AimDirection;
 				base.PostWwiseEvent("Play_BOSS_RatMech_Wizard_Cast_01", null);
 				//float angleDelta = 60f;
 				yield return this.Wait(60);
@@ -664,7 +641,6 @@ namespace Planetside
 				{
 					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("reversible"));
 				}
-				//PlayerController owner = base.LastOwner;
 				base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 60);
 				yield return this.Wait(90);
 				float aim = base.AimDirection;

@@ -39,12 +39,12 @@ namespace Planetside
 
 			WeightedGameObject weightedObject = new WeightedGameObject();
 			weightedObject.SetGameObject(gameObject);
-			weightedObject.weight = 0.5f;
+			weightedObject.weight = 1.25f;
 			weightedObject.rawGameObject = gameObject;
 			weightedObject.pickupId = pickup.PickupObjectId;
 			weightedObject.forceDuplicatesPossible = true;
 			weightedObject.additionalPrerequisites = new DungeonPrerequisite[0];
-
+			
 
 			GenericLootTable thanksbotluvya = ItemBuilder.LoadShopTable("Shop_Gungeon_Cheap_Items_01");
 			thanksbotluvya.defaultItemDrops.elements.Add(weightedObject);

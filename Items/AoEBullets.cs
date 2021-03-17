@@ -83,7 +83,7 @@ namespace Planetside
 					PlayerController player = base.Owner;
 
 					AoEDamageComponent Values = sourceProjectile.gameObject.AddComponent<AoEDamageComponent>();
-					Values.DamageperDamageEvent = 1.5f;
+					Values.DamageperDamageEvent = 1.25f;
 					Values.Radius = 2;
 					Values.TimeBetweenDamageEvents = 0.2f;
 					Values.DealsDamage = true;

@@ -743,6 +743,10 @@ public class EnemyGuidDatabase
 		{
 			"dragun_egg_slimeguy",
 			"8b43a5c59b854eb780f9ab669ec26b7a"
+		},
+		{
+			"ammoconda",
+			"da797878d215453abba824ff902e21b4"
 		}
 	};
 }

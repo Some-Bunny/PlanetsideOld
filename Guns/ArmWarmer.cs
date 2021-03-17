@@ -156,11 +156,6 @@ namespace Planetside
 			}
 		}
 
-
-
-
-
-	
 		private IEnumerator HandleBulletSuck(Projectile target)
 		{
 			EatenBullets += 1;

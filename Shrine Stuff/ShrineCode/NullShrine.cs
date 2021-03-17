@@ -7,7 +7,7 @@ using System.Text;
 using UnityEngine;
 using static GungeonAPI.OldShrineFactory;
 using Gungeon;
-
+using ItemAPI;
 using Dungeonator;
 using System.Reflection;
 using MonoMod.RuntimeDetour;
@@ -35,17 +35,18 @@ namespace Planetside
 				OnAccept = Accept,
 				OnDecline = null,
 				CanUse = CanUse,
-				//offset = new Vector3(43.8f, 42.4f, 42.9f),
 				offset = new Vector3(-1, -1, 0),
 				talkPointOffset = new Vector3(0, 3, 0),
 				isToggle = false,
 				isBreachShrine = false,
+				
 
 			};
-			//register shrine
 			aa.Build();
-		}
+			SpriteBuilder.AddSpriteToCollection(spriteDefinition, SpriteBuilder.ammonomiconCollection);
+			SpriteBuilder.AddSpriteToCollection(spriteDefinition1, SpriteBuilder.ammonomiconCollection);
 
+		}
 		public static bool CanUse(PlayerController player, GameObject shrine)
 		{
 			bool canuse = (player.CurrentGun.CurrentAmmo == 0) || (player.carriedConsumables.KeyBullets == 0) || (player.carriedConsumables.Currency == 0) || (player.Blanks == 0);
@@ -116,18 +117,23 @@ namespace Planetside
             {
 				ChanceToNullKing *= 4;
             }
-			bool flag2 = OtherTools.Randomizer(ChanceToNullKing);
-			if (flag2)
-            {
-				OtherTools.Notify("You Feel Like The","King Of Nothing." , "Planetside/Resources/ShrineIcons/NullShrineIconKing");
+
+			random = UnityEngine.Random.Range(0.0f, 1.0f);
+			if (random <= ChanceToNullKing)
+			{
+				OtherTools.Notify("You Feel Like The","King Of Nothing." ,"Planetside/Resources/ShrineIcons/NullShrineIconKing");
 				player.gameObject.AddComponent<KingOfNulling>();
 			}
 			else
             {
-				OtherTools.Notify("You Feel More", "Fullfilled.", "Planetside/Resources/ShrineIcons/NullShrineIcon");
+				OtherTools.Notify("You Feel More", "Fulfilled.", "Planetside/Resources/ShrineIcons/NullShrineIcon");
 			}
 			AkSoundEngine.PostEvent("Play_OBJ_shrine_accept_01", shrine);
 		}
+		private static float random;
+		public static int spriteId;
+		public static string spriteDefinition = "Planetside/Resources/ShrineIcons/NullShrineIcon";
+		public static string spriteDefinition1 = "Planetside/Resources/ShrineIcons/NullShrineIconKing";
 		public class KingOfNulling : BraveBehaviour
 		{
 			public void Start()

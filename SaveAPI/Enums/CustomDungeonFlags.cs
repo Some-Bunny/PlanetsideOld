@@ -27,6 +27,7 @@ namespace SaveAPI
         HIGHER_CURSE_DRAGUN_KILLED,
         SHELLRAX_DEFEATED,
         BULLETBANK_DEFEATED,
-        BEAT_LOOP_1
+        BEAT_LOOP_1,
+        BEAT_A_BOSS_UNDER_A_SECOND
     }
 }

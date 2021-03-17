@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using Planetside;
 using UnityEngine;
 using MonoMod.RuntimeDetour;
 using Brave.BulletScript;
@@ -140,6 +140,7 @@ namespace ItemAPI
             };
             EnemyDatabase.Instance.Entries.Add(enemyDatabaseEntry);
             BossBuilder.Dictionary.Add(guid, prefab);
+            prefab.AddComponent<Tint>();
 
 
             //finalize
@@ -379,7 +380,13 @@ namespace ItemAPI
                 aishooter.RegenerateCache();
             }
         }
-
+        public class Tint : BraveBehaviour
+        {
+            private void Start()
+            {
+                OtherTools.DisableSuperTinting(base.aiActor);
+            }
+        }
     }
 }
 

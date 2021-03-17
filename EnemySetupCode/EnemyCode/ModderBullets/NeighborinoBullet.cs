@@ -265,7 +265,10 @@ namespace Planetside
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:neighborino_bullet", companion.aiActor);
 
-
+				PlanetsideModule.Strings.Enemies.Set("#YABOYWHOMADEENEMIES", "Neighborino");
+				companion.aiActor.OverrideDisplayName = "#YABOYWHOMADEENEMIES";
+				companion.aiActor.ActorName = "#YABOYWHOMADEENEMIES";
+				companion.aiActor.name = "#YABOYWHOMADEENEMIES";
 			}
 		}
 
@@ -319,9 +322,9 @@ namespace Planetside
 
 
 		}
-		public class SkellScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SkellScript : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("68a238ed6a82467ea85474c595c49c6e").bulletBank.GetBullet("frogger"));
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("icicle"));

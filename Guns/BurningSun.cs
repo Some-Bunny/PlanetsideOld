@@ -141,35 +141,6 @@ namespace Planetside
 			DeadlyDeadlyGoopManager goopManagerForGoopType = DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(goopDefinition);
 			goopManagerForGoopType.TimedAddGoopCircle(projectile.sprite.WorldCenter, 4f, 0.8f, false);
 		}
-		private IEnumerator RiskOfRain(Projectile projectile)
-		{
-			if (projectile != null)
-            {
-				yield return new WaitForSeconds(0.5f);
-                {
-					AkSoundEngine.PostEvent("Play_BOSS_doormimic_flame_01", base.gameObject);
-					PlayerController player = this.gun.CurrentOwner as PlayerController;
-					BulletStatusEffectItem Firecomponent = PickupObjectDatabase.GetById(295).GetComponent<BulletStatusEffectItem>();
-					GameActorFireEffect gameActorFire = Firecomponent.FireModifierEffect;
-					List<AIActor> activeEnemies = player.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
-					Vector2 centerPosition = projectile.sprite.WorldCenter;
-					foreach (AIActor aiactor in activeEnemies)
-					{
-						if (activeEnemies != null)
-                        {
-							bool flag = Vector2.Distance(aiactor.CenterPosition, centerPosition) < 5f && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
-							if (flag)
-							{
-								aiactor.ApplyEffect(gameActorFire, 1f, null);
-							}
-						}
-					}
-				}
-				projectile.StartCoroutine(RiskOfRain(projectile));
-				yield break;
-			}
-			yield break;
-		}
 
 		private void ShockRing(Projectile projectile)
 		{

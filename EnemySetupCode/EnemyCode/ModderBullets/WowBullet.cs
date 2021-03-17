@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Gungeon;
 using ItemAPI;
 using UnityEngine;
-//using DirectionType = DirectionalAnimation.DirectionType;
 using AnimationType = ItemAPI.EnemyBuilder.AnimationType;
 using System.Collections;
 using Dungeonator;
@@ -33,7 +32,6 @@ namespace Planetside
 			bool flag2 = flag;
 			if (!flag2)
 			{
-				//float AttackAnimationThingAMaWhatIts = 0.5f;
 				prefab = EnemyBuilder.BuildPrefab("Wow Bullet", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 800;
@@ -263,8 +261,7 @@ namespace Planetside
 					MaxActiveRange = 0f
 				}
 			};
-				//BehaviorSpeculator load = EnemyDatabase.GetOrLoadByGuid("6e972cd3b11e4b429b888b488e308551").behaviorSpeculator;
-				//Tools.DebugInformation(load);
+
 				bs.InstantFirstTick = behaviorSpeculator.InstantFirstTick;
 				bs.TickInterval = behaviorSpeculator.TickInterval;
 				bs.PostAwakenDelay = behaviorSpeculator.PostAwakenDelay;
@@ -286,6 +283,10 @@ namespace Planetside
 				Game.Enemies.Add("psog:wow_bullet", companion.aiActor);
 
 
+				PlanetsideModule.Strings.Enemies.Set("#SIRBESTFRIEND", "SirWow");
+				companion.aiActor.OverrideDisplayName = "#SIRBESTFRIEND";
+				companion.aiActor.ActorName = "#SIRBESTFRIEND";
+				companion.aiActor.name = "#SIRBESTFRIEND";
 			}
 
 		}
@@ -356,9 +357,9 @@ namespace Planetside
 
 		}
 
-		public class SalamanderScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SalamanderScript : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
 				{
@@ -378,7 +379,6 @@ namespace Planetside
 
 		public class WallBullet : Bullet
 		{
-			// Token: 0x06000A91 RID: 2705 RVA: 0x00030B38 File Offset: 0x0002ED38
 			public WallBullet() : base("default", false, false, false)
 			{
 

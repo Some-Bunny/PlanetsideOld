@@ -35,18 +35,114 @@ namespace Planetside
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.KnockbackMultiplier, 1.5f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.PlayerBulletScale, 1.5f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			item.quality = PickupObject.ItemQuality.C;
+            List<string> mandatoryConsoleIDs = new List<string>
+            {
+                "psog:shell-snake_oil",
+            };
+            List<string> optionalConsoleIDs = new List<string>
+            {
+                "rattler",
+                "snakemaker",
+                "box",
+                "weird_egg"
+            };
+            CustomSynergies.Add("Gun Snek Good Maybe?", mandatoryConsoleIDs, optionalConsoleIDs, true);
+        }
+        private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
+        {
+            try
+            {
+                SpeculativeRigidbody specRigidbody = sourceProjectile.projectile.specRigidbody;
+                specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandlePreCollision));
 
-		}
+            }
+            catch (Exception ex)
+            {
+                ETGModConsole.Log(ex.Message, false);
+            }
+        }
+        private void HandlePreCollision(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
+        {
 
-		public override DebrisObject Drop(PlayerController player)
+            string text;
+            if (otherRigidbody == null)
+            {
+                text = null;
+            }
+            else
+            {
+                AIActor aiActor = otherRigidbody.aiActor;
+                text = ((aiActor != null) ? aiActor.EnemyGuid : null);
+            }
+            string value = text;
+            bool flag = !string.IsNullOrEmpty(value);
+            if (flag)
+            {
+                bool flag2 = otherRigidbody && otherRigidbody.healthHaver;
+                if (flag2)
+                {
+                    foreach (string text2 in ShellsnakeOil.sneks)
+                    {
+                        bool flag3 = text2.Equals(value);
+                        if (flag3)
+                        {
+                            float damage = myRigidbody.projectile.baseData.damage;
+                            myRigidbody.projectile.baseData.damage *= 1.5f;
+                            GameManager.Instance.StartCoroutine(this.ChangeProjectileDamage(myRigidbody.projectile, damage));
+                        }
+                    }
+                }
+            }
+        }
+        private void SpawnBall()
+        {
+            bool flagA = base.Owner.PlayerHasActiveSynergy("Gun Snek Good Maybe?");
+            if (flagA)
+            {
+                string guid;
+                guid = "f38686671d524feda75261e469f30e0b";
+
+                PlayerController owner = base.Owner;
+                AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(guid);
+                IntVector2? intVector = new IntVector2?(base.Owner.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
+                AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Awaken, true);
+                aiactor.CanTargetEnemies = true;
+                aiactor.CanTargetPlayers = false;
+                PhysicsEngine.Instance.RegisterOverlappingGhostCollisionExceptions(aiactor.specRigidbody, null, false);
+                aiactor.gameObject.AddComponent<KillOnRoomClear>();
+                aiactor.IsHarmlessEnemy = true;
+                aiactor.IgnoreForRoomClear = true;
+                aiactor.HandleReinforcementFallIntoRoom(0f);
+            }
+        }
+        public static List<string> sneks = new List<string>
+        {
+            EnemyGuidDatabase.Entries["ammoconda"],
+            EnemyGuidDatabase.Entries["ammoconda_ball"],
+        };
+        private IEnumerator ChangeProjectileDamage(Projectile bullet, float oldDamage)
+        {
+            yield return new WaitForSeconds(0.1f);
+            bool flag = bullet != null;
+            if (flag)
+            {
+                bullet.baseData.damage = oldDamage;
+            }
+            yield break;
+        }
+        public override DebrisObject Drop(PlayerController player)
 		{
-			DebrisObject result = base.Drop(player);	
+            player.OnEnteredCombat = (Action)Delegate.Remove(player.OnEnteredCombat, new Action(this.SpawnBall));
+            player.PostProcessProjectile -= this.PostProcessProjectile;
+            DebrisObject result = base.Drop(player);	
 			return result;
 		}
 
 		public override void Pickup(PlayerController player)
 		{
-			base.Pickup(player);
+            player.OnEnteredCombat = (Action)Delegate.Combine(player.OnEnteredCombat, new Action(this.SpawnBall));
+            player.PostProcessProjectile += this.PostProcessProjectile;
+            base.Pickup(player);
 		}
 	}
 }

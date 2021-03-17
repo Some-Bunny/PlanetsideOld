@@ -270,7 +270,10 @@ namespace Planetside
 				bs.StartingFacingDirection = behaviorSpeculator.StartingFacingDirection;
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:skilotar_bullet", companion.aiActor);
-
+				PlanetsideModule.Strings.Enemies.Set("#SKILOTAR", "Skilotar");
+				companion.aiActor.OverrideDisplayName = "#SKILOTAR";
+				companion.aiActor.ActorName = "#SKILOTAR";
+				companion.aiActor.name = "#SKILOTAR";
 
 			}
 		}
@@ -325,7 +328,7 @@ namespace Planetside
 
 		}
 
-		public class SalamanderScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SalamanderScript : Script 
 		{
 			protected override IEnumerator Top()
 			{
@@ -352,22 +355,17 @@ namespace Planetside
 				yield break;
 			}
 
-			// Token: 0x040000CF RID: 207
 			private const int NumBlobs = 8;
 
-			// Token: 0x040000D0 RID: 208
 			private const int NumBullets = 18;
 
-			// Token: 0x02000039 RID: 57
 			public class BouncingRingBullet : Bullet
 			{
-				// Token: 0x060000D1 RID: 209 RVA: 0x000053B4 File Offset: 0x000035B4
 				public BouncingRingBullet(string name, Vector2 desiredOffset) : base(name, false, false, false)
 				{
 					this.m_desiredOffset = desiredOffset;
 				}
 
-				// Token: 0x060000D2 RID: 210 RVA: 0x000053C8 File Offset: 0x000035C8
 				protected override IEnumerator Top()
 				{
 					Vector2 centerPoint = base.Position;
@@ -413,7 +411,6 @@ namespace Planetside
 					yield break;
 				}
 
-				// Token: 0x040000D1 RID: 209
 				private Vector2 m_desiredOffset;
 			}
 		}
@@ -421,7 +418,6 @@ namespace Planetside
 
 		public class WallBullet : Bullet
 		{
-			// Token: 0x06000A91 RID: 2705 RVA: 0x00030B38 File Offset: 0x0002ED38
 			public WallBullet() : base("bigBullet", false, false, false)
 			{
 			}

@@ -271,7 +271,10 @@ namespace Planetside
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:retrash_bullet", companion.aiActor);
 
-
+				PlanetsideModule.Strings.Enemies.Set("#THEMANTHEMYTHTHELEGEND", "Retrash");
+				companion.aiActor.OverrideDisplayName = "#THEMANTHEMYTHTHELEGEND";
+				companion.aiActor.ActorName = "#THEMANTHEMYTHTHELEGEND";
+				companion.aiActor.name = "#THEMANTHEMYTHTHELEGEND";
 			}
 		}
 
@@ -325,7 +328,7 @@ namespace Planetside
 
 		public class SalamanderScript : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
 				{
@@ -352,7 +355,6 @@ namespace Planetside
 
 		public class WallBullet : Bullet
 		{
-			// Token: 0x06000A91 RID: 2705 RVA: 0x00030B38 File Offset: 0x0002ED38
 			public WallBullet() : base("directedfire", false, false, false)
 			{
 

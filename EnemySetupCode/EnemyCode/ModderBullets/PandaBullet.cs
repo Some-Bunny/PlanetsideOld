@@ -266,6 +266,10 @@ namespace Planetside
 				Game.Enemies.Add("psog:panda_bullet", companion.aiActor);
 
 
+				PlanetsideModule.Strings.Enemies.Set("#PANDA", "Explosive Panda");
+				companion.aiActor.OverrideDisplayName = "#PANDA";
+				companion.aiActor.ActorName = "#PANDA";
+				companion.aiActor.name = "#PANDA";
 			}
 		}
 
@@ -319,7 +323,7 @@ namespace Planetside
 		}
 		public class SkellScript : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
 				{

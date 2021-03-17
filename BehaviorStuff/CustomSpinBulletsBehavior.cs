@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Token: 0x02000D34 RID: 3380
 public class CustomSpinBulletsBehavior : BehaviorBase
 {
 	public override void Start()

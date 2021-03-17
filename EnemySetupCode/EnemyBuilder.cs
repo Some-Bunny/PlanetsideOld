@@ -1,15 +1,14 @@
-﻿using System;
-using System.Reflection;
+﻿using Dungeonator;
+using Planetside;
+using MonoMod.RuntimeDetour;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using UnityEngine;
-using MonoMod.RuntimeDetour;
-using Brave.BulletScript;
 using DirectionType = DirectionalAnimation.DirectionType;
 using FlipType = DirectionalAnimation.FlipType;
-using GungeonAPI;
-using Planetside;
 
 namespace ItemAPI
 {
@@ -201,6 +200,7 @@ namespace ItemAPI
             }
             //allows enemies to be tinted
             prefab.AddComponent<Tint>();
+            prefab.AddComponent<EngageLate>();
             prefab.AddComponent<AIBulletBank>();
             //Add to enemy database
             EnemyDatabaseEntry enemyDatabaseEntry = new EnemyDatabaseEntry()
@@ -480,14 +480,43 @@ namespace ItemAPI
                 aishooter.RegenerateCache();
             }
         }
+    }
 
-        public class Tint : BraveBehaviour
+    public class EngageLate : BraveBehaviour
+    {
+        private RoomHandler m_StartRoom;
+        private void Update()
         {
-            private void Start()
+            if (!base.aiActor.HasBeenEngaged) { CheckPlayerRoom(); }
+        }
+        private void CheckPlayerRoom()
+        {
+
+            if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
             {
-                //EnemyTools.DisableSuperTinting(base.aiActor);
+                GameManager.Instance.StartCoroutine(LateEngage());
             }
+
+        }
+        private IEnumerator LateEngage()
+        {
+            yield return new WaitForSeconds(0.8f);
+            base.aiActor.HasBeenEngaged = true;
+            yield break;
+        }
+        private void Start()
+        {
+            m_StartRoom = aiActor.GetAbsoluteParentRoom();
         }
 
+
     }
+    public class Tint : BraveBehaviour
+    {
+        private void Start()
+        {
+            OtherTools.DisableSuperTinting(base.aiActor);
+        }
+    }
+
 }

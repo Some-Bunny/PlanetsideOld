@@ -269,7 +269,10 @@ namespace Planetside
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:nevernamed_bullet", companion.aiActor);
 
-
+				PlanetsideModule.Strings.Enemies.Set("#ANGRYTENTACLEMANTHATSCARESME", "Nevernamed");
+				companion.aiActor.OverrideDisplayName = "#ANGRYTENTACLEMANTHATSCARESME";
+				companion.aiActor.ActorName = "#ANGRYTENTACLEMANTHATSCARESME";
+				companion.aiActor.name = "#ANGRYTENTACLEMANTHATSCARESME";
 			}
 		}
 
@@ -323,7 +326,7 @@ namespace Planetside
 
 		}
 
-		public class SalamanderScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SalamanderScript : Script 
 		{
 			protected override IEnumerator Top()
 			{
@@ -331,7 +334,7 @@ namespace Planetside
 				{
 					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.GetBullet("default"));
 				}
-				float startingDirection = UnityEngine.Random.Range(-90f, 90f);
+				float startingDirection = UnityEngine.Random.Range(-45f, 45f);
 				Vector2 targetPos = base.GetPredictedTargetPosition((float)(((double)UnityEngine.Random.value >= 0.5) ? 1 : 0), 12f);
 				for (int j = 0; j < 7; j++)
 				{
@@ -340,32 +343,19 @@ namespace Planetside
 				yield break;
 			}
 
-			// Token: 0x04000254 RID: 596
 			private const int NumSnakes = 10;
-
-			// Token: 0x04000255 RID: 597
 			private const int NumBullets = 5;
-
-			// Token: 0x04000256 RID: 598
 			private const int BulletSpeed = 12;
-
-			// Token: 0x04000257 RID: 599
 			private const float SnakeMagnitude = 0.75f;
-
-			// Token: 0x04000258 RID: 600
 			private const float SnakePeriod = 3f;
-
-			// Token: 0x02000091 RID: 145
 			public class SnakeBullet : Bullet
 			{
-				// Token: 0x06000238 RID: 568 RVA: 0x0000B3B0 File Offset: 0x000095B0
 				public SnakeBullet(int delay, Vector2 target) : base("default", false, false, false)
 				{
 					this.delay = delay;
 					this.target = target;
 				}
 
-				// Token: 0x06000239 RID: 569 RVA: 0x0000B3CC File Offset: 0x000095CC
 				protected override IEnumerator Top()
 				{
 					base.ManualControl = true;
@@ -388,10 +378,7 @@ namespace Planetside
 					yield break;
 				}
 
-				// Token: 0x04000259 RID: 601
 				private int delay;
-
-				// Token: 0x0400025A RID: 602
 				private Vector2 target;
 			}
 		}
@@ -399,7 +386,6 @@ namespace Planetside
 
 		public class WallBullet : Bullet
 		{
-			// Token: 0x06000A91 RID: 2705 RVA: 0x00030B38 File Offset: 0x0002ED38
 			public WallBullet() : base("default", false, false, false)
 			{
 			}

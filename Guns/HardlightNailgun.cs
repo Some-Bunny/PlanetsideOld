@@ -5,6 +5,7 @@ using System.Text;
 using Gungeon;
 using ItemAPI;
 using UnityEngine;
+
 namespace Planetside
 {
     class HardlightNailgun : MultiActiveReloadController

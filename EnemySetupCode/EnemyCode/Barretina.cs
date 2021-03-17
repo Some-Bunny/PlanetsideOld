@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Gungeon;
 using ItemAPI;
 using UnityEngine;
-//using DirectionType = DirectionalAnimation.DirectionType;
 using AnimationType = ItemAPI.EnemyBuilder.AnimationType;
 using System.Collections;
 using Dungeonator;
@@ -29,13 +28,12 @@ namespace Planetside
 
 		public static void BuildPrefab()
 		{
-			//
+			
 			bool flag = prefab != null || EnemyBuilder.Dictionary.ContainsKey(guid);
 			bool flag2 = flag;
 			if (!flag2)
 			{
 
-				//float AttackAnimationThingAMaWhatIts = 0.5f;
 				prefab = EnemyBuilder.BuildPrefab("Barretina", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 200;
@@ -56,16 +54,15 @@ namespace Planetside
 				companion.aiActor.SetIsFlying(true, "Gamemode: Creative");
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").ShadowObject; 
 				companion.aiActor.healthHaver.SetHealthMaximum(55f, null, false);
-				//woop.spawnShadows = true;
+
 				companion.aiActor.gameObject.AddComponent<ImprovedAfterImage>().dashColor = Color.grey;
 				companion.aiActor.gameObject.AddComponent<ImprovedAfterImage>().spawnShadows = true;
+
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.gameObject.AddComponent<AfterImageTrailController>().spawnShadows = false;
 				companion.aiActor.gameObject.AddComponent<tk2dSpriteAttachPoint>();
 				companion.aiActor.gameObject.AddComponent<ObjectVisibilityManager>();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
-
-
 				{
 					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
 					CollisionLayer = CollisionLayer.EnemyCollider,
@@ -315,20 +312,14 @@ namespace Planetside
 					AttackCooldown = 0f,
 					Cooldown = 4f,
 					InitialCooldown = 0.5f,
-
-					//TellAnimation = "attack",
-					//FireAnimation = "tell",
 					RequiresLineOfSight = true,
 					MultipleFireEvents = false,
-					//EnabledDuringAttack = new PowderSkullSpinBulletsBehavior(),
-					//StopDuring = ShootBehavior.StopType.Attack,
 					Uninterruptible = false,
 
 
 				},
 				new DashBehavior()
 				{
-					//dashAnim = "wail",
 					ShootPoint = m_CachedGunAttachPoint,
 					dashDistance = 6f,
 					dashTime = 0.3f,
@@ -340,20 +331,10 @@ namespace Planetside
 					hideShadow = true,
 					fireAtDashStart = true,
 					InitialCooldown = 1f,
-
 					bulletScript = new CustomBulletScriptSelector(typeof(DashAttack)),
-					//BulletScript = new CustomBulletScriptSelector(typeof(Wail)),
-					//LeadAmount = 0f,
-					//AttackCooldown = 5f,
-					//InitialCooldown = 4f,
-					//TellAnimation = "wail",
-					//FireAnimation = "wail",
 					RequiresLineOfSight = false,
-					//Uninterruptible = true,
-					//FireVfx = ,
-					//ChargeVfx = ,
-					//	MoveSpeedModifier = 0f,
-				}//GlobalCooldown = 0.5f,
+
+				}
 				};
 				bs.MovementBehaviors = new List<MovementBehaviorBase>() {
 				new SeekTargetBehavior() {
@@ -465,9 +446,6 @@ namespace Planetside
 			"Planetside/Resources/Enemies/Berretina/berretina_die_008.png",
 			"Planetside/Resources/Enemies/Berretina/berretina_die_009.png",
 
-
-
-
 		};
 
 		public class EnemyBehavior : BraveBehaviour
@@ -495,28 +473,20 @@ namespace Planetside
 			}
 			private void Start()
 			{
-				//base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("465da2bb086a4a88a803f79fe3a27677").bulletBank.bulletBank.GetBullet("homing"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.bulletBank.GetBullet("default"));
-				//base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").bulletBank.GetBullet("sweep"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("31a3ea0c54a745e182e22ea54844a82d").bulletBank.GetBullet("sniper"));
-
-
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
-				//base.aiActor.HasBeenEngaged = true;
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
-				{ //new CustomBulletScriptSelector(typeof(EatPants));		
+				{ 
 				  AkSoundEngine.PostEvent("Play_ENM_Tarnisher_Bite_01", base.aiActor.gameObject);
-				  //AkSoundEngine.PostEvent("Play_WPN_Life_Orb_Fade_01", base.aiActor.gameObject);
-					//AkSoundEngine.PostEvent("Play_BOSS_mineflayer_belldrop_01", null);
-
 				};
 			}
 
 		}
 
-		public class NormalAttack : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class NormalAttack : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
@@ -543,7 +513,6 @@ namespace Planetside
 
 		public class SpitNormal : Bullet
 		{
-			// Token: 0x06000A99 RID: 2713 RVA: 0x000085A7 File Offset: 0x000067A7
 			public SpitNormal() : base("default", false, false, false)
 			{
 
@@ -551,24 +520,20 @@ namespace Planetside
 		}
 		public class SpitLarge : Bullet
 		{
-			// Token: 0x06000A99 RID: 2713 RVA: 0x000085A7 File Offset: 0x000067A7
 			public SpitLarge() : base("sniper", false, false, false)
 			{
-
 			}
 			protected override IEnumerator Top()
 			{
-
 				base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 60);
 				yield return base.Wait(20);
 				base.ChangeSpeed(new Speed(30f, SpeedType.Absolute), 40);
-
 				yield break;
 			}
 		}
-		public class DashAttack : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class DashAttack : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top()
 			{
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.bulletBank.GetBullet("default"));
 				base.PostWwiseEvent("Play_WPN_eyeballgun_shot_01", null);
@@ -582,14 +547,11 @@ namespace Planetside
 		}
 		public class Spit : Bullet
 		{
-			// Token: 0x06000A99 RID: 2713 RVA: 0x000085A7 File Offset: 0x000067A7
 			public Spit() : base("default", false, false, false)
 			{
-
 			}
 			protected override IEnumerator Top()
 			{
-
 				base.ChangeSpeed(new Speed(18f, SpeedType.Absolute), 20);
 				yield break;
 			}

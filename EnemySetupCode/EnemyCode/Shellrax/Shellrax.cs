@@ -826,7 +826,7 @@ namespace Planetside
 		};
 	}
 
-	public class DropDownScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+	public class DropDownScript : Script 
 	{
 		protected override IEnumerator Top()
 		{
@@ -955,7 +955,7 @@ namespace Planetside
 	}
 
 
-	public class SemiCirclesOfDoom : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+	public class SemiCirclesOfDoom : Script 
 	{
 		protected override IEnumerator Top()
 		{
@@ -1170,13 +1170,11 @@ namespace Planetside
 		}
 		public class SnakeBullet : Bullet
 		{
-			// Token: 0x0600008B RID: 139 RVA: 0x00004080 File Offset: 0x00002280
 			public SnakeBullet(int delay) : base("snakeBullet", false, false, false)
 			{
 				this.delay = delay;
 			}
 
-			// Token: 0x0600008C RID: 140 RVA: 0x00004098 File Offset: 0x00002298
 			protected override IEnumerator Top()
 			{
 				base.ManualControl = true;
@@ -1193,7 +1191,6 @@ namespace Planetside
 				yield break;
 			}
 
-			// Token: 0x04000091 RID: 145
 			private int delay;
 		}
 	}
@@ -1206,24 +1203,17 @@ namespace Planetside
 	public class EnemyBehavior : BraveBehaviour
 	{
 
-
-
-
 		private void Start()
 		{
 			base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("4d164ba3f62648809a4a82c90fc22cae").bulletBank.GetBullet("big_one"));
 			base.aiActor.healthHaver.OnPreDeath += (obj) =>
 			{
-				//AkSoundEngine.PostEvent("Play_ENM_beholster_death_01", base.aiActor.gameObject);
-				//Chest chest2 = GameManager.Instance.RewardManager.SpawnTotallyRandomChest(spawnspot)rg;
-				//chest2.IsLocked = false;
 				AkSoundEngine.PostEvent("Play_VO_lichC_death_01", base.gameObject);
 			};
 			base.healthHaver.healthHaver.OnDeath += (obj) =>
 			{
-				float itemsToSpawn = UnityEngine.Random.Range(3, 6);
+				float itemsToSpawn = UnityEngine.Random.Range(2, 5);
 				float spewItemDir = 360 / itemsToSpawn;
-				// new Vector2(spewItemDir * itemsToSpawn, 0);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.SHELLRAX_DEFEATED, true);//Done
 				for (int i = 0; i < itemsToSpawn; i++)
 				{

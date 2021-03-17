@@ -4,6 +4,8 @@ using System.Reflection;
 using MonoMod.RuntimeDetour;
 using MonoMod.Utils;
 using UnityEngine;
+using ItemAPI;
+
 
 namespace Planetside
 {
@@ -286,7 +288,7 @@ namespace Planetside
         public string Name;
     }
 
-    class MultiActiveReloadController : AdvancedGunBehavior
+    class MultiActiveReloadController : AdvancedGunBehaviourMultiActive
     {
         public virtual void OnActiveReloadSuccess(MultiActiveReload reload)
         {

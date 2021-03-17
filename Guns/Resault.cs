@@ -16,7 +16,7 @@ using MonoMod;
 
 namespace Planetside
 {
-	public class Resault : AdvancedGunBehavior
+	public class Resault : AdvancedGunBehaviourMultiActive
 	{
 		// FINISH GUN
 		public static void Add()
@@ -48,7 +48,7 @@ namespace Planetside
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile);
 			gun.DefaultModule.projectiles[0] = projectile;
-			projectile.baseData.damage = 7f;
+			projectile.baseData.damage = 9f;
 			projectile.baseData.speed *= 1f;
 			projectile.AdditionalScaleMultiplier *= 1.1f;
 			projectile.shouldRotate = true;

@@ -258,8 +258,7 @@ namespace Planetside
 					MaxActiveRange = 0f
 				}
 			};
-				//BehaviorSpeculator load = EnemyDatabase.GetOrLoadByGuid("6e972cd3b11e4b429b888b488e308551").behaviorSpeculator;
-				//Tools.DebugInformation(load);
+
 				bs.InstantFirstTick = behaviorSpeculator.InstantFirstTick;
 				bs.TickInterval = behaviorSpeculator.TickInterval;
 				bs.PostAwakenDelay = behaviorSpeculator.PostAwakenDelay;
@@ -268,7 +267,10 @@ namespace Planetside
 				bs.StartingFacingDirection = behaviorSpeculator.StartingFacingDirection;
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:bot_bullet", companion.aiActor);
-
+				PlanetsideModule.Strings.Enemies.Set("#BOTBOT", "Not A Bot");
+				companion.aiActor.OverrideDisplayName = "#BOTBOT";
+				companion.aiActor.ActorName = "#BOTBOT";
+				companion.aiActor.name = "#BOTBOT";
 
 			}
 		}
@@ -322,9 +324,9 @@ namespace Planetside
 
 
 		}
-		public class SkellScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SkellScript : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("ffca09398635467da3b1f4a54bcfda80").bulletBank.GetBullet("directedfire"));
 				float aim = base.AimDirection;

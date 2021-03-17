@@ -99,8 +99,12 @@ namespace Planetside
 				{
 					aiactor.healthHaver.ApplyDamage(DamageScalar, Vector2.zero, "fuck you", CoreDamageTypes.Electric, DamageCategory.Normal, false, null, false);
 				}
+				position.DieInAir();
 			}
-			position.DieInAir();
+			else
+            {
+				position.DieInAir();
+			}
 			yield break;
 		}
 		public float distortionMaxRadius = 30f;

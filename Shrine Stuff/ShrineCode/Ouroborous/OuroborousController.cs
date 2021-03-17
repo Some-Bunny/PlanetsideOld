@@ -17,11 +17,8 @@ namespace Planetside
 	public class Ouroborous : ETGModule
 	{
 
-		public bool DepixelatesTargets = true;
-		public Vector2 TargetScale = new Vector2(1.5f, 1.5f);
-		public Vector2 TargetScale2 = new Vector2(0.8f, 0.8f);
 		public static bool LoopingOn;
-				bool disabled = false;
+		bool disabled = false;
 
 
 		public override void Exit()
@@ -128,6 +125,7 @@ namespace Planetside
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.SHELLRAX_DEFEATED, true);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BULLETBANK_DEFEATED, true);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_LOOP_1, true);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND, true);
 			});
 			global::ETGModConsole.Commands.GetGroup("psog").AddUnit("lock_all", delegate (string[] args)
 			{
@@ -138,6 +136,7 @@ namespace Planetside
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.SHELLRAX_DEFEATED, false);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BULLETBANK_DEFEATED, false);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_LOOP_1, false);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND, false);
 			});
 			ETGMod.AIActor.OnPostStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPostStart, new Action<AIActor>(LoopScale));
 			ETGMod.AIActor.OnPostStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPostStart, new Action<AIActor>(AssignUnlocks));
@@ -169,9 +168,10 @@ namespace Planetside
 				string c = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.SHELLRAX_DEFEATED) ? " Done!\n" : " -Defeat The Failed Demi-Lich\n";
 				string d = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BULLETBANK_DEFEATED) ? " Done!\n" : " -Defeat The Banker Of Bullets.\n";
 				string e = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BROKEN_CHAMBER_RUN_COMPLETED) ? " Done!\n" : " -Defeat The Lich With A Broken Remnant In Hand.\n";
-				string f = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_LOOP_1) ? " Done!\n" : " -Beat The Game On Ouroborous Level 1.\n";
-				ETGModConsole.Log("Unlock List:\n" + a + b + c + d + e + f, true);
-				
+				string f = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_LOOP_1) ? " Done!\n" : " -Beat The Game On Ouroborous Level 0.\n";
+				string g = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND) ? " Done!\n" : " -Kill A Boss After Dealing 500 Damage Or More At Once.\n";
+				string color1 = "9006FF";
+				OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g, color1);
 			});
 
 			global::ETGModConsole.Commands.GetGroup("psog").AddUnit("toggleui", delegate (string[] args)
@@ -208,6 +208,7 @@ namespace Planetside
 						float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 						if (Loop == 0 || Loop <= 0)
 						{
+							AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_LOOP_1, true);
 							SaveAPIManager.SetStat(CustomTrackedStats.TIMES_LOOPED, 1);
 						}
 						else
@@ -267,12 +268,12 @@ namespace Planetside
 			if (!Ouroborous.BannedEnemies.Contains(target.EnemyGuid))
             {
 				float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
-				float DownScaler = Loop / 33.33f;
-				float InitialScale = 0.50f;
+				float DownScaler = Loop / 30f;
+				float InitialScale = 0.4f;
 
 				if (LoopingOn == true)
                 {
-					Projectile.BaseEnemyBulletSpeedMultiplier = 1 + ((Loop / 50));
+					Projectile.BaseEnemyBulletSpeedMultiplier = 1 + ((Loop / 32.5f));
 				}
 				else
                 {
@@ -286,10 +287,12 @@ namespace Planetside
                 {
 					target.MovementSpeed *= 1 + ((Loop / 20f)+InitialScale)-DownScaler;
 				}
-				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/5f)+InitialScale)- DownScaler);
-				target.knockbackDoer.weight *= 1 + ((Loop / 1.33f)+InitialScale)- -DownScaler;
-				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/1.25f)) + InitialScale)-DownScaler;
-				if (OtherTools.Randomizer(Loop / 200))
+				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/7.5f)+InitialScale)- DownScaler);
+				target.knockbackDoer.weight *= 1 + ((Loop / 1.5f)+InitialScale)- -DownScaler;
+				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/1.5f)) + InitialScale)-DownScaler;
+				//target.behaviorSpeculator.CooldownScale *= 0;
+				float random = UnityEngine.Random.Range(0.0f, 1.0f);
+				if (random <= Loop/25)
 				{
 					target.healthHaver.spawnBulletScript = true;
 					target.healthHaver.chanceToSpawnBulletScript = 1f;
@@ -323,15 +326,6 @@ namespace Planetside
 							source.BulletManager = bulletBank;
 							source.BulletScript = bulletScriptSelected;
 							source.Initialize();//to fire the script once
-							/*
-							Ouroborous Grenade = self.GetComponent<Ouroborous>();
-							GameObject dragunBoulder = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec").GetComponent<DraGunController>().skyBoulder;
-							GameObject dragunRocket = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec").GetComponent<DraGunController>().skyRocket;
-							SkyRocket component = SpawnManager.SpawnProjectile(dragunRocket, self.sprite.WorldCenter, Quaternion.identity, true).GetComponent<SkyRocket>();
-							component.TargetVector2 = self.sprite.WorldCenter;
-							tk2dSprite componentInChildren = component.GetComponentInChildren<tk2dSprite>();
-							component.transform.position = component.transform.position.WithY(component.transform.position.y - componentInChildren.transform.localPosition.y);
-							*/
 						}
 					}
 					else

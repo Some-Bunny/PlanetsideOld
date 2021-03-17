@@ -18,7 +18,6 @@ using GungeonAPI;
 
 namespace Planetside
 {
-	// Token: 0x02000047 RID: 71
 	public class FrailtyHealthEffect : GameActorHealthEffect
 	{
 		public static string vfxNamefrailty = "FrailtyVFX";

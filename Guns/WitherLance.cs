@@ -24,8 +24,6 @@ namespace Planetside
 			Gun gun = ETGMod.Databases.Items.NewGun("Wither Lance", "witherlance");
 			Game.Items.Rename("outdated_gun_mods:wither_lance", "psog:wither_lance");
 			gun.gameObject.AddComponent<WitherLance>();
-			//PassiveItem Item = gun.gameObject.GetComponent<PassiveItem>();
-
 			GunExt.SetShortDescription(gun, "Frail and Soft");
 			GunExt.SetLongDescription(gun, "A primordial lance held together by dark energy. Should you be holding it?");
 			GunExt.SetupSprite(gun, null, "witherlance_idle_001", 11);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Gungeon;
 using ItemAPI;
 using UnityEngine;
-//using DirectionType = DirectionalAnimation.DirectionType;
 using AnimationType = ItemAPI.EnemyBuilder.AnimationType;
 using System.Collections;
 using Dungeonator;
@@ -33,7 +32,6 @@ namespace Planetside
 			bool flag2 = flag;
 			if (!flag2)
 			{
-				//float AttackAnimationThingAMaWhatIts = 0.5f;
 				prefab = EnemyBuilder.BuildPrefab("Deturretleft Enemy", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 10000;
@@ -53,8 +51,6 @@ namespace Planetside
 				companion.aiActor.healthHaver.SetHealthMaximum(100f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
-
-
 				{
 					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
 					CollisionLayer = CollisionLayer.EnemyCollider,
@@ -274,8 +270,6 @@ namespace Planetside
 				}
 				};
 				*/
-				//BehaviorSpeculator load = EnemyDatabase.GetOrLoadByGuid("43426a2e39584871b287ac31df04b544").behaviorSpeculator;
-				//Tools.DebugInformation(load);
 				bs.InstantFirstTick = behaviorSpeculator.InstantFirstTick;
 				bs.TickInterval = behaviorSpeculator.TickInterval;
 				bs.PostAwakenDelay = behaviorSpeculator.PostAwakenDelay;
@@ -334,14 +328,11 @@ namespace Planetside
 			private void Start()
 			{
 				this.aiActor.knockbackDoer.SetImmobile(true, "nope.");
-				//base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.bulletBank.GetBullet("default"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").bulletBank.GetBullet("sweep"));
 
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
-				//base.aiActor.HasBeenEngaged = true;
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
-				{ //new CustomBulletScriptSelector(typeof(EatPants));		
-				  //AkSoundEngine.PostEvent("Play_BOSS_mineflayer_bellshot_01", base.aiActor.gameObject);
+				{
 
 				};
 			}

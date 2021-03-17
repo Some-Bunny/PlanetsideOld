@@ -272,7 +272,10 @@ namespace Planetside
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:spcreat_bullet", companion.aiActor);
 
-
+				PlanetsideModule.Strings.Enemies.Set("#HARDMODEMAN", "Spcreat");
+				companion.aiActor.OverrideDisplayName = "#HARDMODEMAN";
+				companion.aiActor.ActorName = "#HARDMODEMAN";
+				companion.aiActor.name = "#HARDMODEMAN";
 			}
 		}
 

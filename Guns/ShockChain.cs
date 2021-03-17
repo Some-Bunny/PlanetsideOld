@@ -91,6 +91,7 @@ namespace Planetside
 				gun.Volley.projectiles[1].ammoCost = 0;
 			}
 			projectile1.transform.parent = gun.barrelOffset;
+
 			gun.encounterTrackable.EncounterGuid = "):";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.barrelOffset.transform.localPosition = new Vector3(1.25f, 0.3125f, 0f);

@@ -16,24 +16,10 @@ using MonoMod;
 namespace Planetside
 {
 	
-	internal class InitialiseSynergies
+	internal class InitialiseGTEE
 	{
 		public static void DoInitialisation()
 		{
-			List<string> mandatoryConsoleIDs2 = new List<string>
-		    {
-			"psog:hardlight_nailgun",
-			"nail_gun"
-			};
-			CustomSynergies.Add("Stop!", mandatoryConsoleIDs2, null, true);
-			List<string> ee = new List<string>
-			{
-			"psog:shock-chain",
-			"thunderclap"
-			};
-
-			CustomSynergies.Add("UNLIMITED POWER!!!", ee, null, true);
-
 		List<string> OOHT = new List<string>
 		{
 				"heart_holster",
@@ -109,9 +95,8 @@ namespace Planetside
 			CustomSynergies.Add("End Of Everything", eeeee, null, true);
 			Gun gun = PickupObjectDatabase.GetByEncounterName(OneToShootIt) as Gun;
 			int StoredGunID = gun.PickupObjectId;
-			InitialiseSynergies.GunIDForEOE = OneToShootIt;
+			InitialiseGTEE.GunIDForEOE = OneToShootIt;
 			AdvancedTransformGunSynergyProcessor advancedTransformGunSynergyProcessor = (PickupObjectDatabase.GetById(StoredGunID) as Gun).gameObject.AddComponent<AdvancedTransformGunSynergyProcessor>();
-
 			EndOfEverything aaaa = (PickupObjectDatabase.GetById(StoredGunID) as Gun).gameObject.GetOrAddComponent<EndOfEverything>();
 
 			advancedTransformGunSynergyProcessor.NonSynergyGunId = StoredGunID;

@@ -29,7 +29,7 @@ namespace Planetside
 			GunExt.SetAnimationFPS(gun, gun.reloadAnimation, 4);
 			GunExt.SetAnimationFPS(gun, gun.idleAnimation, 2);
 
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(7) as Gun, true, false);
 
@@ -62,16 +62,13 @@ namespace Planetside
 			gun.SetBaseMaxAmmo(240);
 			gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(404) as Gun).muzzleFlashEffects;
 
-			// Here we just set the quality of the gun and the "EncounterGuid", which is used by Gungeon to identify the gun.
 			gun.quality = PickupObject.ItemQuality.C;
 			gun.encounterTrackable.EncounterGuid = "Cheer up Bunny ^ᴗ^ (i dont want to change this, at the very least not remove it)ae";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
+			SwanOff.SwanOffID = gun.PickupObjectId;
 
 		}
-		public override void PostProcessProjectile(Projectile projectile)
-		{
-		}
-
+		public static int SwanOffID;
 		public override void OnPostFired(PlayerController player, Gun bruhgun)
 		{
 			gun.PreventNormalFireAudio = true;
@@ -96,7 +93,6 @@ namespace Planetside
 			}
 
 		}
-
 		public override void OnReloadPressed(PlayerController player, Gun bruhgun, bool bSOMETHING)
 		{
 			if (gun.IsReloading && this.HasReloaded)

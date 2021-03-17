@@ -64,8 +64,6 @@ namespace Planetside
 			gun.reloadTime = 2.6f;
 			gun.SetBaseMaxAmmo(80);
 			gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(51) as Gun).muzzleFlashEffects;
-
-			// Here we just set the quality of the gun and the "EncounterGuid", which is used by Gungeon to identify the gun.
 			gun.quality = PickupObject.ItemQuality.EXCLUDED;
 			gun.encounterTrackable.EncounterGuid = "Its a supershtung";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");

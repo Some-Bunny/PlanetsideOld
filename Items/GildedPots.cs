@@ -31,6 +31,8 @@ namespace Planetside
 				"gilded_bullets"
 			};
 			CustomSynergies.Add("Expert Demolitionist", mandatoryConsoleIDs, optionalConsoleIDs, true);
+
+		
 		}
 
 		// Token: 0x06000198 RID: 408 RVA: 0x0001013B File Offset: 0x0000E33B

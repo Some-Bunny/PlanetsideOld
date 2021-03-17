@@ -9,10 +9,8 @@ using Object = UnityEngine.Object;
 
 namespace Planetside
 {
-	// Token: 0x0200002D RID: 45
 	public class PolarityForme : GunBehaviour
 	{
-		// Token: 0x0600013F RID: 319 RVA: 0x0000D468 File Offset: 0x0000B668
 		public static void Add()
 		{
 			Gun gun = ETGMod.Databases.Items.NewGun("Balanced Polarity", "polarity1");
@@ -26,14 +24,11 @@ namespace Planetside
 			GunExt.SetAnimationFPS(gun, gun.idleAnimation, 3);
 			gun.SetBaseMaxAmmo(450);
 
-			Gun gun2 = PickupObjectDatabase.GetById(336) as Gun;
 			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(223) as Gun, true, false);
 			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(336) as Gun, true, false);
 
 			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).frames[0].eventAudio = "Play_WPN_yarirocketlauncher_shot_01";
 			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).frames[0].triggerEvent = true;
-			//Gun gun2 = PickupObjectDatabase.GetById(336) as Gun;
-			Gun gun3 = PickupObjectDatabase.GetById(146) as Gun;
 			gun.gunSwitchGroup = (PickupObjectDatabase.GetById(16) as Gun).gunSwitchGroup;
 			gun.DefaultModule.ammoCost = 1;
 			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
@@ -55,7 +50,6 @@ namespace Planetside
 			projectile.baseData.damage = 5f;
 
 
-			//mama.lastUp = projectile;
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile);
 			gun.DefaultModule.projectiles[0] = projectile;
@@ -82,7 +76,6 @@ namespace Planetside
 			projectile1.baseData.damage = 5f;
 			FakePrefab.MarkAsFakePrefab(projectile1.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile1);
-			//gun2.DefaultModule.projectiles[0] = projectile1;
 			bool aa = gun.Volley.projectiles[1] != gun.DefaultModule;
 			if (aa)
 			{
@@ -103,11 +96,8 @@ namespace Planetside
 		public static int PolarityFormeID;
 
 		public override void PostProcessProjectile(Projectile projectile)
-		{
-			//bool flag5 = false;
-			
+		{			
 			gun.PreventNormalFireAudio = true;
-
 		}
 
 		private bool HasReloaded;
@@ -126,9 +116,6 @@ namespace Planetside
 				}
 			}
 		}
-		//private Projectile lastDown = null;
-		//private Projectile lastUp = null;
 		public Vector3 projectilePos;
-		
 	}
 }

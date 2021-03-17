@@ -52,7 +52,6 @@ namespace Planetside
                 "the_emperor",
                 "shock_rifle",
                 "shock_rounds"
-
             };
             CustomSynergies.Add("Shocker", mandatoryConsoleIDs, optionalConsoleIsDs, true);
         }

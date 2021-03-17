@@ -258,8 +258,7 @@ namespace Planetside
 					MaxActiveRange = 0f
 				}
 			};
-				//BehaviorSpeculator load = EnemyDatabase.GetOrLoadByGuid("6e972cd3b11e4b429b888b488e308551").behaviorSpeculator;
-				//Tools.DebugInformation(load);
+
 				bs.InstantFirstTick = behaviorSpeculator.InstantFirstTick;
 				bs.TickInterval = behaviorSpeculator.TickInterval;
 				bs.PostAwakenDelay = behaviorSpeculator.PostAwakenDelay;
@@ -268,7 +267,10 @@ namespace Planetside
 				bs.StartingFacingDirection = behaviorSpeculator.StartingFacingDirection;
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:bleak_bullet", companion.aiActor);
-
+				PlanetsideModule.Strings.Enemies.Set("#BLEAK", "BleakBubbles");
+				companion.aiActor.OverrideDisplayName = "#BLEAK";
+				companion.aiActor.ActorName = "#BLEAK";
+				companion.aiActor.name = "#BLEAK";
 
 			}
 		}
@@ -323,9 +325,9 @@ namespace Planetside
 
 
 		}
-		public class SkellScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SkellScript : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.GetBullet("default"));
 				for (int i = 0; i < 5; i++)

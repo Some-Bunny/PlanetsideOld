@@ -260,8 +260,6 @@ namespace Planetside
 					MaxActiveRange = 0f
 				}
 			};
-				//BehaviorSpeculator load = EnemyDatabase.GetOrLoadByGuid("6e972cd3b11e4b429b888b488e308551").behaviorSpeculator;
-				//Tools.DebugInformation(load);
 				bs.InstantFirstTick = behaviorSpeculator.InstantFirstTick;
 				bs.TickInterval = behaviorSpeculator.TickInterval;
 				bs.PostAwakenDelay = behaviorSpeculator.PostAwakenDelay;
@@ -270,7 +268,10 @@ namespace Planetside
 				bs.StartingFacingDirection = behaviorSpeculator.StartingFacingDirection;
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:hunter_bullet", companion.aiActor);
-
+				PlanetsideModule.Strings.Enemies.Set("#HUNTER", "Bl4ck Hunter");
+				companion.aiActor.OverrideDisplayName = "#HUNTER";
+				companion.aiActor.ActorName = "#HUNTER";
+				companion.aiActor.name = "#HUNTER";
 
 			}
 		}
@@ -324,9 +325,9 @@ namespace Planetside
 
 		}
 
-		public class SalamanderScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SalamanderScript : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
 				{

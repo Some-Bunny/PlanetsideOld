@@ -1,11 +1,11 @@
 ﻿using Dungeonator;
-using Pathfinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using tk2dRuntime.TileMap;
 using UnityEngine;
 using ItemAPI;
+using FullInspector;
 
 using Gungeon;
 
@@ -16,11 +16,46 @@ using System.Collections;
 using Brave.BulletScript;
 using GungeonAPI;
 
+using System.Text;
+using System.IO;
+using System.Reflection;
+
+
+using MonoMod.RuntimeDetour;
+
 namespace Planetside
 {
+
     public static class OtherTools
     {
-        // Token: 0x06000172 RID: 370 RVA: 0x00013060 File Offset: 0x00011260
+        public static bool verbose = true;
+        private static string defaultLog = Path.Combine(ETGMod.ResourcesDirectory, "PSOG.txt");
+        public static string modID = "PSOG";
+
+        public static void PrintNoID<T>(T obj, string color = "FFFFFF", bool force = false)
+        {
+            if (verbose || force)
+            {
+                string[] lines = obj.ToString().Split('\n');
+                foreach (var line in lines)
+                    LogToConsole($"<color=#{color}> {line}</color>");
+            }
+
+            Log(obj.ToString());
+        }
+        public static void LogToConsole(string message)
+        {
+            message.Replace("\t", "    ");
+            ETGModConsole.Log(message);
+        }
+        public static void Log<T>(T obj)
+        {
+            using (StreamWriter writer = new StreamWriter(Path.Combine(ETGMod.ResourcesDirectory, defaultLog), true))
+            {
+                writer.WriteLine(obj.ToString());
+            }
+        }
+
         public static void Notify(string header, string text, string spriteID, UINotificationController.NotificationColor color = UINotificationController.NotificationColor.SILVER)
         {
             tk2dSpriteCollectionData encounterIconCollection = AmmonomiconController.Instance.EncounterIconCollection;
@@ -43,6 +78,7 @@ namespace Planetside
         {
             return UnityEngine.Random.value > value;
         }
+
 
         public static void AnimateProjectile(this Projectile proj, List<string> names, int fps, bool loops, List<IntVector2> pixelSizes, List<bool> lighteneds, List<tk2dBaseSprite.Anchor> anchors, List<bool> anchorsChangeColliders,
             List<bool> fixesScales, List<Vector3?> manualOffsets, List<IntVector2?> overrideColliderPixelSizes, List<IntVector2?> overrideColliderOffsets, List<Projectile> overrideProjectilesToCopyFrom)
@@ -115,14 +151,77 @@ namespace Planetside
             proj.sprite.spriteAnimator.DefaultClipId = proj.sprite.spriteAnimator.Library.GetClipIdByName("idle");
             proj.sprite.spriteAnimator.deferNextStartClip = false;
         }
+        public static AIActor SetupAIActorDummy(string name, IntVector2 colliderOffset, IntVector2 colliderDimensions)
+        {
+            GameObject gameObject = new GameObject(name);
+            gameObject.SetActive(false);
+            FakePrefab.MarkAsFakePrefab(gameObject);
+            UnityEngine.Object.DontDestroyOnLoad(gameObject);
+            SpeculativeRigidbody speculativeRigidbody = gameObject.AddComponent<tk2dSprite>().SetUpSpeculativeRigidbody(colliderOffset, colliderDimensions);
+            PixelCollider pixelCollider = new PixelCollider();
+            pixelCollider.ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual;
+            pixelCollider.CollisionLayer = CollisionLayer.EnemyCollider;
+            pixelCollider.ManualWidth = colliderDimensions.x;
+            pixelCollider.ManualHeight = colliderDimensions.y;
+            pixelCollider.ManualOffsetX = colliderOffset.x;
+            pixelCollider.ManualOffsetY = colliderOffset.y;
+            speculativeRigidbody.PixelColliders.Add(pixelCollider);
+            speculativeRigidbody.PrimaryPixelCollider.CollisionLayer = CollisionLayer.EnemyCollider;
+            AIActor result = gameObject.AddComponent<AIActor>();
+            HealthHaver healthHaver = gameObject.AddComponent<HealthHaver>();
+            healthHaver.SetHealthMaximum(10f, null, false);
+            healthHaver.ForceSetCurrentHealth(10f);
+            BehaviorSpeculator behaviorSpeculator = gameObject.AddComponent<BehaviorSpeculator>();
+            ((ISerializedObject)behaviorSpeculator).SerializedObjectReferences = new List<UnityEngine.Object>(0);
+            ((ISerializedObject)behaviorSpeculator).SerializedStateKeys = new List<string>
+            {
+                "OverrideBehaviors",
+                "OtherBehaviors",
+                "TargetBehaviors",
+                "AttackBehaviors",
+                "MovementBehaviors"
+            };
+            ((ISerializedObject)behaviorSpeculator).SerializedStateValues = new List<string>
+            {
+                "",
+                "",
+                "",
+                "",
+                ""
+            };
+            return result;
+        }
+
+        public static void DisableSuperTinting(AIActor actor)
+        {
+            Material mat = actor.sprite.renderer.material;
+            mat.mainTexture = actor.sprite.renderer.material.mainTexture;
+            mat.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+            mat.DisableKeyword("BRIGHTNESS_CLAMP_OFF");
+        }
+
 
     }
+
+    public static class AnimateBullet//----------------------------------------------------------------------------------------------
+    {
+        public static List<T> ConstructListOfSameValues<T>(T value, int length)
+        {
+            List<T> list = new List<T>();
+            for (int i = 0; i < length; i++)
+            {
+                list.Add(value);
+            }
+            return list;
+        }
+    }
+
 }
 
 
 namespace Planetside
 {
-    internal class FUCK
+    public class FUCK
     {
 
         //GameManager.Instance.StartCoroutine(FUCK.DoDistortionWaveLocal(obj.transform.position, 1.8f, 0.2f, 10f, 0.4f));
@@ -154,6 +253,48 @@ namespace Planetside
         {
             Vector3 vector = GameManager.Instance.MainCameraController.Camera.WorldToViewportPoint(centerPoint.ToVector3ZUp(0f));
             return new Vector4(vector.x, vector.y, dRadius, dIntensity);
+        }
+        public AIActor GetNearestEnemy(List<AIActor> activeEnemies, Vector2 position, out float nearestDistance, string[] filter)
+        {
+            AIActor aiactor = null;
+            nearestDistance = float.MaxValue;
+            bool flag = activeEnemies == null;
+            bool flag2 = flag;
+            bool flag3 = flag2;
+            bool flag4 = flag3;
+            bool flag5 = flag4;
+            AIActor result;
+            if (flag5)
+            {
+                result = null;
+            }
+            else
+            {
+                for (int i = 0; i < activeEnemies.Count; i++)
+                {
+                    AIActor aiactor2 = activeEnemies[i];
+                    bool flag6 = !aiactor2.healthHaver.IsDead && aiactor2.healthHaver.IsVulnerable;
+                    bool flag7 = flag6;
+                    if (flag7)
+                    {
+                        bool flag8 = filter == null || !filter.Contains(aiactor2.EnemyGuid);
+                        bool flag9 = flag8;
+                        if (flag9)
+                        {
+                            float num = Vector2.Distance(position, aiactor2.CenterPosition);
+                            bool flag10 = num < nearestDistance;
+                            bool flag11 = flag10;
+                            if (flag11)
+                            {
+                                nearestDistance = num;
+                                aiactor = aiactor2;
+                            }
+                        }
+                    }
+                }
+                result = aiactor;
+            }
+            return result;
         }
     }
 }

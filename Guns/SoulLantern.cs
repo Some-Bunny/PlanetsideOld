@@ -23,7 +23,6 @@ namespace Planetside
 			Gun gun = ETGMod.Databases.Items.NewGun("Soul Lantern", "lantern");
 			Game.Items.Rename("outdated_gun_mods:soul_lantern", "psog:soul_lantern");
 			gun.gameObject.AddComponent<SoulLantern>();
-			//PassiveItem Item = gun.gameObject.AddComponent<PassiveItem>();
 
 			GunExt.SetShortDescription(gun, "Light The Way");
 			GunExt.SetLongDescription(gun, "A lantern filled with the souls that came before and after its time. Who knows how old it is, and if it even was manufactured by human hands...");

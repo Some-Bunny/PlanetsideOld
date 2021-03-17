@@ -54,13 +54,13 @@ namespace Planetside
             float NullPoints = 0;
             NullPoints += Money / 20 + keys / 2 + Blank / 2;
             //ETGModConsole.Log("Points Gotten: " + NullPoints.ToString(), false);
-            OtherTools.ApplyStat(player, PlayerStats.StatType.Damage, NullPoints / 50, StatModifier.ModifyMethod.ADDITIVE);
-            OtherTools.ApplyStat(player, PlayerStats.StatType.MovementSpeed, NullPoints / 7.14f, StatModifier.ModifyMethod.ADDITIVE);
-            OtherTools.ApplyStat(player, PlayerStats.StatType.ChargeAmountMultiplier, NullPoints / 50, StatModifier.ModifyMethod.ADDITIVE);
-            OtherTools.ApplyStat(player, PlayerStats.StatType.KnockbackMultiplier, NullPoints / 50, StatModifier.ModifyMethod.ADDITIVE);
-            OtherTools.ApplyStat(player, PlayerStats.StatType.ProjectileSpeed, NullPoints / 50, StatModifier.ModifyMethod.ADDITIVE);
-            OtherTools.ApplyStat(player, PlayerStats.StatType.AdditionalClipCapacityMultiplier, NullPoints / 50, StatModifier.ModifyMethod.ADDITIVE);
-            OtherTools.ApplyStat(player, PlayerStats.StatType.AmmoCapacityMultiplier, NullPoints / 50, StatModifier.ModifyMethod.ADDITIVE);
+            OtherTools.ApplyStat(player, PlayerStats.StatType.Damage, NullPoints / 35, StatModifier.ModifyMethod.ADDITIVE);
+            OtherTools.ApplyStat(player, PlayerStats.StatType.MovementSpeed, NullPoints / 5f, StatModifier.ModifyMethod.ADDITIVE);
+            OtherTools.ApplyStat(player, PlayerStats.StatType.ChargeAmountMultiplier, NullPoints / 35, StatModifier.ModifyMethod.ADDITIVE);
+            OtherTools.ApplyStat(player, PlayerStats.StatType.KnockbackMultiplier, NullPoints / 35, StatModifier.ModifyMethod.ADDITIVE);
+            OtherTools.ApplyStat(player, PlayerStats.StatType.ProjectileSpeed, NullPoints / 35, StatModifier.ModifyMethod.ADDITIVE);
+            OtherTools.ApplyStat(player, PlayerStats.StatType.AdditionalClipCapacityMultiplier, NullPoints / 35, StatModifier.ModifyMethod.ADDITIVE);
+            OtherTools.ApplyStat(player, PlayerStats.StatType.AmmoCapacityMultiplier, NullPoints / 35, StatModifier.ModifyMethod.ADDITIVE);
 
             Exploder.DoDistortionWave(player.sprite.WorldTopCenter, this.distortionIntensity, this.distortionThickness, this.distortionMaxRadius, this.distortionDuration);
             player.carriedConsumables.KeyBullets = 0;

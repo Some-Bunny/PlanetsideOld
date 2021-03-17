@@ -269,7 +269,10 @@ namespace Planetside
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:spapi_bullet", companion.aiActor);
 
-
+				PlanetsideModule.Strings.Enemies.Set("#CHAAAAAAAAAAAAAAMBERRR", "SpecialAPI");
+				companion.aiActor.OverrideDisplayName = "#CHAAAAAAAAAAAAAAMBERRR";
+				companion.aiActor.ActorName = "#CHAAAAAAAAAAAAAAMBERRR";
+				companion.aiActor.name = "#CHAAAAAAAAAAAAAAMBERRR";
 			}
 		}
 
@@ -322,16 +325,14 @@ namespace Planetside
 
 		}
 
-		public class SalamanderScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SalamanderScript : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
 				{
 					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("ec6b674e0acd4553b47ee94493d66422").bulletBank.GetBullet("bigBullet"));
 				}
-				//float angle = base.AimDirection;
-				//base.PostWwiseEvent("Play_ENM_Tarnisher_Spit_01", null);
 				float angleDelta = 60f;
 				for (int i = 0; i < 6; i++)
 				{
@@ -342,10 +343,8 @@ namespace Planetside
 			}
 		}
 
-
 		public class WallBullet : Bullet
 		{
-			// Token: 0x06000A91 RID: 2705 RVA: 0x00030B38 File Offset: 0x0002ED38
 			public WallBullet() : base("bigBullet", false, false, false)
 			{
 			}

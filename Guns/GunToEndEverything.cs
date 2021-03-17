@@ -52,7 +52,6 @@ namespace Planetside
 			projectile.AdditionalScaleMultiplier *= 1f;
 			projectile.shouldRotate = true;
 			EndOfEverything fuck = projectile.GetComponent<EndOfEverything>();
-			//projectile.baseData.range = 5.8f;
 			gun.encounterTrackable.EncounterGuid = "Haha gun go *ends world*";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			GTEE.FuckinGhELL = gun.PickupObjectId;
@@ -82,8 +81,6 @@ namespace Planetside
 		{
 			ETGModConsole.Log("Beginning The End.");
 			GameManager.Instance.StartCoroutine(GTEE.StartTheEnd());
-			//GTEETHING Values = player.gameObject.AddComponent<GTEETHING>();
-
 		}
 
 		private static IEnumerator StartTheEnd()

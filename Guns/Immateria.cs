@@ -21,7 +21,6 @@ namespace Planetside
 	public class Immateria : GunBehaviour
 	{
 		public static void Add()
-			//NONE OF THIS FUCKING WORKS
 		{
 			Gun gun = ETGMod.Databases.Items.NewGun("Immateria", "immateria");
 			Game.Items.Rename("outdated_gun_mods:immateria", "psog:immateria");

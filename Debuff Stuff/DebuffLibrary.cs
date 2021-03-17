@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Planetside
 {
-	// Token: 0x02000050 RID: 80
 	public static class DebuffLibrary
 	{
 		public static FrailtyHealthEffect Frailty = new FrailtyHealthEffect
@@ -57,7 +56,6 @@ namespace Planetside
 			HealthModifierEffect = DebuffLibrary.Possessed
 
 		};
-		
 		public static Color LightGreen = new Color(0.55f, 1.76428568f, 0.871428549f);
 	}
 }

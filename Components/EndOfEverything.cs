@@ -38,7 +38,7 @@ namespace Planetside
 		{
 			try
 			{
-				Gun gun = PickupObjectDatabase.GetByEncounterName(InitialiseSynergies.GunIDForEOE) as Gun;
+				Gun gun = PickupObjectDatabase.GetByEncounterName(InitialiseGTEE.GunIDForEOE) as Gun;
 				int StoredGunID = gun.PickupObjectId;
 				PlayerController player = GameManager.Instance.PrimaryPlayer;
 				bool flagA = player.PlayerHasActiveSynergy("End Of Everything") && player.CurrentGun.PickupObjectId == StoredGunID;
@@ -264,7 +264,7 @@ namespace Planetside
 			goopManagerForGoopType2.TimedAddGoopCircle(player.sprite.WorldCenter, 30f, 0.35f, false);
 			aa.damagesEnemies = false;
 			GameObject aaa = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec").GetComponent<DraGunController>().skyBoulder;
-			for (int i = 0; i <= 100; i++)
+			for (int i = 0; i <= 50; i++)
 			{
 				IntVector2? vector = (player as PlayerController).CurrentRoom.GetRandomAvailableCell(new IntVector2?(IntVector2.One * 2), CellTypes.FLOOR | CellTypes.PIT, false, null);
 				Vector2 vector2 = vector.Value.ToVector2();

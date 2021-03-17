@@ -264,7 +264,10 @@ namespace Planetside
 				bs.StartingFacingDirection = behaviorSpeculator.StartingFacingDirection;
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:kyle_bullet", companion.aiActor);
-
+				PlanetsideModule.Strings.Enemies.Set("#GOD", "Kyle The Scientist");
+				companion.aiActor.OverrideDisplayName = "#GOD";
+				companion.aiActor.ActorName = "#GOD";
+				companion.aiActor.name = "#GOD";
 
 			}
 		}

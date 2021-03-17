@@ -44,7 +44,7 @@ namespace Planetside
 				component.name = BrokenArmorEffect.VFXNameBrokenAArmor;
 
 				component.PlaceAtPositionByAnchor(actor.sprite.WorldTopCenter, tk2dBaseSprite.Anchor.LowerCenter);
-				component.scale = Vector3.one;
+				component.scale = Vector3.Lerp(component.scale, Vector3.one, 0.25f);
 			}
 		}
 		public override void OnEffectApplied(GameActor actor, RuntimeGameActorEffectData effectData, float partialAmount = 1f)

@@ -18,7 +18,6 @@ using UnityEngine.Serialization;
 
 namespace Planetside
 {
-	// Token: 0x02000075 RID: 117
 	public class AoEDamageComponent : MonoBehaviour
 	{
 		public AoEDamageComponent()
@@ -94,7 +93,7 @@ namespace Planetside
 							bool peep = Vector2.Distance(aiactor.CenterPosition, centerPosition) < Radius * num && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
 							if (peep)
 							{
-								aiactor.ApplyEffect(gameActorFreeze, 3f, null);
+								aiactor.ApplyEffect(gameActorFreeze, 0.5f, null);
 							}
 						}
 						if (InflictsPoison == true)

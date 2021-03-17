@@ -46,6 +46,11 @@ namespace Planetside
 			advancedTransformGunSynergyProcessorveterna.SynergyGunId = VeteranerShotgun.VeteranerID;
 			advancedTransformGunSynergyProcessorveterna.SynergyToCheck = "Old War";
 
+			AdvancedTransformGunSynergyProcessor eae = (PickupObjectDatabase.GetById(Oscillato.AAID) as Gun).gameObject.AddComponent<AdvancedTransformGunSynergyProcessor>();
+			eae.NonSynergyGunId = Oscillato.AAID;
+			eae.SynergyGunId = OscillatoSynergyForme.AeID;
+			eae.SynergyToCheck = "Reverberation";
+
 		}
 	}
 }

@@ -26,7 +26,7 @@ namespace Planetside
     {
         public static void Init()
         {
-            string itemName = "Test Active Item";
+            string itemName = " PSOGTest Active Item";
             string resourceName = "Planetside/Resources/blashshower.png";
             GameObject obj = new GameObject(itemName);
             TestActiveItem testActive = obj.AddComponent<TestActiveItem>();
@@ -52,12 +52,35 @@ namespace Planetside
         //WORKS
         //            material.shader = ShaderCache.Acquire("Brave/Internal/HologramShader");
 
+        public GameObject spawnedPlayerObject;
+        public GameObject objectToSpawn;
 
         protected override void DoEffect(PlayerController user)
         {
+            //this.objectToSpawn = EnemyDatabase.GetOrLoadByGuid(LoaderPylonController.guid).gameObject;
+            GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(LoaderPylonController.Turretprefab, user.specRigidbody.UnitCenter, Quaternion.identity);
+            this.spawnedPlayerObject = gameObject;
+            tk2dBaseSprite component2 = gameObject.GetComponent<tk2dBaseSprite>();
+            if (component2 != null)
+            {
+                component2.PlaceAtPositionByAnchor(user.specRigidbody.UnitCenter.ToVector3ZUp(component2.transform.position.z), tk2dBaseSprite.Anchor.MiddleCenter);
+                if (component2.specRigidbody != null)
+                {
+                    component2.specRigidbody.RegisterGhostCollisionException(user.specRigidbody);
+                }
+            }
+            SpawnObjectItem componentInChildren2 = this.spawnedPlayerObject.GetComponentInChildren<SpawnObjectItem>();
+            if (componentInChildren2)
+            {
+                componentInChildren2.SpawningPlayer = this.LastOwner;
+            }
+            LoaderPylonController yah = gameObject.AddComponent<LoaderPylonController>();
+            if (yah != null)
+            {
+                yah.maxDuration = 120f;
+            }
 
-
-            
+            /*
             Chest rainbow_Chest = GameManager.Instance.RewardManager.S_Chest;
             Chest chest2 = Chest.Spawn(rainbow_Chest, user.CurrentRoom.GetRandomVisibleClearSpot(1, 1));
             chest2.sprite.usesOverrideMaterial = true;
@@ -111,6 +134,7 @@ namespace Planetside
             chest2.lootTable.multipleItemDropChances.elements[0] = weightedInt;
             chest2.lootTable.onlyOneGunCanDrop = false;
             chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
+            */
 
             /*
             GameObject gameObject = new GameObject();
@@ -132,6 +156,19 @@ namespace Planetside
             AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(guid);
             IntVector2? intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
             AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
+            //aiactor.gameObject.AddComponent<PlayerController>();
+            //Chest aaa = aiactor.gameObject.AddComponent<Chest>();
+            //var texture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\nebula_reducednoise.png");
+            var texture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\nebula_reducednoise.png");
+
+            aiactor.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/Internal/StarNest_Derivative");
+            */
+            //aiactor.sprite.renderer.material.SetTexture("_EeveeTex", texture);
+
+            //     aiactor.sprite.renderer.material.DisableKeyword("BRIGHTNESS_CLAMP_ON");
+            //   aiactor.sprite.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_OFF");
+
+            /*
             aiactor.CanTargetEnemies = false;
             aiactor.CanTargetPlayers = true;
             PhysicsEngine.Instance.RegisterOverlappingGhostCollisionExceptions(aiactor.specRigidbody, null, false);
@@ -139,6 +176,7 @@ namespace Planetside
             aiactor.IgnoreForRoomClear = true;
             aiactor.HandleReinforcementFallIntoRoom(-1f);
             */
+
         }
         public static BulletScriptSource m_bulletSource;
         public BulletScriptSelector BulletScript;

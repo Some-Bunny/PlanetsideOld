@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Gungeon;
 using ItemAPI;
 using UnityEngine;
-//using DirectionType = DirectionalAnimation.DirectionType;
 using AnimationType = ItemAPI.EnemyBuilder.AnimationType;
 using System.Collections;
 using Dungeonator;
@@ -28,12 +27,11 @@ namespace Planetside
 
 		public static void BuildPrefab()
 		{
-			//
+			
 			bool flag = prefab != null || EnemyBuilder.Dictionary.ContainsKey(guid);
 			bool flag2 = flag;
 			if (!flag2)
 			{
-				//float AttackAnimationThingAMaWhatIts = 0.5f;
 				prefab = EnemyBuilder.BuildPrefab("Skullvenant", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 800;
@@ -54,8 +52,6 @@ namespace Planetside
 				companion.aiActor.healthHaver.SetHealthMaximum(40f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
-
-
 				{
 					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
 					CollisionLayer = CollisionLayer.EnemyCollider,
@@ -287,12 +283,8 @@ namespace Planetside
 					LeadAmount = 0f,
 					AttackCooldown = 0f,
 					Cooldown = 2.5f,
-					//TellAnimation = "attack",
-					//FireAnimation = "tell",
 					RequiresLineOfSight = true,
 					MultipleFireEvents = true,
-					//EnabledDuringAttack = new PowderSkullSpinBulletsBehavior(),
-					//StopDuring = ShootBehavior.StopType.Attack,
 					Uninterruptible = false,
 
 
@@ -423,12 +415,8 @@ namespace Planetside
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").bulletBank.GetBullet("sweep"));
 
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
-				//base.aiActor.HasBeenEngaged = true;
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
-				{ //new CustomBulletScriptSelector(typeof(EatPants));		
-				  //AkSoundEngine.PostEvent("Play_BOSS_mineflayer_bellshot_01", base.aiActor.gameObject);
-				  //AkSoundEngine.PostEvent("Play_WPN_Life_Orb_Fade_01", base.aiActor.gameObject);
-					//AkSoundEngine.PostEvent("Play_BOSS_mineflayer_belldrop_01", null);
+				{ 
 
 				};
 			}

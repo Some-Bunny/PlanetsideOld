@@ -483,7 +483,7 @@ namespace Planetside
 				companion.encounterTrackable.journalData.enemyPortraitSprite = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\Ammocom\\jammedguardicon.png");
 				PlanetsideModule.Strings.Enemies.Set("#JAMMED_GUARD", "Jammed Guardian");
 				PlanetsideModule.Strings.Enemies.Set("#JAMMED_GUARD_SHORTDESC", "You Have Angered The Gods");
-				PlanetsideModule.Strings.Enemies.Set("#JAMMED_GUARD_LONGDESC", "Only sent out if Kali has been enraged in a particular way, this guardian uses the souls of slain Gungeoneers to shield itself from oncoming attacks.");
+				PlanetsideModule.Strings.Enemies.Set("#JAMMED_GUARD_LONGDESC", "Only sent out if Kaliber has been enraged in a particular way, this guardian uses the souls of slain Gungeoneers to shield itself from oncoming attacks.");
 				companion.encounterTrackable.journalData.PrimaryDisplayName = "#JAMMED_GUARD";
 				companion.encounterTrackable.journalData.NotificationPanelDescription = "#JAMMED_GUARD_SHORTDESC";
 				companion.encounterTrackable.journalData.AmmonomiconFullEntry = "#JAMMED_GUARD_LONGDESC";

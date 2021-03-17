@@ -30,7 +30,6 @@ namespace Planetside
 			bool flag2 = flag;
 			if (!flag2)
 			{
-				//float AttackAnimationThingAMaWhatIts = 0.5f;
 				prefab = EnemyBuilder.BuildPrefab("Apache Bullet", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 800;
@@ -258,8 +257,7 @@ namespace Planetside
 					MaxActiveRange = 0f
 				}
 			};
-				//BehaviorSpeculator load = EnemyDatabase.GetOrLoadByGuid("6e972cd3b11e4b429b888b488e308551").behaviorSpeculator;
-				//Tools.DebugInformation(load);
+
 				bs.InstantFirstTick = behaviorSpeculator.InstantFirstTick;
 				bs.TickInterval = behaviorSpeculator.TickInterval;
 				bs.PostAwakenDelay = behaviorSpeculator.PostAwakenDelay;
@@ -268,7 +266,10 @@ namespace Planetside
 				bs.StartingFacingDirection = behaviorSpeculator.StartingFacingDirection;
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:apache_bullet", companion.aiActor);
-
+				PlanetsideModule.Strings.Enemies.Set("#APACHE", "Apache Thunder");
+				companion.aiActor.OverrideDisplayName = "#APACHE";
+				companion.aiActor.ActorName = "#APACHE";
+				companion.aiActor.name = "#APACHE";
 
 			}
 		}
@@ -324,9 +325,9 @@ namespace Planetside
 
 
 		}
-		public class SkellScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SkellScript : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				PlayerController player = GameManager.Instance.PrimaryPlayer;
 				for (int j = 0; j < 2; j++)

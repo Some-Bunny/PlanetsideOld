@@ -100,10 +100,17 @@ namespace Planetside
 
             OffWorldMedicine.Init();
             BabyGoodCandleKin.Init();
+
             ShellsnakeOil.Init();
+            TableTechDevour.Init();
+            UnstableTeslaCoil.Init();
+            DeathWarrant.Init();
+            OscilaltingBullets.Init();
+            TinyPlanetBullets.Init();
 
             WitherLance.Add();
             SwanOff.Add();
+            UglyDuckling.Add();
             HardlightNailgun.Add();
             BurningSun.Add();
             StatiBlast.Add();
@@ -120,6 +127,26 @@ namespace Planetside
             Immateria.Add();
             //Unlocked By Beating Loop 1
             ArmWarmer.Add();
+
+            Oscillato.Add();
+            OscillatoSynergyForme.Add();
+
+            RebarPuncher.Add();
+            LaserChainsaw.Add();
+            ExecutionersCrossbow.Add();
+            ExecutionersCrossbowSpecial.Init();
+
+            ForgiveMePlease.Init();
+            ForgiveMePlease.BuildPrefab();
+            //ForgiveMePleaseAiActor.Init();
+
+            PortablePylon.Init();
+            LoaderPylonController.Init();
+
+            LoaderPylonSynergyFormeController.Init();
+
+            DeadKingsDesparation.Init();
+            DeadKingsDesparation.BuildPrefab();
 
             //Debuff Icons
             BrokenArmorEffect.Init();
@@ -163,7 +190,11 @@ namespace Planetside
             Wailer.Init();
 
             CelBullet.Init();
+
             InitialiseSynergies.DoInitialisation();
+            InitialiseGTEE.DoInitialisation();
+            HoveringGunsAdder.AddHovers();
+
             SynergyFormInitialiser.AddSynergyForms();
             Log($"{MOD_NAME} v{VERSION} started successfully.", TEXT_COLOR);
             List<string> RandomFunnys = new List<string>
@@ -177,6 +208,7 @@ namespace Planetside
                 "weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
                 "If you see this, you owe me 10 bucks you nerd.",
                 "https://www.youtube.com/watch?v=qn0YdT_pQF8",
+                "https://www.youtube.com/watch?v=EGXPAoyP_cg",
                 "Ashes To Ashes, To Ashes (To Ashes)",
                 "Deadbolt Is Underrated!",
                 "You're Gonna Need A Bigger Gun",
@@ -187,7 +219,6 @@ namespace Planetside
                 "is that supposed to be like that???",
                 "I'm so lonely.",
                 "I removed an item from the item pool, which one is it? ;)",
-                "I am lactose intolerant why am i drinking tea with milk",
                 "Peter Griffin!",
                 "Hey VSauce!",
                 "Yo Mama!",
@@ -216,9 +247,10 @@ namespace Planetside
                 "Planetside Supports Trans Rights",
                 "bepis",
                 "pootis",
-                "Frogs are cool!"
+                "Frogs are cool!",
+                "It's... so... warm...",
+                "Poor aim, and a poor Reaper."
             };
-            //"There are no Hot Singles in your area.",
             Random r = new Random();
             int index = r.Next(RandomFunnys.Count);
             string randomString = RandomFunnys[index];
@@ -231,8 +263,10 @@ namespace Planetside
             string c = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.SHELLRAX_DEFEATED) ? " Done!\n" : " -Defeat The Failed Demi-Lich\n";
             string d = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BULLETBANK_DEFEATED) ? " Done!\n" : " -Defeat The Banker Of Bullets.\n";
             string e = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BROKEN_CHAMBER_RUN_COMPLETED) ? " Done!\n" : " -Defeat The Lich With A Broken Remnant In Hand.\n";
-            string f = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_LOOP_1) ? " Done!\n" : " -Beat The Game On Ouroborous Level 1.\n";
-            ETGModConsole.Log("Unlock List:\n" + a + b + c + d + e + f, true);
+            string f = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_LOOP_1) ? " Done!\n" : " -Beat The Game On Ouroborous Level 0.\n";
+            string g = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND) ? " Done!\n" : " -Kill A Boss After Dealing 500 Damage Or More At Once.\n";
+            string color1 = "9006FF";
+            OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g, color1);
         }
 
         public static void Log(string text, string color="#FFFFFF")
@@ -286,7 +320,7 @@ namespace Planetside
                 //Gun gun;
                 //ETGModConsole.Log("AAAAAAAAAAAAAAAAAAAAAA");
                 PlayerController player = GameManager.Instance.PrimaryPlayer;
-                player.OnTriedToInitiateAttack += this.HandleTriedAttack;
+                player.OnUsedBlank += this.HandleTriedAttack;
                 GameManager.Instance.OnNewLevelFullyLoaded += this.OnNewFloor;
             }
             public void Update()
@@ -298,7 +332,7 @@ namespace Planetside
                 this.SummonedOnFloor = 0f;
             }
 
-            private void HandleTriedAttack(PlayerController obj)
+            private void HandleTriedAttack(PlayerController obj, int what)
             {
                 //ETGModConsole.Log("ITS THIS TRIGGERING EVEN");
                 if ((CheckforSpeciRoom.Contains(obj.CurrentRoom.GetRoomName())))
@@ -310,12 +344,13 @@ namespace Planetside
                         string text = "The Gods Have Been Angered.";
                         if ((GameManager.Instance.PrimaryPlayer.HasPickupID(ETGMod.Databases.Items["Diamond Chamber"].PickupObjectId)))
                         {
-                            this.SummonedOnFloor += 1f;
+                            //this.SummonedOnFloor += 1f;
                             header = "YOU ARE FORGIVEN.";
                             text = "FOR NOW.";
                         }
                         else
                         {
+                            AkSoundEngine.PostEvent("Play_BOSS_lichB_intro_01", base.gameObject);
                             GameObject gameObject = new GameObject();
                             gameObject.transform.position = obj.transform.position;
                             BulletScriptSource source = gameObject.GetOrAddComponent<BulletScriptSource>();
@@ -323,33 +358,13 @@ namespace Planetside
                             var bulletScriptSelected = new CustomBulletScriptSelector(typeof(AngerGodsScript));
                             AIActor aIActor = EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5");
                             AIBulletBank bulletBank = aIActor.GetComponent<AIBulletBank>();
-                            bulletBank.CollidesWithEnemies = true;
+                            bulletBank.CollidesWithEnemies = false;
                             source.BulletManager = bulletBank;
                             source.BulletScript = bulletScriptSelected;
                             source.Initialize();//to fire the script once
                         }
                         this.SummonedOnFloor += 1f;
                         TellThePlayerTofuckRightOff.Notify(header, text);
-
-
-                        /*
-                        string guid;
-                        guid = "jammed_guardian";
-                        PlayerController owner = obj;
-                        AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(guid);
-                        IntVector2? intVector = new IntVector2?(obj.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
-                        AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Awaken, true);
-                        aiactor.CanTargetEnemies = false;
-                        aiactor.CanTargetPlayers = true;
-                        PhysicsEngine.Instance.RegisterOverlappingGhostCollisionExceptions(aiactor.specRigidbody, null, false);
-                        aiactor.IsHarmlessEnemy = false;
-                        aiactor.IgnoreForRoomClear = true;
-                        aiactor.HandleReinforcementFallIntoRoom(-1f);
-                        SpawnManager.SpawnVFX((PickupObjectDatabase.GetById(573) as ChestTeleporterItem).TeleportVFX, aiactor.sprite.WorldCenter.ToVector3ZisY(0f), Quaternion.identity).GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(aiactor.sprite.WorldCenter.ToVector3ZisY(0f), tk2dBaseSprite.Anchor.MiddleCenter);
-                        SpawnManager.SpawnVFX((PickupObjectDatabase.GetById(573) as ChestTeleporterItem).TeleportVFX, aiactor.sprite.WorldCenter.ToVector3ZisY(0f), Quaternion.identity).GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(aiactor.sprite.WorldCenter.ToVector3ZisY(0f), tk2dBaseSprite.Anchor.MiddleCenter);
-                        SpawnManager.SpawnVFX((PickupObjectDatabase.GetById(573) as ChestTeleporterItem).TeleportVFX, aiactor.sprite.WorldCenter.ToVector3ZisY(0f), Quaternion.identity).GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(aiactor.sprite.WorldCenter.ToVector3ZisY(0f), tk2dBaseSprite.Anchor.MiddleCenter);
-                        */
-                        AkSoundEngine.PostEvent("Play_BOSS_lichB_intro_01", base.gameObject);
                     }
                 }
             }
@@ -524,13 +539,28 @@ public class AngerGodsScript : Script
     protected override IEnumerator Top()
     {
         PlayerController player = (GameManager.Instance.PrimaryPlayer);
+        RoomHandler currentRoom = player.CurrentRoom;
+        AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_002");
+        this.Mines_Cave_In = assetBundle.LoadAsset<GameObject>("Mines_Cave_In");
+        GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(Mines_Cave_In, player.sprite.WorldCenter, Quaternion.identity);
+        HangingObjectController RockSlideController = gameObject.GetComponent<HangingObjectController>();
+        RockSlideController.triggerObjectPrefab = null;
+        GameObject[] additionalDestroyObjects = new GameObject[]
+        {
+                RockSlideController.additionalDestroyObjects[1]
+        };
+        RockSlideController.additionalDestroyObjects = additionalDestroyObjects;
+        UnityEngine.Object.Destroy(gameObject.transform.Find("Sign").gameObject);
+        RockSlideController.ConfigureOnPlacement(currentRoom);
+        yield return Wait(60);
         IntVector2? vector = player.CurrentRoom.GetRandomAvailableCell(new IntVector2?(IntVector2.One * 2), CellTypes.FLOOR | CellTypes.PIT, false, null);
-        Vector2 vector2 = vector.Value.ToVector2();
+        Vector2 vector2 = player.sprite.WorldCenter + new Vector2(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2));
         base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("4d164ba3f62648809a4a82c90fc22cae").bulletBank.GetBullet("big_one"));
         base.Fire(Offset.OverridePosition(vector2 + new Vector2(0f, 30f)), new Direction(-90f, DirectionType.Absolute, -1f), new Speed(30f, SpeedType.Absolute), new AngerGodsScript.BigBullet());
 
         yield break;
     }
+    private GameObject Mines_Cave_In;
     private class BigBullet : Bullet
     {
         public BigBullet() : base("big_one", false, false, false)

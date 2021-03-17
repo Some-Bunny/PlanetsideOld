@@ -307,20 +307,22 @@ namespace Planetside
 				//shootpoint.transform.parent = companion.transform;
 				//shootpoint.transform.position = new Vector2(1.5f, 0.25f);
 				GameObject m_CachedGunAttachPoint = companion.transform.Find("GunAttachPoint").gameObject;
-				//m_CachedGunAttachPoint.transform.localPosition = new Vector3(1.5f, 0.25f);
 				var yah = companion.transform.Find("GunAttachPoint").gameObject;
 				yah.transform.position = companion.aiActor.transform.position;
 				yah.transform.localPosition = new Vector2(0f, 0f);
 				EnemyBuilder.DuplicateAIShooterAndAIBulletBank(prefab, aIActor.aiShooter, aIActor.GetComponent<AIBulletBank>(), 38, yah.transform);
 				Game.Enemies.Add("psog:cel_bullet", companion.aiActor);
-
+				PlanetsideModule.Strings.Enemies.Set("#CEL", "Cel");
+				companion.aiActor.OverrideDisplayName = "#CEL";
+				companion.aiActor.ActorName = "#CEL";
+				companion.aiActor.name = "#CEL";
 
 			}
 		}
 
-		public class SkellScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SkellScript : Script
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				AkSoundEngine.PostEvent("Play_WPN_magnum_shot_01", this.BulletBank.aiActor.gameObject);
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)

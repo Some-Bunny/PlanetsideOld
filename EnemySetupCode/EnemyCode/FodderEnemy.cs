@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Gungeon;
 using ItemAPI;
 using UnityEngine;
-//using DirectionType = DirectionalAnimation.DirectionType;
 using AnimationType = ItemAPI.EnemyBuilder.AnimationType;
 using System.Collections;
 using Dungeonator;
@@ -33,7 +32,6 @@ namespace Planetside
 			bool flag2 = flag;
 			if (!flag2)
 			{
-				//float AttackAnimationThingAMaWhatIts = 0.5f;
 				prefab = EnemyBuilder.BuildPrefab("Fodder Enemy", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 800;
@@ -53,8 +51,6 @@ namespace Planetside
 				companion.aiActor.healthHaver.SetHealthMaximum(2f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
-
-
 				{
 					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
 					CollisionLayer = CollisionLayer.EnemyCollider,
@@ -274,9 +270,6 @@ namespace Planetside
 				}
 				};
 				*/
-				//BehaviorSpeculator load = EnemyDatabase.GetOrLoadByGuid("43426a2e39584871b287ac31df04b544").behaviorSpeculator;
-				//Tools.DebugInformation(load);
-
 				companion.healthHaver.spawnBulletScript = true;
 				companion.healthHaver.chanceToSpawnBulletScript = 1f;
 				companion.healthHaver.bulletScriptType = HealthHaver.BulletScriptType.OnPreDeath;
@@ -400,10 +393,8 @@ namespace Planetside
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").bulletBank.GetBullet("sweep"));
 
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
-				//base.aiActor.HasBeenEngaged = true;
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
-				{ //new CustomBulletScriptSelector(typeof(EatPants));		
-				  //AkSoundEngine.PostEvent("Play_BOSS_mineflayer_bellshot_01", base.aiActor.gameObject);
+				{ 
 				  AkSoundEngine.PostEvent("Play_WPN_Life_Orb_Fade_01", base.aiActor.gameObject);
 					AkSoundEngine.PostEvent("Play_BOSS_mineflayer_belldrop_01", null);
 
@@ -412,9 +403,9 @@ namespace Planetside
 
 		}
 
-		public class EatPants : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class EatPants : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top()
 			{
 
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)

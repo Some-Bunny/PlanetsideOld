@@ -33,7 +33,6 @@ namespace Planetside
 			bool flag2 = flag;
 			if (!flag2)
 			{
-				//float AttackAnimationThingAMaWhatIts = 0.5f;
 				prefab = EnemyBuilder.BuildPrefab("Glockulus", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 100;
@@ -55,8 +54,11 @@ namespace Planetside
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").ShadowObject; 
 				companion.aiActor.healthHaver.SetHealthMaximum(25f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
-				companion.aiActor.gameObject.AddComponent<AfterImageTrailController>();
-				//companion.aiActor.gameObject.AddComponent<AfterImageTrailController>();
+
+				companion.aiActor.gameObject.AddComponent<ImprovedAfterImage>().dashColor = Color.grey;
+				companion.aiActor.gameObject.AddComponent<ImprovedAfterImage>().spawnShadows = true;
+
+				companion.aiActor.gameObject.AddComponent<AfterImageTrailController>().spawnShadows = false;
 				companion.aiActor.gameObject.AddComponent<tk2dSpriteAttachPoint>();
 				companion.aiActor.gameObject.AddComponent<ObjectVisibilityManager>();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
@@ -365,7 +367,7 @@ namespace Planetside
 				companion.encounterTrackable.journalData.enemyPortraitSprite = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\Ammocom\\glockulussheet.png");
 				PlanetsideModule.Strings.Enemies.Set("#THE_GLOCKULUS", "Glockulus");
 				PlanetsideModule.Strings.Enemies.Set("#THE_GLOCKULUS_SHORTDESC", "Eye Spy");
-				PlanetsideModule.Strings.Enemies.Set("#THE_GLOCKULUS_LONGDESC", "A sentinel from beyond the Curtain, it watches over the Gungeon for any... suspicious activity.\n\nSome Gungeonologists speculate that Gluckuli are an off-breed of the Beholster, but no evidence has pointed towards that.");
+				PlanetsideModule.Strings.Enemies.Set("#THE_GLOCKULUS_LONGDESC", "A sentinel from beyond the Curtain, it watches over the Gungeon for any... suspicious activity.\n\nSome Gungeonologists speculate that Glockuli are an off-breed of the Beholster, but no evidence has pointed towards that.");
 				companion.encounterTrackable.journalData.PrimaryDisplayName = "#THE_GLOCKULUS";
 				companion.encounterTrackable.journalData.NotificationPanelDescription = "#THE_GLOCKULUS_SHORTDESC";
 				companion.encounterTrackable.journalData.AmmonomiconFullEntry = "#THE_GLOCKULUS_LONGDESC";
@@ -432,21 +434,19 @@ namespace Planetside
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").bulletBank.GetBullet("sweep"));
 
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
-				//base.aiActor.HasBeenEngaged = true;
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
-				{ //new CustomBulletScriptSelector(typeof(EatPants));		
+				{ 	
 				  AkSoundEngine.PostEvent("Play_ENM_Tarnisher_Bite_01", base.aiActor.gameObject);
-				  //AkSoundEngine.PostEvent("Play_WPN_Life_Orb_Fade_01", base.aiActor.gameObject);
-					//AkSoundEngine.PostEvent("Play_BOSS_mineflayer_belldrop_01", null);
+
 
 				};
 			}
 
 		}
 
-		public class NormalAttack : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class NormalAttack : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
@@ -466,15 +466,14 @@ namespace Planetside
 
 		public class SpitNormal : Bullet
 		{
-			// Token: 0x06000A99 RID: 2713 RVA: 0x000085A7 File Offset: 0x000067A7
+
 			public SpitNormal() : base("default", false, false, false)
 			{
-
 			}
 		}
-		public class DashAttack : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class DashAttack : Script 
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.bulletBank.GetBullet("default"));
 				base.PostWwiseEvent("Play_WPN_eyeballgun_shot_01", null);
@@ -484,7 +483,6 @@ namespace Planetside
 		}
 		public class Spit : Bullet
 		{
-			// Token: 0x06000A99 RID: 2713 RVA: 0x000085A7 File Offset: 0x000067A7
 			public Spit() : base("default", false, false, false)
 			{
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Gungeon;
 using ItemAPI;
 using UnityEngine;
-//using DirectionType = DirectionalAnimation.DirectionType;
 using AnimationType = ItemAPI.EnemyBuilder.AnimationType;
 using System.Collections;
 using Dungeonator;
@@ -20,7 +19,6 @@ namespace Planetside
 		private static tk2dSpriteCollectionData WailerCollection;
 		public static GameObject shootpointwail;
 		public static AIBeamShooter AIBeamShooter;
-		//public static SpeculativeRigidbody TargetRigidbody;
 
 		public static void Init()
 		{
@@ -569,7 +567,7 @@ namespace Planetside
 				companion.encounterTrackable.journalData.NotificationPanelDescription = "#THE_WAILER_SHORTDESC";
 				companion.encounterTrackable.journalData.AmmonomiconFullEntry = "#THE_WAILER_LONGDESC";
 				EnemyBuilder.AddEnemyToDatabase(companion.gameObject, "psog:wailer");
-				EnemyDatabase.GetEntry("psog:wailer").ForcedPositionInAmmonomicon = 11;
+				EnemyDatabase.GetEntry("psog:wailer").ForcedPositionInAmmonomicon = 9;
 				EnemyDatabase.GetEntry("psog:wailer").isInBossTab = false;
 				EnemyDatabase.GetEntry("psog:wailer").isNormalEnemy = true;
 			}

@@ -77,6 +77,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CustomItems\CustomItems\bin\Debug\UnityEngine.JSONSerializeModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Enter the Gungeon\EtG_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CustomItems\CustomItems\bin\Debug\UnityEngine.TextRenderingModule.dll</HintPath>
@@ -92,7 +95,12 @@
     <Compile Include="BehaviorStuff\I Need This.cs" />
     <Compile Include="BehaviorStuff\CustomSpinBulletsBehavior.cs" />
     <Compile Include="Code That IDK When I%27ll Use.cs" />
-    <Compile Include="Components\UnchangeableRangeThing.cs" />
+    <Compile Include="Components\GunPieces.cs" />
+    <Compile Include="Components\LoaderPylonSynergyFormeController.cs" />
+    <Compile Include="Components\LoaderPylonController.cs" />
+    <Compile Include="Components\BloodbathOnKill.cs" />
+    <Compile Include="Components\TinyPlanetMovementModule.cs" />
+    <Compile Include="Components\OscillatingBulletsMovementModule.cs" />
     <Compile Include="Debuff Stuff\BlueFireEffect.cs" />
     <Compile Include="Debuff Stuff\BrokenArmorEffect.cs" />
     <Compile Include="DungeonGenStuff\DungeonHandler.cs" />
@@ -143,9 +151,15 @@
     <Compile Include="EnemySetupCode\EnemyCode\WallDweller.cs" />
     <Compile Include="EnemySetupCode\EnemyCode\JammedGuardian.cs" />
     <Compile Include="EnemySetupCode\EnemyGUIDs.cs" />
+    <Compile Include="Guns\ExecutionersCrossbow.cs" />
+    <Compile Include="Guns\ExecutionersCrossbowSpecial.cs" />
+    <Compile Include="Guns\RebarPuncher.cs" />
     <Compile Include="Guns\ImmateriaProjectile.cs" />
     <Compile Include="Guns\Immateria.cs" />
     <Compile Include="Guns\HardlightNailgun.cs" />
+    <Compile Include="Guns\OscillatoSynergyForme.cs" />
+    <Compile Include="Guns\Oscillato.cs" />
+    <Compile Include="Guns\LaserChainsaw.cs" />
     <Compile Include="Guns\ShockChain.cs" />
     <Compile Include="Guns\PolaritySynergyForme.cs" />
     <Compile Include="Guns\GunToEndEverything.cs" />
@@ -153,6 +167,7 @@
     <Compile Include="Guns\StSWpNTsT.cs" />
     <Compile Include="Guns\Revenant.cs" />
     <Compile Include="Guns\SoulLantern.cs" />
+    <Compile Include="Guns\UglyDuckling.cs" />
     <Compile Include="Guns\VeteranerShotgun.cs" />
     <Compile Include="Guns\VeteranShotgun.cs" />
     <Compile Include="Guns\Resault.cs" />
@@ -179,11 +194,19 @@
     <Compile Include="Guns\StatiBlast.cs" />
     <Compile Include="Guns\BurningSun.cs" />
     <Compile Include="Item and Gun Parts\ShadowBulletsButGunfire.cs" />
-    <Compile Include="Item and Gun Parts\SynergiesForGuns.cs" />
+    <Compile Include="Item and Gun Parts\InitSynergies.cs" />
+    <Compile Include="Item and Gun Parts\GTEEInitialiser.cs" />
     <Compile Include="Item and Gun Parts\Synergy Forms and Other Gun Synergy Stuff.cs" />
+    <Compile Include="Items\DeathWarrant.cs" />
+    <Compile Include="Items\DeadKingsDesparation.cs" />
+    <Compile Include="Items\TinyPlanetBullets.cs" />
+    <Compile Include="Items\PortablePylon.cs" />
+    <Compile Include="Items\ForgiveMePlease.cs" />
+    <Compile Include="Items\UnstableTeslaCoil.cs" />
     <Compile Include="Items\GunsnakeOil.cs" />
     <Compile Include="Items\DiasukesPolymorph.cs" />
     <Compile Include="Items\OffWorldMedicine.cs" />
+    <Compile Include="Items\TableTechDevour.cs" />
     <Compile Include="Items\TableTechNull.cs" />
     <Compile Include="Items\Shellheart.cs" />
     <Compile Include="Items\SoulboundSkull.cs" />
@@ -193,6 +216,7 @@
     <Compile Include="Items\DiamondChamber.cs" />
     <Compile Include="Items\BrokenChamber.cs" />
     <Compile Include="Items\BabyGoodCandleKin.cs" />
+    <Compile Include="Items\OscillatingBullets.cs" />
     <Compile Include="Items\Unstabullets.cs" />
     <Compile Include="Items\LongDistanceCast.cs" />
     <Compile Include="Items\ElectrostaticGuonStone.cs" />
@@ -1156,6 +1180,91 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\gunsnakeoil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\tabletechdevour.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\plaetunstableteslacoil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\gundeathwarrant.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\deadkingsdesparation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\VFX\FalseStrengths\falsestrengthfire.png" />
+    <EmbeddedResource Include="Resources\VFX\FalseStrengths\falsestrengthpoison.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\oscillatingbullets.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LoaderPylon\Idle\laoderpylon_idle_001.png" />
+    <EmbeddedResource Include="Resources\LoaderPylon\Idle\laoderpylon_idle_002.png" />
+    <EmbeddedResource Include="Resources\LoaderPylon\Idle\laoderpylon_idle_003.png" />
+    <EmbeddedResource Include="Resources\LoaderPylon\Idle\laoderpylon_idle_004.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LoaderPylon\Appear\laoderpylon_spawn_001.png" />
+    <EmbeddedResource Include="Resources\LoaderPylon\Disappear\laoderpylon_die_001.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\portablepylon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LoaderPylon\SynergyForme\laoderpylonsynergy_idle_001.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\VFX\Rebar\plusnails.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx_001.png" />
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx_002.png" />
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx_003.png" />
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx_004.png" />
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx_005.png" />
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx_006.png" />
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx_007.png" />
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx_008.png" />
+    <EmbeddedResource Include="Resources\VFX\DeathMark\markedfordeathvfx_009.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LoaderPylon\SynergyForme\laoderpylonsynergy_idle_002.png" />
+    <EmbeddedResource Include="Resources\LoaderPylon\SynergyForme\laoderpylonsynergy_idle_003.png" />
+    <EmbeddedResource Include="Resources\LoaderPylon\SynergyForme\laoderpylonsynergy_idle_004.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ForgiveMePleaseDolls\fmg_testsprite_001.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ForgiveMePleaseDolls\fmg_bullet_001.png" />
+    <EmbeddedResource Include="Resources\ForgiveMePleaseDolls\fmg_convict_001.png" />
+    <EmbeddedResource Include="Resources\ForgiveMePleaseDolls\fmg_gunslinger_001.png" />
+    <EmbeddedResource Include="Resources\ForgiveMePleaseDolls\fmg_hunter_001.png" />
+    <EmbeddedResource Include="Resources\ForgiveMePleaseDolls\fmg_marine_001.png" />
+    <EmbeddedResource Include="Resources\ForgiveMePleaseDolls\fmg_pilot_001.png" />
+    <EmbeddedResource Include="Resources\ForgiveMePleaseDolls\fmg_robot_001.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\forgivemeplease.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\VFX\LockedIn\lockedin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixfalling_001.png" />
+    <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixland_001.png" />
+    <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixland_002.png" />
+    <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixland_003.png" />
+    <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixland_004.png" />
+    <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixland_005.png" />
+    <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixland_006.png" />
+    <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixleap_001.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

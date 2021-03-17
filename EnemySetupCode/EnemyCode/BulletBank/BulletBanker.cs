@@ -960,10 +960,10 @@ namespace Planetside
 				}
 				float Aim = base.AimDirection;
 				float radius = 0.075f;
-				float delta = 20f;
+				float delta = 15f;
 				float startDirection = AimDirection;
 				base.PostWwiseEvent("Play_ENM_blobulord_bubble_01", null);
-				for (int j = 0; j < 18; j++)
+				for (int j = 0; j < 24; j++)
 				{
 					base.Fire(new Direction(-90f, DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BloopScript.OopsANull("ring", this, startDirection + (float)j * delta, radius));
 				}
@@ -972,7 +972,7 @@ namespace Planetside
 				for (int j = 0; j < 11; j++)
 				{
 					base.Fire(new Direction(-90f, DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BloopScript.OopsANull("ring", this, startDirection + (float)j * delta, radius));
-					base.Fire(new Direction(-90f, DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BloopScript.OopsANull("ring", this, startDirection + (float)j * delta, radius));
+					base.Fire(new Direction(-90f, DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BloopScript.OopsANull("ring", this, startDirection + (float)j * delta+180, radius));
 					radius -= 0.01f;
 				}
 				yield break;
@@ -1053,7 +1053,7 @@ namespace Planetside
 				};
 				base.healthHaver.healthHaver.OnDeath += (obj) =>
 				{
-					float itemsToSpawn = UnityEngine.Random.Range(3, 6);
+					float itemsToSpawn = UnityEngine.Random.Range(1, 4);
 					float spewItemDir = 360 / itemsToSpawn;
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BULLETBANK_DEFEATED, true);//Done
 					for (int i = 0; i < itemsToSpawn; i++)

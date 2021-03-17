@@ -10,20 +10,11 @@ namespace Planetside
     {
 
         public bool m_finished;
-
-        // private bool m_initialized;        
         public AIActor m_AIActor;
-
-        //public override void PlayerWalkedIn(PlayerController player, List<tk2dSpriteAnimator> animators)
-        //{
-        //    GameManager.Instance.StartCoroutine(PlaySound());
-        //}
-
         public override void PlayerWalkedIn(PlayerController player, List<tk2dSpriteAnimator> animators)
         {
             GameManager.Instance.StartCoroutine(PlaySound());
         }
-
         private IEnumerator PlaySound()
         {   
             yield return StartCoroutine(WaitForSecondsInvariant(3.6f));

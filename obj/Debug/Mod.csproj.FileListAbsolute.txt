@@ -114,3 +114,8 @@ C:\Users\Maxym\source\repos\Planetside\obj\Debug\Mod.csproj.CopyComplete
 C:\Users\Maxym\source\repos\Planetside\obj\Debug\Planetside.dll
 C:\Users\Maxym\source\repos\Planetside\obj\Debug\Planetside.pdb
 C:\Users\Maxym\source\repos\Planetside\bin\Debug\Ionic.Zip.dll
+C:\Users\Maxym\source\repos\Planetside\bin\Debug\UnityEngine.ParticleSystemModule.dll
+C:\Users\Maxym\source\repos\Planetside\bin\Debug\UnityEngine.SharedInternalsModule.dll
+C:\Users\Maxym\source\repos\Planetside\bin\Debug\UnityEngine.ParticleSystemModule.xml
+C:\Users\Maxym\source\repos\Planetside\bin\Debug\UnityEngine.SharedInternalsModule.xml
+C:\Users\Maxym\source\repos\Planetside\obj\Debug\Mod.csprojAssemblyReference.cache

@@ -19,10 +19,8 @@ using UnityEngine.Serialization;
 
 namespace Planetside
 {
-	// Token: 0x0200002D RID: 45
 	public class Polarity : GunBehaviour
 	{
-		// Token: 0x0600013F RID: 319 RVA: 0x0000D468 File Offset: 0x0000B668
 		public static void Add()
 		{
 			Gun gun = ETGMod.Databases.Items.NewGun("Polarity", "polarity");

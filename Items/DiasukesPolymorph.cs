@@ -27,7 +27,7 @@ namespace Planetside
             DiasukesPolymorphine lockpicker = obj.AddComponent<DiasukesPolymorphine>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
             string shortDesc = "Chaos! Chaos!";
-            string longDesc = "An incredibly volatile potion capable of transmogrifying enemies on a whim, with incredibly unpredictable results. A note reads on the back: Getting any on your skin will result in near guaranteed death.";
+            string longDesc = "An incredibly volatile potion capable of transmogrifying enemies on a whim, with incredibly unpredictable results. A note reads on the back: 'Getting any on your skin will result in near guaranteed death.'";
             lockpicker.SetupItem(shortDesc, longDesc, "psog");
             lockpicker.SetCooldownType(ItemBuilder.CooldownType.Damage, 200f);
             lockpicker.consumable = false;
@@ -91,7 +91,6 @@ namespace Planetside
 						foreach (AIActor aiactor in DiasukesPolymorphine.enemiesToReRoll)
 						{
 							if (aiactor != randomActiveEnemy && aiactor.encounterTrackable.EncounterGuid != randomActiveEnemy.encounterTrackable.EncounterGuid && !aiactor.healthHaver.IsBoss)
-
                             {
 
 								bool flag3 = aiactor.gameObject.GetComponent<ExplodeOnDeath>();
@@ -108,10 +107,18 @@ namespace Planetside
 									aiactor.Transmogrify(randomActiveEnemy, (GameObject)ResourceCache.Acquire("Global VFX/VFX_Item_Spawn_Poof"));
 								}
 							}
+							else if (aiactor != randomActiveEnemy && aiactor.encounterTrackable.EncounterGuid == randomActiveEnemy.encounterTrackable.EncounterGuid && !aiactor.healthHaver.IsBoss)
+							{
+								LootEngine.DoDefaultItemPoof(aiactor.sprite.WorldCenter, false, true);
+
+							}
+
 						}
 						foreach (AIActor enemy in DiasukesPolymorphine.enemiesToPostMogModify)
 						{
 							this.HandlePostTransmogLootEnemies(enemy);
+							enemy.behaviorSpeculator.Stun(3, true);
+
 						}
 					}
 				}
@@ -142,10 +149,12 @@ namespace Planetside
 		public override bool CanBeUsed(PlayerController user)
 		{
 			List<AIActor> activeEnemies = user.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
-			return activeEnemies != null;
+			float count = activeEnemies.Count;
+			return count >= 1;
 		}
 		public List<string> enemyBlacklist = new List<string>
 		{
+			"39de9bd6a863451a97906d949c103538",
 			"fa6a7ac20a0e4083a4c2ee0d86f8bbf7",
 			"47bdfec22e8e4568a619130a267eab5b",
 			"ea40fcc863d34b0088f490f4e57f8913",

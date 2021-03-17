@@ -17,6 +17,7 @@ namespace Planetside
 {
 	public class GameActorBlueFireEffect : GameActorHealthEffect
 	{
+		//DOESNT WORK, DONT EVEN TRY
 		public static void Init()
 		{
 			GameActorBlueFireEffect.BlueFlameVFX = SpriteBuilder.SpriteFromResource(GameActorBlueFireEffect.BlueFirevfx, null, false);
