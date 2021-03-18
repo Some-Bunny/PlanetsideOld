@@ -273,7 +273,7 @@ namespace Planetside
 
 				if (LoopingOn == true)
                 {
-					Projectile.BaseEnemyBulletSpeedMultiplier = 1 + ((Loop / 32.5f));
+					Projectile.BaseEnemyBulletSpeedMultiplier = 1 + ((Loop / 30f));
 				}
 				else
                 {
@@ -281,15 +281,15 @@ namespace Planetside
 				}
 				if (Loop == 50 || Loop >= 50)
                 {
-					target.MovementSpeed *= 3.5f + ((Loop / 40f)+InitialScale) - DownScaler;
+					target.MovementSpeed *= 3f + ((Loop / 50f)+InitialScale) - DownScaler;
 				}
 				else
                 {
-					target.MovementSpeed *= 1 + ((Loop / 20f)+InitialScale)-DownScaler;
+					target.MovementSpeed *= 1 + ((Loop / 25f)+InitialScale)-DownScaler;
 				}
-				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/7.5f)+InitialScale)- DownScaler);
-				target.knockbackDoer.weight *= 1 + ((Loop / 1.5f)+InitialScale)- -DownScaler;
-				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/1.5f)) + InitialScale)-DownScaler;
+				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/8.75f)+InitialScale)- DownScaler);
+				target.knockbackDoer.weight *= 1 + ((Loop / 1.66f)+InitialScale)- -DownScaler;
+				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/1.75f)) + InitialScale)-DownScaler;
 				//target.behaviorSpeculator.CooldownScale *= 0;
 				float random = UnityEngine.Random.Range(0.0f, 1.0f);
 				if (random <= Loop/25)
@@ -311,7 +311,7 @@ namespace Planetside
 					float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 					if (Loop == 10 || Loop >= 10)
                     {
-						int num3 = UnityEngine.Random.Range(0, 20);
+						int num3 = UnityEngine.Random.Range(0, 15);
 						bool ItsATrap = num3 == 1;
 						if (ItsATrap)
 						{
@@ -330,7 +330,7 @@ namespace Planetside
 					}
 					else
                     {
-						int num3 = (int)UnityEngine.Random.Range(0, 30 - (Loop));
+						int num3 = (int)UnityEngine.Random.Range(0, 25 - (Loop));
 						bool ItsATrap = num3 == 1;
 						if (ItsATrap)
 						{
@@ -360,7 +360,7 @@ namespace Planetside
             {
 				float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 				spawnedGun.gameObject.SetActive(true);
-				if (GameStatsManager.Instance.GetFlag(GungeonFlags.ITEMSPECIFIC_HAS_BEEN_PEDESTAL_MIMICKED) && GameManager.Instance.CurrentLevelOverrideState == GameManager.LevelOverrideState.NONE && UnityEngine.Random.value < 0.001f+(Loop/2500))
+				if (GameStatsManager.Instance.GetFlag(GungeonFlags.ITEMSPECIFIC_HAS_BEEN_PEDESTAL_MIMICKED) && GameManager.Instance.CurrentLevelOverrideState == GameManager.LevelOverrideState.NONE && UnityEngine.Random.value < 0.001f+(Loop/750))
 				{
 					spawnedGun.gameObject.AddComponent<MimicGunMimicModifier>();
 				}
@@ -387,7 +387,7 @@ namespace Planetside
 					if (Loop == 75 | Loop >= 75)
 					{
 						int FairyScaler;
-						FairyScaler = UnityEngine.Random.Range(0, 200);
+						FairyScaler = UnityEngine.Random.Range(0, 150);
 						if (FairyScaler == 1)
 						{
 							PotFairyEngageDoer.InstantSpawn = true;
@@ -399,7 +399,7 @@ namespace Planetside
 					else
 					{
 						int FairyScaler;
-						FairyScaler = (int)UnityEngine.Random.Range(0, 250 - (Loop / 5));
+						FairyScaler = (int)UnityEngine.Random.Range(0, 200 - (Loop / 5));
 						if (FairyScaler == 1)
 						{
 							PotFairyEngageDoer.InstantSpawn = true;
