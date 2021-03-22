@@ -99,6 +99,7 @@ namespace Planetside
 			Gun gun4 = PickupObjectDatabase.GetById(13) as Gun;
 			gun.muzzleFlashEffects = gun4.muzzleFlashEffects;
 			gun.quality = PickupObject.ItemQuality.C;
+			/*
 			List<string> mandatoryConsoleIDs1 = new List<string>
 			{
 				"psog:shock-chain"
@@ -111,6 +112,7 @@ namespace Planetside
 				"relodestone"
 			};
 			CustomSynergies.Add("POWER SURGE", mandatoryConsoleIDs1, optionalConsoleIDs, true);
+			*/
 			List<string> AAA = new List<string>
 			{
 				"psog:shock-chain",

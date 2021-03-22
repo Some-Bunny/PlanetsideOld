@@ -33,17 +33,20 @@ namespace Planetside
         }
         private void OnEnemyDamaged(float damage, bool fatal, HealthHaver enemy)
         {
-            if (enemy.specRigidbody != null)
+            if (base.Owner != null)
             {
-                bool flag = enemy.aiActor && fatal;
-                if (flag)
+                if (enemy.specRigidbody != null)
                 {
-                    this.Spited(enemy.sprite.WorldCenter);
+                    bool flag = enemy.aiActor && fatal;
+                    if (flag)
+                    {
+                        this.Spited(enemy.sprite.WorldCenter);
 
-                }
-                else if (enemy.aiActor && UnityEngine.Random.value <= 0.05f)
-                {
-                    this.Spited(base.Owner.sprite.WorldCenter);
+                    }
+                    else if (enemy.aiActor && UnityEngine.Random.value <= 0.05f)
+                    {
+                        this.Spited(base.Owner.sprite.WorldCenter);
+                    }
                 }
             }
         }
@@ -101,34 +104,39 @@ namespace Planetside
                     myRigidbody.projectile.baseData.damage *= 2f;
                     GameManager.Instance.StartCoroutine(this.ChangeProjectileDamage(myRigidbody.projectile, damage));
                 }
-                bool ee = base.Owner.activeItems == null;
-                if (!ee)
+                if (base.Owner != null)
                 {
-                    foreach (PlayerItem playerItem in base.Owner.activeItems)
+                    bool ee = base.Owner.activeItems == null;
+                    if (!ee)
                     {
-                        bool aa = playerItem == null;
-                        if (!aa)
+
+                        foreach (PlayerItem playerItem in base.Owner.activeItems)
                         {
-                            float timeCooldown = playerItem.timeCooldown;
-                            float damageCooldown = playerItem.damageCooldown;
-                            try
+                            bool aa = playerItem == null;
+                            if (!aa)
                             {
-                                float noom = (float)this.remainingTimeCooldown.GetValue(playerItem);
-                                float eee = (float)this.remainingDamageCooldown.GetValue(playerItem);
-                                bool flag3 = eee <= 0f || eee <= 0f;
-                                if (!flag3)
+                                float timeCooldown = playerItem.timeCooldown;
+                                float damageCooldown = playerItem.damageCooldown;
+                                try
                                 {
-                                    this.remainingTimeCooldown.SetValue(playerItem, noom - timeCooldown * 0.015f);
-                                    this.remainingDamageCooldown.SetValue(playerItem, eee - damageCooldown * 0.015f);
+                                    float noom = (float)this.remainingTimeCooldown.GetValue(playerItem);
+                                    float eee = (float)this.remainingDamageCooldown.GetValue(playerItem);
+                                    bool flag3 = eee <= 0f || eee <= 0f;
+                                    if (!flag3)
+                                    {
+                                        this.remainingTimeCooldown.SetValue(playerItem, noom - timeCooldown * 0.015f);
+                                        this.remainingDamageCooldown.SetValue(playerItem, eee - damageCooldown * 0.015f);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    ETGModConsole.Log(ex.Message + ": " + ex.StackTrace, false);
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                ETGModConsole.Log(ex.Message + ": " + ex.StackTrace, false);
-                            }
+
                         }
                     }
-                }
+                }          
             }
         }
         private FieldInfo remainingDamageCooldown = typeof(PlayerItem).GetField("remainingDamageCooldown", BindingFlags.Instance | BindingFlags.NonPublic);

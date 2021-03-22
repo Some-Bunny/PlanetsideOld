@@ -110,10 +110,20 @@ namespace Planetside
 				PlanetsideModule.Log(OneToPrimeIt, TEXT_COLOR_GTEE);
 				PlanetsideModule.Log(OneToShootIt, TEXT_COLOR_GTEE);
 			});
+			HOneToHoldIt = OneToHoldIt;
+			HOneToFireIt = OneToFireIt;
+			HOneToPrimeIt = OneToPrimeIt;
+
 
 		}
 		public static string GunIDForEOE;
-	
+
+		public static string HOneToHoldIt;
+		public static string HOneToFireIt;
+		public static string HOneToPrimeIt;
+
+
+
 		public static readonly string TEXT_COLOR_GTEE = "#FFe400";
 	}
 }

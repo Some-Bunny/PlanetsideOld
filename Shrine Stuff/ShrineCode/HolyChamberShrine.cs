@@ -26,7 +26,7 @@ namespace Planetside
 
 				name = "Holy Chamber Shrine",
 				modID = "psog",
-				text = "The Shrine of the Holy Chamber. It's missing something...",
+				text = "The Shrine of the Holy Chamber. It's so quiet here it very feels wrong to make any noise. Seems like it's missing something...",
 				spritePath = "Planetside/Resources/Shrines/HolyChamberShrine.png",
 				room = RoomFactory.BuildFromResource("Planetside/ShrineRooms/HolyChamberRoom.room").room,
 				RoomWeight = 1f,
@@ -74,7 +74,7 @@ namespace Planetside
 			};
 			StatModifier item2 = new StatModifier
 			{
-				statToBoost = PlayerStats.StatType.Curse,
+				statToBoost = PlayerStats.StatType.AmmoCapacityMultiplier,
 				amount = 0.8f,
 				modifyType = StatModifier.ModifyMethod.MULTIPLICATIVE
 			};
@@ -156,8 +156,6 @@ namespace Planetside
 			}
 			shrine.GetComponent<CustomShrineController>().numUses++;
 			shrine.GetComponent<CustomShrineController>().GetRidOfMinimapIcon();
-
-
 			AkSoundEngine.PostEvent("Play_OBJ_shrine_accept_01", shrine);
 		}
 
@@ -265,7 +263,6 @@ namespace Planetside
 					}
 				}
 
-				// Token: 0x0600065B RID: 1627 RVA: 0x0003F9E8 File Offset: 0x0003DBE8
 				private void HandleChests()
 				{
 					foreach (Chest chest in this.encounteredChests)

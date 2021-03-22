@@ -176,9 +176,10 @@ namespace Planetside
 			bool flag3 = flag;
 			if (flag3)
 			{
+				float speed = projectile.baseData.speed / 15;
 				for (int i = 0; i < 15; i++)
 				{
-					projectile.baseData.speed -= 1f;
+					projectile.baseData.speed -= speed;
 					projectile.UpdateSpeed();
 					yield return new WaitForSeconds(0.05f);
 				}

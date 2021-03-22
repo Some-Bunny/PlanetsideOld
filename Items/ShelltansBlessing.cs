@@ -53,30 +53,34 @@ namespace Planetside
         private void OnEnemyDamaged(float damage, bool fatal, HealthHaver enemy)
         {
             PlayerController player = base.Owner;
-            bool deathed = fatal;
-            if (deathed)
+            if (base.Owner != null)
             {
-                this.random = UnityEngine.Random.Range(0.0f, 1.0f);
-                if (random <= 0.3f)
+                bool deathed = fatal;
+                if (deathed)
                 {
-                    bool flagA = player.PlayerHasActiveSynergy("Invigorated");
-                    if (flagA)
+                    this.random = UnityEngine.Random.Range(0.0f, 1.0f);
+                    if (random <= 0.3f)
                     {
-                        for (int i = 0; i < player.inventory.AllGuns.Count; i++)
+                        bool flagA = player.PlayerHasActiveSynergy("Invigorated");
+                        if (flagA)
                         {
-                            if (player.inventory.AllGuns[i] && player.CurrentGun != player.inventory.AllGuns[i])
+                            for (int i = 0; i < player.inventory.AllGuns.Count; i++)
                             {
-                                player.inventory.AllGuns[i].GainAmmo(Mathf.FloorToInt((float)player.inventory.AllGuns[i].AdjustedMaxAmmo * 0.01f));
+                                if (player.inventory.AllGuns[i] && player.CurrentGun != player.inventory.AllGuns[i])
+                                {
+                                    player.inventory.AllGuns[i].GainAmmo(Mathf.FloorToInt((float)player.inventory.AllGuns[i].AdjustedMaxAmmo * 0.01f));
+                                }
                             }
                         }
+                        else
+                        {
+                            player.inventory.CurrentGun.GainAmmo(Mathf.FloorToInt((float)player.inventory.CurrentGun.AdjustedMaxAmmo * 0.02f));
+                        }
+                        player.CurrentGun.ForceImmediateReload(false);
                     }
-                    else
-                    {
-                        player.inventory.CurrentGun.GainAmmo(Mathf.FloorToInt((float)player.inventory.CurrentGun.AdjustedMaxAmmo * 0.02f));
-                    }
-                    player.CurrentGun.ForceImmediateReload(false);
                 }
             }
+            
 		}
 
 		public override DebrisObject Drop(PlayerController player)

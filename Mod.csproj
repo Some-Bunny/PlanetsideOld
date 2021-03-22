@@ -187,10 +187,11 @@
     <Compile Include="Item and Gun Parts\AdvancedSynergyFormProcessor.cs" />
     <Compile Include="Item and Gun Parts\CustomLightningVFXThing.cs" />
     <Compile Include="Item and Gun Parts\MultiActiveReload.cs" />
+    <Compile Include="Item and Gun Parts\SynergyOrbitingGunProcessor.cs" />
     <Compile Include="Item and Gun Parts\OrbitingGunAdder.cs" />
     <Compile Include="EnemySetupCode\OverrideBehavior.cs" />
     <Compile Include="Components\AoEDamageComponent.cs" />
-    <Compile Include="Item and Gun Parts\OrbitingGunProcessor.cs" />
+    <Compile Include="Item and Gun Parts\NonSynergyOrbitingGunProcessor.cs" />
     <Compile Include="Guns\StatiBlast.cs" />
     <Compile Include="Guns\BurningSun.cs" />
     <Compile Include="Item and Gun Parts\ShadowBulletsButGunfire.cs" />
@@ -1265,6 +1266,15 @@
     <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixland_005.png" />
     <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixland_006.png" />
     <EmbeddedResource Include="Resources\VFX\MithrixCalldown\mithrixleap_001.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Shrines\EOEShrine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ShrineRooms\EOEShrineRoom.room" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\brokenchamberfixedtier2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -19,7 +19,7 @@ namespace Planetside
 			string shortDesc = "Destruction Therapy";
 			string longDesc = "Decorative breakables have a chance to drop a casing.\n\nOriginally a trinket carried around by the Lost Adventurer, he lost it while traversing the halls of the Gungeon.";
 			ItemBuilder.SetupItem(warVase, shortDesc, longDesc, "psog");
-			warVase.quality = PickupObject.ItemQuality.C;
+			warVase.quality = PickupObject.ItemQuality.D;
 			List<string> mandatoryConsoleIDs = new List<string>
 			{
 				"psog:gilded_pot",

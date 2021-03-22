@@ -44,7 +44,7 @@ namespace Planetside
             testActive.SetupItem(shortDesc, longDesc, "psog");
             testActive.SetCooldownType(ItemBuilder.CooldownType.Damage, 666f);
             testActive.consumable = false;
-            testActive.quality = PickupObject.ItemQuality.C;
+            testActive.quality = PickupObject.ItemQuality.B;
 
         }
         public static void BuildPrefab()
@@ -232,13 +232,15 @@ namespace Planetside
             aiactor.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.BulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Trap));
             for (int i = 0; i < 8; i++)
             {
-
-                Action<float, bool, HealthHaver> aaa = player.OnAnyEnemyReceivedDamage;
-                for (int e = 0; e < 4; e++)
+                if (player != null)
                 {
-                    aaa.Invoke(1f, false, aiactor.healthHaver);
+                    Action<float, bool, HealthHaver> aaa = player.OnAnyEnemyReceivedDamage;
+                    for (int e = 0; e < 4; e++)
+                    {
+                        aaa.Invoke(1f, false, aiactor.healthHaver);
+                    }
+                    aaa.Invoke(10f, true, aiactor.healthHaver);
                 }
-                aaa.Invoke(10f, true, aiactor.healthHaver);
                 LootEngine.DoDefaultPurplePoof(ahfuck.sprite.WorldCenter, false);
                 AkSoundEngine.PostEvent("Play_PET_junk_splat_01", base.gameObject);
                 yield return new WaitForSeconds(1f);

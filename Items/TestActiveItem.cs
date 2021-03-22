@@ -57,7 +57,14 @@ namespace Planetside
 
         protected override void DoEffect(PlayerController user)
         {
+
+            for (int i = 0; i < Minimap.Instance.transform.childCount; i++)
+            {
+                ETGModConsole.Log(Minimap.Instance.transform.GetChild(i).gameObject.name);
+            }
+
             //this.objectToSpawn = EnemyDatabase.GetOrLoadByGuid(LoaderPylonController.guid).gameObject;
+            /*
             GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(LoaderPylonController.Turretprefab, user.specRigidbody.UnitCenter, Quaternion.identity);
             this.spawnedPlayerObject = gameObject;
             tk2dBaseSprite component2 = gameObject.GetComponent<tk2dBaseSprite>();
@@ -79,7 +86,7 @@ namespace Planetside
             {
                 yah.maxDuration = 120f;
             }
-
+            */
             /*
             Chest rainbow_Chest = GameManager.Instance.RewardManager.S_Chest;
             Chest chest2 = Chest.Spawn(rainbow_Chest, user.CurrentRoom.GetRandomVisibleClearSpot(1, 1));

@@ -68,7 +68,6 @@ namespace Planetside
             GunOrbitShrine.Add();
             NullShrine.Add();
             HolyChamberShrine.Add();
-            BrokenChamberShrine.Add();
 
             Unstabullets.Init();
             HullBreakerBullets.Init();
@@ -192,10 +191,12 @@ namespace Planetside
             CelBullet.Init();
 
             InitialiseSynergies.DoInitialisation();
+            SynergyFormInitialiser.AddSynergyForms();
             InitialiseGTEE.DoInitialisation();
             HoveringGunsAdder.AddHovers();
 
-            SynergyFormInitialiser.AddSynergyForms();
+            BrokenChamberShrine.Add();
+
             Log($"{MOD_NAME} v{VERSION} started successfully.", TEXT_COLOR);
             List<string> RandomFunnys = new List<string>
             {
@@ -267,6 +268,7 @@ namespace Planetside
             string g = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND) ? " Done!\n" : " -Kill A Boss After Dealing 500 Damage Or More At Once.\n";
             string color1 = "9006FF";
             OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g, color1);
+            OtherTools.Init();
         }
 
         public static void Log(string text, string color="#FFFFFF")

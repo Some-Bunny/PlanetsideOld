@@ -5,6 +5,11 @@ using System.Text;
 
 /*
  * 
+ * 
+ * 
+ * GameObject gameObject = (GameObject)ResourceCache.Acquire("Global VFX/VFX_Teleport_Beam"); there's only one really irc
+
+ * 
  *Reverse Distortion Wave 
  *
 private IEnumerator DoDistortionWaveLocal(Vector2 center, float distortionIntensity, float distortionRadius, float maxRadius, float duration)

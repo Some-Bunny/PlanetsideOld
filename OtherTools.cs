@@ -32,6 +32,15 @@ namespace Planetside
         private static string defaultLog = Path.Combine(ETGMod.ResourcesDirectory, "PSOG.txt");
         public static string modID = "PSOG";
 
+        public static void Init()
+        {
+            if (File.Exists(defaultLog)) File.Delete(defaultLog);
+        }
+        public static bool OwnerHasSynergy(this Gun gun, string synergyName)
+        {
+            return gun.CurrentOwner is PlayerController && (gun.CurrentOwner as PlayerController).PlayerHasActiveSynergy(synergyName);
+        }
+
         public static void PrintNoID<T>(T obj, string color = "FFFFFF", bool force = false)
         {
             if (verbose || force)

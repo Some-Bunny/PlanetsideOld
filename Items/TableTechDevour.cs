@@ -62,7 +62,7 @@ namespace Planetside
             {
                 foreach (AIActor aiactor in activeEnemies)
                 {
-                    bool ae = Vector2.Distance(aiactor.CenterPosition, centerPosition) < 6 && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && base.Owner != null;
+                    bool ae = Vector2.Distance(aiactor.CenterPosition, centerPosition) < 6 && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && base.Owner != null && !aiactor.healthHaver.IsBoss;
                     if (ae)
                     {
                         GameManager.Instance.Dungeon.StartCoroutine(this.HandleEnemySuck(aiactor, tabler));
@@ -79,9 +79,11 @@ namespace Planetside
                     RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
                     AIActor randomActiveEnemy;
                     randomActiveEnemy = base.Owner.CurrentRoom.GetRandomActiveEnemy(true);
-                    GameManager.Instance.Dungeon.StartCoroutine(this.HandleEnemySuck(randomActiveEnemy, tabler));
-                    randomActiveEnemy.EraseFromExistence(true);
-
+                    if (!randomActiveEnemy.healthHaver.IsBoss)
+                    {
+                        GameManager.Instance.Dungeon.StartCoroutine(this.HandleEnemySuck(randomActiveEnemy, tabler));
+                        randomActiveEnemy.EraseFromExistence(true);
+                    }
                 }
             }
         }

@@ -86,7 +86,7 @@ namespace GungeonAPI
                     //success = true;
                     break;
                 case RoomCategory.BOSS:
-                    // TODO
+                    // get trolled lol 
                     break;
                 default:
                     foreach (var p in room.prerequisites)

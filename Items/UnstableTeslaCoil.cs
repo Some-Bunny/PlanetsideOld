@@ -20,7 +20,7 @@ namespace Planetside
 			GameObject gameObject = new GameObject(name);
 			UnstableTeslaCoil warVase = gameObject.AddComponent<UnstableTeslaCoil>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
-			string shortDesc = "Hari-Raising Experience";
+			string shortDesc = "Hair-Raising Experience";
 			string longDesc = "A very volatile tesla-pack that's been hidden away in a chest to prevent harm. The arcs connect to nearby things and can erupt powerfully enough to confuse enemies.";
 			ItemBuilder.SetupItem(warVase, shortDesc, longDesc, "psog");
 			warVase.quality = PickupObject.ItemQuality.B;
@@ -55,33 +55,41 @@ namespace Planetside
 		{
             //Theres like 6 checks to remove the lightning god kill me
 			base.Update();
-            float num2 = 6f;
+            if (base.Owner != null)
             {
-                if (this.LinkVFXPrefab == null)
+                float num2 = 6f;
                 {
-                    this.LinkVFXPrefab = FakePrefab.Clone(Game.Items["shock_rounds"].GetComponent<ComplexProjectileModifier>().ChainLightningVFX);
-                }
-                if (base.Owner && this.extantLink == null)
-                {
-                    tk2dTiledSprite component = SpawnManager.SpawnVFX(this.LinkVFXPrefab, false).GetComponent<tk2dTiledSprite>();
-                    this.extantLink = component;
-                }
-                bool isInCombat = base.Owner.IsInCombat;
-                if (isInCombat)
-                {
-                    List<AIActor> activeEnemies = base.Owner.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
-                    bool flag5 = activeEnemies == null | activeEnemies.Count <= 0;
-                    if (!flag5)
+                    if (this.LinkVFXPrefab == null)
                     {
-                        AIActor nearestEnemy = this.GetNearestEnemy(activeEnemies, base.Owner.sprite.WorldCenter, out num2, null);
-                        bool flag8 = nearestEnemy && nearestEnemy != null;
-                        if (flag8)
+                        this.LinkVFXPrefab = FakePrefab.Clone(Game.Items["shock_rounds"].GetComponent<ComplexProjectileModifier>().ChainLightningVFX);
+                    }
+                    if (base.Owner && this.extantLink == null)
+                    {
+                        tk2dTiledSprite component = SpawnManager.SpawnVFX(this.LinkVFXPrefab, false).GetComponent<tk2dTiledSprite>();
+                        this.extantLink = component;
+                    }
+                    bool isInCombat = base.Owner.IsInCombat;
+                    if (isInCombat)
+                    {
+                        List<AIActor> activeEnemies = base.Owner.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
+                        bool flag5 = activeEnemies == null | activeEnemies.Count <= 0;
+                        if (!flag5)
                         {
-                            if (base.Owner && this.extantLink != null && nearestEnemy != null)
+                            AIActor nearestEnemy = this.GetNearestEnemy(activeEnemies, base.Owner.sprite.WorldCenter, out num2, null);
+                            bool flag8 = nearestEnemy && nearestEnemy != null;
+                            if (flag8)
                             {
-                                UpdateLink(base.Owner, this.extantLink, nearestEnemy);
+                                if (base.Owner && this.extantLink != null && nearestEnemy != null)
+                                {
+                                    UpdateLink(base.Owner, this.extantLink, nearestEnemy);
+                                }
+                                else if (extantLink != null && nearestEnemy != null)
+                                {
+                                    SpawnManager.Despawn(extantLink.gameObject);
+                                    extantLink = null;
+                                }
                             }
-                            else if (extantLink != null && nearestEnemy != null)
+                            else if (extantLink != null)
                             {
                                 SpawnManager.Despawn(extantLink.gameObject);
                                 extantLink = null;
@@ -99,14 +107,7 @@ namespace Planetside
                         extantLink = null;
                     }
                 }
-                else if (extantLink != null)
-                {
-                    SpawnManager.Despawn(extantLink.gameObject);
-                    extantLink = null;
-                }
             }
-
-
         }
         public AIActor GetNearestEnemy(List<AIActor> activeEnemies, Vector2 position, out float nearestDistance, string[] filter)
         {
