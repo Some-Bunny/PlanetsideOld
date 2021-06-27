@@ -34,37 +34,7 @@ namespace Planetside
 
 
 		}
-		private void HandleEffect(HealthHaver source, HealthHaver.ModifyDamageEventArgs args)
-		{
-			PlayerController player = GameManager.Instance.PrimaryPlayer;
-			bool flag = args == EventArgs.Empty;
-			if (!flag)
-			{
-				bool flag4 = base.Owner;
-				if (flag4)
-				{
-					try
-                    {
-						if (base.Owner.healthHaver.Armor >= 0f)
-						{
-							bool reee = player.CurrentRoom != null;
-							if (reee)
-							{
-								player.CurrentRoom.PlayerHasTakenDamageInThisRoom = false;
 
-							}
-						}
-						AkSoundEngine.PostEvent("Play_ENM_shells_gather_01", player.gameObject);
-						player.inventory.CurrentGun.GainAmmo(Mathf.FloorToInt((float)player.inventory.CurrentGun.AdjustedMaxAmmo * 0.25f));
-					}
-					catch (Exception ex)
-                    {
-						ETGModConsole.Log(ex.Message, false);
-						ETGModConsole.Log("OG GOD OH FUCK");
-					}
-				}
-			}
-		}
 		private void ModifyIncomingDamage(HealthHaver source, HealthHaver.ModifyDamageEventArgs args)
 		{
 			PlayerController player = GameManager.Instance.PrimaryPlayer;
@@ -74,9 +44,10 @@ namespace Planetside
 			}
 			if (player.healthHaver.Armor > 0f)
 			{
-				AkSoundEngine.PostEvent("Play_ENM_shells_gather_01", base.gameObject);
 				GameManager.Instance.StartCoroutine(this.SaveFlawless());
 			}
+			AkSoundEngine.PostEvent("Play_ENM_shells_gather_01", base.gameObject);
+			player.inventory.CurrentGun.GainAmmo(Mathf.FloorToInt((float)player.inventory.CurrentGun.AdjustedMaxAmmo * 0.25f));
 		}
 		private IEnumerator SaveFlawless()
 		{
@@ -102,7 +73,7 @@ namespace Planetside
 		{
 			{
 				HealthHaver healthHaver = player.healthHaver;
-				healthHaver.ModifyDamage = (Action<HealthHaver, HealthHaver.ModifyDamageEventArgs>)Delegate.Remove(healthHaver.ModifyDamage, new Action<HealthHaver, HealthHaver.ModifyDamageEventArgs>(this.HandleEffect));
+				healthHaver.ModifyDamage = (Action<HealthHaver, HealthHaver.ModifyDamageEventArgs>)Delegate.Remove(healthHaver.ModifyDamage, new Action<HealthHaver, HealthHaver.ModifyDamageEventArgs>(this.ModifyIncomingDamage));
 				return base.Drop(player);
 			}
 		}

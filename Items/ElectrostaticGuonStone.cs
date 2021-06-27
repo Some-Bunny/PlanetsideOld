@@ -20,7 +20,7 @@ namespace Planetside
         public static void Init()
         {
             string name = "Electro-Static Guon Stone";
-            string resourcePath = "Planetside/Resources/ElectroGuon/electrostaticguonitem.png";
+            string resourcePath = "Planetside/Resources/Guons/ElectroGuon/electrostaticguonitem.png";
             GameObject gameObject = new GameObject();
             ElectrostaticGuonStone item = gameObject.AddComponent<ElectrostaticGuonStone>();
             ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
@@ -56,7 +56,6 @@ namespace Planetside
             CustomSynergies.Add("Shocker", mandatoryConsoleIDs, optionalConsoleIsDs, true);
         }
 
-        // Token: 0x0600017C RID: 380 RVA: 0x0000EA44 File Offset: 0x0000CC44
         public static void BuildPrefab()
         {
             string value = "AWESOME";
@@ -64,7 +63,7 @@ namespace Planetside
             bool flag = ElectrostaticGuonStone.orbitalPrefab != null;
             if (!flag)
             {
-                GameObject gameObject = SpriteBuilder.SpriteFromResource("Planetside/Resources/ElectroGuon/electrostaticguonfloaty.png");
+                GameObject gameObject = SpriteBuilder.SpriteFromResource("Planetside/Resources/Guons/ElectroGuon/electrostaticguonfloaty.png");
                 gameObject.name = "Electro Guon Stone Orbital";
                 SpeculativeRigidbody speculativeRigidbody = gameObject.GetComponent<tk2dSprite>().SetUpSpeculativeRigidbody(IntVector2.Zero, new IntVector2(7, 13));
                 speculativeRigidbody.CollideWithTileMap = false;

@@ -43,7 +43,8 @@ namespace Planetside
 			gun.gunSwitchGroup = (PickupObjectDatabase.GetById(16) as Gun).gunSwitchGroup;
 			Projectile replacementProjectile = component.projectile;
 			gun.DefaultModule.usesOptionalFinalProjectile = true;
-
+			PolarityProjectile pol1 = replacementProjectile.gameObject.AddComponent<PolarityProjectile>();
+			pol1.IsDown = true;
 			gun.DefaultModule.numberOfFinalProjectiles = 15;
 			gun.DefaultModule.finalProjectile = replacementProjectile;
 			gun.DefaultModule.finalCustomAmmoType = gun3.DefaultModule.customAmmoType;
@@ -72,6 +73,8 @@ namespace Planetside
 			projectile.transform.parent = gun.barrelOffset;
 			projectile.AdditionalScaleMultiplier *= 1.33f;
 			projectile.baseData.damage = 6.5f;
+			PolarityProjectile aaaaaaa = projectile.gameObject.AddComponent<PolarityProjectile>();
+			aaaaaaa.IsUp = true;
 			Polarity.PolarityID = gun.PickupObjectId;
 
 			List<string> mandatoryConsoleIDs1 = new List<string>
@@ -105,57 +108,18 @@ namespace Planetside
 
 		public override void PostProcessProjectile(Projectile projectile)
 		{
-			PlayerController player = this.gun.CurrentOwner as PlayerController;
-			bool flagA = player.PlayerHasActiveSynergy("Refridgeration");
-			if (flagA)
-			{
-				bool flag6 = this.lastUp == null;
-				if (flag6)
-				{
-					projectile.OverrideMotionModule = new HelixProjectileMotionModule
-					{
-						helixAmplitude = 2f,
-						helixWavelength = 8f,
-						ForceInvert = false
-					};
-					projectile.gameObject.AddComponent<Polarity.EyeProjUp>();
-					this.lastUp = projectile;
-				}
-				else
-				{
-					bool flag7 = this.lastDown == null;
-					if (flag7)
-					{
-						projectile.OverrideMotionModule = new HelixProjectileMotionModule
-						{
-							helixAmplitude = 2f,
-							helixWavelength = 8f,
-							ForceInvert = true
-						};
-						projectile.gameObject.AddComponent<Polarity.EyeProjDown>();
-						this.lastDown = projectile;
-						this.lastUp = null;
-						this.lastDown = null;
-					}
-				}
-			}
-			else
-            {
-				this.HalfOFClip(player);
-			}
+			
 		}
 		public override void OnReloadPressed(PlayerController player, Gun gun, bool bSOMETHING)
 		{
 			this.HalfOFClip(player);
 		}
-		private Projectile lastDown = null;
-		private Projectile lastUp = null;
-		private class EyeProjUp : MonoBehaviour
+		public class EyeProjUp : MonoBehaviour
 		{
 		}
 
 		// Token: 0x020000E6 RID: 230
-		private class EyeProjDown : MonoBehaviour
+		public class EyeProjDown : MonoBehaviour
 		{
 		}
 		protected void Update()
@@ -180,7 +144,7 @@ namespace Planetside
 			PlayerController player = actor as PlayerController;
 			this.HalfOFClip(player);
 		}
-		private void HalfOFClip(PlayerController player)
+		public void HalfOFClip(PlayerController player)
 		{
 			float clip = 0f;
 			clip = (player.stats.GetStatValue(PlayerStats.StatType.AdditionalClipCapacityMultiplier));

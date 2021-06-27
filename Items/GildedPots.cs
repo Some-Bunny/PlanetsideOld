@@ -38,6 +38,7 @@ namespace Planetside
 		// Token: 0x06000198 RID: 408 RVA: 0x0001013B File Offset: 0x0000E33B
 		public override void Pickup(PlayerController player)
 		{
+			//player.ReceivesTouchDamage = false;
 			/*
 			TrailRenderer tr;
 			var tro = player.gameObject.AddChild("trail object");

@@ -45,14 +45,14 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(25f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(22.5f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = true;
 				companion.aiActor.CanTargetPlayers = true;
 				companion.aiActor.HasShadow = true;
 				companion.aiActor.SetIsFlying(true, "Gamemode: Creative");
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").ShadowObject; 
-				companion.aiActor.healthHaver.SetHealthMaximum(25f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(22.5f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 
 				companion.aiActor.gameObject.AddComponent<ImprovedAfterImage>().dashColor = Color.grey;
@@ -257,6 +257,7 @@ namespace Planetside
 				BehaviorSpeculator behaviorSpeculator = EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5").behaviorSpeculator;
 				bs.OverrideBehaviors = behaviorSpeculator.OverrideBehaviors;
 				bs.OtherBehaviors = behaviorSpeculator.OtherBehaviors;
+				
 				shootpoint = new GameObject("fuck");
 				shootpoint.transform.parent = companion.transform;
 				shootpoint.transform.position = companion.sprite.WorldCenter;
@@ -406,12 +407,15 @@ namespace Planetside
 
 		public class EnemyBehavior : BraveBehaviour
 		{
-
 			private RoomHandler m_StartRoom;
 
-			private void Update()
+			public void Update()
 			{
-				if (!base.aiActor.HasBeenEngaged) { CheckPlayerRoom(); }
+				m_StartRoom = aiActor.GetAbsoluteParentRoom();
+				if (!base.aiActor.HasBeenEngaged)
+				{
+					CheckPlayerRoom();
+				}
 			}
 			private void CheckPlayerRoom()
 			{
@@ -419,16 +423,23 @@ namespace Planetside
 				{
 					GameManager.Instance.StartCoroutine(LateEngage());
 				}
+				else
+				{
+					base.aiActor.HasBeenEngaged = false;
+				}
 			}
-
 			private IEnumerator LateEngage()
 			{
 				yield return new WaitForSeconds(0.5f);
-				base.aiActor.HasBeenEngaged = true;
+				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+				{
+					base.aiActor.HasBeenEngaged = true;
+				}
 				yield break;
 			}
 			private void Start()
 			{
+				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("31a3ea0c54a745e182e22ea54844a82d").bulletBank.GetBullet("sniper"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("465da2bb086a4a88a803f79fe3a27677").bulletBank.bulletBank.GetBullet("homing"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.bulletBank.GetBullet("default"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").bulletBank.GetBullet("sweep"));
@@ -441,7 +452,6 @@ namespace Planetside
 
 				};
 			}
-
 		}
 
 		public class NormalAttack : Script 
@@ -483,14 +493,14 @@ namespace Planetside
 		}
 		public class Spit : Bullet
 		{
-			public Spit() : base("default", false, false, false)
+			public Spit() : base("sniper", false, false, false)
 			{
 
 			}
 			protected override IEnumerator Top()
 			{
 
-				base.ChangeSpeed(new Speed(15f, SpeedType.Absolute), 20);
+				base.ChangeSpeed(new Speed(13f, SpeedType.Absolute), 30);
 				yield break;
 			}
 		}

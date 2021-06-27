@@ -29,16 +29,17 @@ namespace Planetside
 				Weight *= 10;
 				OldShrineFactory iei = new OldShrineFactory
 				{
-					name = "Broken Chamber Shrine",
+					name = "BrokenChamberShrine",
 					modID = "psog",
 					text = "A shrine with a half-broken chamber on it. It's seems loose...",
 					spritePath = "Planetside/Resources/Shrines/brokenchambershrine.png",
-					room = RoomFactory.BuildFromResource("Planetside/ShrineRooms/BrokenChamberRoom.room").room,
+					room = RoomFactory.BuildFromResource("Planetside/Resources/ShrineRooms/BrokenChamberRoom.room").room,
 					RoomWeight = Weight,
 					acceptText = "Lift the remnant.",
 					declineText = "Leave.",
 					OnAccept = Accept,
 					OnDecline = null,
+					
 					CanUse = CanUse,
 					offset = new Vector3(0, 0, 0),
 					talkPointOffset = new Vector3(0, 3, 0),
@@ -54,11 +55,11 @@ namespace Planetside
 				Weight = 1;
 				OldShrineFactory iei = new OldShrineFactory
 				{
-					name = "End Of Everything Shrine",
+					name = "EndOfEverythingShrine",
 					modID = "psog",
 					text = "A shrine with 4 engravings carved onto it. Although the engravings shift, you can slightly make out what they are...",
 					spritePath = "Planetside/Resources/Shrines/EOEShrine.png",
-					room = RoomFactory.BuildFromResource("Planetside/ShrineRooms/EOEShrineRoom.room").room,
+					room = RoomFactory.BuildFromResource("Planetside/Resources/ShrineRooms/EOEShrineRoom.room").room,
 					RoomWeight = Weight,
 					acceptText = "Kneel.",
 					declineText = "Leave.",

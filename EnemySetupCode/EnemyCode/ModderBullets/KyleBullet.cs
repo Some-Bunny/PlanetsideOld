@@ -41,13 +41,13 @@ namespace Planetside
 				companion.aiActor.IgnoreForRoomClear = true;
 				companion.aiActor.aiAnimator.HitReactChance = 0f;
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
-				companion.aiActor.specRigidbody.CollideWithTileMap = false;
+				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(50f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(20f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = false;
 				companion.aiActor.CanTargetPlayers = true;
-				companion.aiActor.healthHaver.SetHealthMaximum(50f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(20f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
 
@@ -62,7 +62,7 @@ namespace Planetside
 					ManualOffsetX = 0,
 					ManualOffsetY = 0,
 					ManualWidth = 16,
-					ManualHeight = 16,
+					ManualHeight = 17,
 					ManualDiameter = 0,
 					ManualLeftX = 0,
 					ManualLeftY = 0,
@@ -79,9 +79,9 @@ namespace Planetside
 					SpecifyBagelFrame = string.Empty,
 					BagelColliderNumber = 0,
 					ManualOffsetX = 0,
-					ManualOffsetY = 15,
-					ManualWidth = 17,
-					ManualHeight = 16,
+					ManualOffsetY = 0,
+					ManualWidth = 16,
+					ManualHeight = 17,
 					ManualDiameter = 0,
 					ManualLeftX = 0,
 					ManualLeftY = 0,
@@ -233,9 +233,9 @@ namespace Planetside
 					NumBullets = 2,
 					BulletMinRadius = 4.5f,
 					BulletMaxRadius = 5,
-					BulletCircleSpeed = 105,
+					BulletCircleSpeed = 90,
 					BulletsIgnoreTiles = true,
-					RegenTimer = 0.25f,
+					RegenTimer = 0.35f,
 					AmountOFLines = 5,
 				}
 				};
@@ -275,19 +275,19 @@ namespace Planetside
 		private static string[] spritePaths = new string[]
 		{
 
-			"Planetside/ModderBullets/kyle/kylebullet_idle_001.png",
-			"Planetside/ModderBullets/kyle/kylebullet_idle_002.png",
-			"Planetside/ModderBullets/kyle/kylebullet_idle_003.png",
-			"Planetside/ModderBullets/kyle/kylebullet_idle_004.png",
+			"Planetside/Resources/Enemies/ModderBullets/kyle/kylebullet_idle_001.png",
+			"Planetside/Resources/Enemies/ModderBullets/kyle/kylebullet_idle_002.png",
+			"Planetside/Resources/Enemies/ModderBullets/kyle/kylebullet_idle_003.png",
+			"Planetside/Resources/Enemies/ModderBullets/kyle/kylebullet_idle_004.png",
 
 
 
 			//death
-			"Planetside/ModderBullets/kyle/kylebullet_die_001.png",
-			"Planetside/ModderBullets/kyle/kylebullet_die_002.png",
-			"Planetside/ModderBullets/kyle/kylebullet_die_003.png",
-			"Planetside/ModderBullets/kyle/kylebullet_die_004.png",
-			"Planetside/ModderBullets/kyle/kylebullet_die_005.png",
+			"Planetside/Resources/Enemies/ModderBullets/kyle/kylebullet_die_001.png",
+			"Planetside/Resources/Enemies/ModderBullets/kyle/kylebullet_die_002.png",
+			"Planetside/Resources/Enemies/ModderBullets/kyle/kylebullet_die_003.png",
+			"Planetside/Resources/Enemies/ModderBullets/kyle/kylebullet_die_004.png",
+			"Planetside/Resources/Enemies/ModderBullets/kyle/kylebullet_die_005.png",
 		};
 
 		public class EnemyBehavior : BraveBehaviour

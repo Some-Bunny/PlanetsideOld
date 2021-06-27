@@ -189,7 +189,11 @@ namespace Planetside
 			"fodder_enemy",
 			"deturret_enemy",
 			"deturretleft_enemy",
-			"Bullet_Banker"
+			"Bullet_Banker",
+			"Fungannon",
+			"Ophanaim",
+			"annihichamber",
+			"shamber_psog"
 
 		};
 

@@ -50,7 +50,7 @@ namespace Planetside
 				companion.aiActor.healthHaver.ForceSetCurrentHealth(30f);
 				companion.aiActor.CollisionKnockbackStrength = 5f;
 				companion.aiActor.CanTargetPlayers = true;
-				companion.aiActor.healthHaver.SetHealthMaximum(35f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(30f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
 
@@ -140,7 +140,7 @@ namespace Planetside
 						"run_front_left",
 						"run_back_right",
 
-						}
+					}
 				};
 				DirectionalAnimation aaa = new DirectionalAnimation
 				{
@@ -572,9 +572,99 @@ namespace Planetside
 				EnemyDatabase.GetEntry("psog:wailer").isNormalEnemy = true;
 			}
 		}
-		public class SkellScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+
+		public class zappies : Script
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top()
+			{
+				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5").bulletBank.GetBullet("default"));
+				float direction = BraveMathCollege.QuantizeFloat(base.AimDirection, 45f);
+
+				base.Fire( new zappies.LightningBullet(direction, -1f, 30, -4, null));
+				base.Fire( new zappies.LightningBullet(direction, -1f, 30, 4, null));
+				if (BraveUtility.RandomBool())
+				{
+					base.Fire( new zappies.LightningBullet(direction, -1f, 30, 4, null));
+				}
+				else
+				{
+					base.Fire(new zappies.LightningBullet(direction, 1f, 30, 4, null));
+				}
+				base.Fire( new zappies.LightningBullet(direction, 1f, 30, 4, null));
+				base.Fire( new zappies.LightningBullet(direction, 1f, 30, -4, null));
+				return null;
+			}
+
+			public const float Dist = 0.8f;
+
+			public const int MaxBulletDepth = 30;
+
+			public const float RandomOffset = 0.3f;
+
+			public const float TurnChance = 0.2f;
+
+			public const float TurnAngle = 30f;
+
+			private class LightningBullet : Bullet
+			{
+				public LightningBullet(float direction, float sign, int maxRemainingBullets, int timeSinceLastTurn, Vector2? truePosition = null) : base("default", false, false, false)
+				{
+					this.m_direction = direction;
+					this.m_sign = sign;
+					this.m_maxRemainingBullets = maxRemainingBullets;
+					this.m_timeSinceLastTurn = timeSinceLastTurn;
+					this.m_truePosition = truePosition;
+				}
+
+				protected override IEnumerator Top()
+				{
+					yield return base.Wait(2);
+					Vector2? truePosition = this.m_truePosition;
+					if (truePosition == null)
+					{
+						this.m_truePosition = new Vector2?(base.Position);
+					}
+					if (this.m_maxRemainingBullets > 0)
+					{
+						if (this.m_timeSinceLastTurn > 0 && this.m_timeSinceLastTurn != 2 && this.m_timeSinceLastTurn != 3 && UnityEngine.Random.value < 0.2f)
+						{
+							this.m_sign *= -1f;
+							this.m_timeSinceLastTurn = 0;
+						}
+						float num = this.m_direction + this.m_sign * 30f;
+						Vector2 vector = this.m_truePosition.Value + BraveMathCollege.DegreesToVector(num, 0.8f);
+						Vector2 vector2 = vector + BraveMathCollege.DegreesToVector(num + 90f, UnityEngine.Random.Range(-0.3f, 0.3f));
+						if (!base.IsPointInTile(vector2))
+						{
+							zappies.LightningBullet lightningBullet = new zappies.LightningBullet(this.m_direction, this.m_sign, this.m_maxRemainingBullets - 1, this.m_timeSinceLastTurn + 1, new Vector2?(vector));
+							base.Fire(Offset.OverridePosition(vector2), lightningBullet);
+							if (lightningBullet.Projectile && lightningBullet.Projectile.specRigidbody && PhysicsEngine.Instance.OverlapCast(lightningBullet.Projectile.specRigidbody, null, true, false, null, null, false, null, null, new SpeculativeRigidbody[0]))
+							{
+								lightningBullet.Projectile.DieInAir(false, true, true, false);
+							}
+						}
+					}
+					yield return base.Wait(30);
+					base.Vanish(true);
+					yield break;
+				}
+
+				private float m_direction;
+
+				private float m_sign;
+
+				private int m_maxRemainingBullets;
+
+				private int m_timeSinceLastTurn;
+
+				private Vector2? m_truePosition;
+			}
+		}
+
+
+		public class SkellScript : Script 
+		{
+			protected override IEnumerator Top() 
 			{
 				AkSoundEngine.PostEvent("Play_WPN_eyeballgun_shot_01", this.BulletBank.aiActor.gameObject);
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
@@ -591,14 +681,12 @@ namespace Planetside
 		}
 		public class GrubBullet : Bullet
 		{
-			// Token: 0x06000BB4 RID: 2996 RVA: 0x0003952C File Offset: 0x0003772C
 			public GrubBullet() : base("gross", false, false, false)
 			{
 				//base.SuppressVfx = true;
 
 			}
 
-			// Token: 0x06000BB5 RID: 2997 RVA: 0x00039540 File Offset: 0x00037740
 			protected override IEnumerator Top()
 			{
 				base.ManualControl = true;
@@ -623,7 +711,7 @@ namespace Planetside
 
 			}
 		}
-		public class Wail : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class Wail : Script
 		{
 			protected override IEnumerator Top()
 			{
@@ -642,13 +730,11 @@ namespace Planetside
 		}
 		public class ReverseBullet : Bullet
 		{
-			// Token: 0x06000A91 RID: 2705 RVA: 0x00030B38 File Offset: 0x0002ED38
 			public ReverseBullet() : base("reversible", false, false, false)
 			{
 				base.SuppressVfx = true;
 			}
 
-			// Token: 0x06000A92 RID: 2706 RVA: 0x00030B48 File Offset: 0x0002ED48
 			protected override IEnumerator Top()
 			{
 				float speed = this.Speed;
@@ -741,9 +827,13 @@ namespace Planetside
 
 			private RoomHandler m_StartRoom;
 
-			private void Update()
+			public void Update()
 			{
-				if (!base.aiActor.HasBeenEngaged) { CheckPlayerRoom(); }
+				m_StartRoom = aiActor.GetAbsoluteParentRoom();
+				if (!base.aiActor.HasBeenEngaged)
+				{
+					CheckPlayerRoom();
+				}
 			}
 			private void CheckPlayerRoom()
 			{
@@ -751,14 +841,22 @@ namespace Planetside
 				{
 					GameManager.Instance.StartCoroutine(LateEngage());
 				}
+				else
+				{
+					base.aiActor.HasBeenEngaged = false;
+				}
 			}
-
 			private IEnumerator LateEngage()
 			{
 				yield return new WaitForSeconds(0.5f);
-				base.aiActor.HasBeenEngaged = true;
+				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+				{
+					base.aiActor.HasBeenEngaged = true;
+				}
 				yield break;
 			}
+
+
 			private void Start()
 			{
 				if (!base.aiActor.IsBlackPhantom)

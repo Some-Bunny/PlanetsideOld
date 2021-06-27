@@ -27,8 +27,8 @@ namespace Planetside
         private IEnumerator PlaySound()
         {
             yield return StartCoroutine(WaitForSecondsInvariant(2f));
-            AkSoundEngine.PostEvent("Play_ENM_shells_gather_01", base.aiActor.gameObject);
-            AkSoundEngine.PostEvent("Play_BOSS_lichC_intro_01", base.aiActor.gameObject);
+            //AkSoundEngine.PostEvent("Play_ENM_shells_gather_01", base.aiActor.gameObject);
+            //AkSoundEngine.PostEvent("Play_BOSS_lichC_intro_01", base.aiActor.gameObject);
             
             yield break;
         }

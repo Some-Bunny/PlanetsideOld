@@ -46,7 +46,25 @@ namespace Planetside
 			if (flag)
 			{
 				this.CalculateStats(base.Owner);
+				bool Q = SaveAPIManager.GetFlag(CustomDungeonFlags.BROKEN_CHAMBER_RUN_COMPLETED);
+				bool W = SaveAPIManager.GetFlag(CustomDungeonFlags.BEAT_LOOP_1);
+				bool E = SaveAPIManager.GetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND);
+				bool R = SaveAPIManager.GetFlag(CustomDungeonFlags.BULLETBANK_DEFEATED);
+				bool T = SaveAPIManager.GetFlag(CustomDungeonFlags.HIGHER_CURSE_DRAGUN_KILLED);
+				bool Y = SaveAPIManager.GetFlag(CustomDungeonFlags.SHELLRAX_DEFEATED);
+				bool U = SaveAPIManager.GetFlag(CustomDungeonFlags.JAMMED_GUARD_DEFEATED);
+				bool I = SaveAPIManager.GetFlag(CustomDungeonFlags.DEFEAT_FUNGANNON);
+				bool O = SaveAPIManager.GetFlag(CustomDungeonFlags.DEFEAT_OPHANAIM);
+				bool P = SaveAPIManager.GetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER);
+				bool A = SaveAPIManager.GetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK);
 
+				if (Q == true && W == true && E == true && R == true && T == true && Y == true && U == true && I == true && O == true && P == true && A == true)
+                {
+					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.PLATE_DIAMOND_CHAMBER, true);
+					base.Owner.RemovePassiveItem(DiamondChamber.ChamberID);
+					LootEngine.TryGivePrefabToPlayer(ETGMod.Databases.Items["Netherite Chamber"].gameObject, base.Owner, true);
+
+				}
 			}
 		}
 		private void CalculateStats(PlayerController player)

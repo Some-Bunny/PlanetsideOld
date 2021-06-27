@@ -10,6 +10,7 @@ namespace GungeonAPI
 		// Token: 0x06000070 RID: 112 RVA: 0x000065CF File Offset: 0x000047CF
 		private void Start()
 		{
+			SpriteOutlineManager.AddOutlineToSprite(base.sprite, Color.black, 1f, 0f, SpriteOutlineManager.OutlineType.NORMAL);
 			this.talkPoint = base.transform.Find("talkpoint");
 			this.m_isToggled = false;
 		}
@@ -122,7 +123,7 @@ namespace GungeonAPI
 		// Token: 0x06000074 RID: 116 RVA: 0x000066B2 File Offset: 0x000048B2
 		public void OnExitRange(PlayerController interactor)
 		{
-			SpriteOutlineManager.RemoveOutlineFromSprite(base.sprite, false);
+			SpriteOutlineManager.AddOutlineToSprite(base.sprite, Color.black, 1f, 0f, SpriteOutlineManager.OutlineType.NORMAL);
 		}
 
 		// Token: 0x06000075 RID: 117 RVA: 0x000066C4 File Offset: 0x000048C4

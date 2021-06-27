@@ -42,7 +42,10 @@ namespace Planetside
             {
 				GameObject original;
 				original = FrailtyHealthEffect.frailtyVFXObject;
-				tk2dSprite component = UnityEngine.Object.Instantiate<GameObject>(original, actor.transform).GetComponent<tk2dSprite>();
+				tk2dSprite component = GameObject.Instantiate(original, actor.specRigidbody.UnitTopCenter, Quaternion.identity, actor.transform).GetComponent<tk2dSprite>();
+				component.transform.position.WithZ(component.transform.position.z + 99999);
+				component.GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(actor.CenterPosition, tk2dBaseSprite.Anchor.MiddleCenter);
+				actor.sprite.AttachRenderer(component.GetComponent<tk2dBaseSprite>());
 				component.name = FrailtyHealthEffect.vfxNamefrailty;
 				component.PlaceAtPositionByAnchor(actor.sprite.WorldTopCenter, tk2dBaseSprite.Anchor.LowerCenter);
 				component.scale = Vector3.one;
@@ -53,11 +56,11 @@ namespace Planetside
 			
 			if (this.AffectsEnemies && actor is AIActor && !actor.healthHaver.IsBoss)
 			{
-				actor.healthHaver.SetHealthMaximum(actor.healthHaver.GetMaxHealth() * 1 - (0.92f*BraveTime.DeltaTime));
+				actor.healthHaver.SetHealthMaximum(actor.healthHaver.GetMaxHealth() * 1 - (0.89f*BraveTime.DeltaTime));
 			}
 			if (this.AffectsEnemies && actor is AIActor && actor.healthHaver.IsBoss)
 			{
-				actor.healthHaver.ApplyDamage(3 * BraveTime.DeltaTime, Vector2.zero, "oooo spoooooky", CoreDamageTypes.Void, DamageCategory.Normal, false, null, false);
+				actor.healthHaver.ApplyDamage(7f * BraveTime.DeltaTime, Vector2.zero, "oooo spoooooky", CoreDamageTypes.Void, DamageCategory.Normal, false, null, false);
 			}
 		}
 

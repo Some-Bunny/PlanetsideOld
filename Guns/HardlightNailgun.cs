@@ -121,8 +121,7 @@ namespace Planetside
         }
         private void AllClip(PlayerController player)
         {
-            float clip = 0f;
-            clip = (player.stats.GetStatValue(PlayerStats.StatType.AdditionalClipCapacityMultiplier));
+            float clip = (player.stats.GetStatValue(PlayerStats.StatType.AdditionalClipCapacityMultiplier));
             int num = (int)(10 * clip);
             foreach (ProjectileModule projectileModule in this.gun.Volley.projectiles)
             {

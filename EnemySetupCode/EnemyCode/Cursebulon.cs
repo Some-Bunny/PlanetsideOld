@@ -35,14 +35,14 @@ namespace Planetside
 				prefab = EnemyBuilder.BuildPrefab("Cursebulon", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 150;
-				companion.aiActor.MovementSpeed = 4.5f;
+				companion.aiActor.MovementSpeed = 4.75f;
 				companion.aiActor.healthHaver.PreventAllDamage = false;
 				companion.aiActor.CollisionDamage = 1f;
 				companion.aiActor.HasShadow = false;
 				companion.aiActor.IgnoreForRoomClear = false;
 				companion.aiActor.aiAnimator.HitReactChance = 0f;
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
-				companion.aiActor.specRigidbody.CollideWithTileMap = false;
+				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
 				companion.aiActor.healthHaver.ForceSetCurrentHealth(25f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
@@ -400,12 +400,15 @@ namespace Planetside
 
 		public class EnemyBehavior : BraveBehaviour
 		{
-
 			private RoomHandler m_StartRoom;
 
-			private void Update()
+			public void Update()
 			{
-				if (!base.aiActor.HasBeenEngaged) { CheckPlayerRoom(); }
+				m_StartRoom = aiActor.GetAbsoluteParentRoom();
+				if (!base.aiActor.HasBeenEngaged)
+				{
+					CheckPlayerRoom();
+				}
 			}
 			private void CheckPlayerRoom()
 			{
@@ -413,12 +416,18 @@ namespace Planetside
 				{
 					GameManager.Instance.StartCoroutine(LateEngage());
 				}
+				else
+				{
+					base.aiActor.HasBeenEngaged = false;
+				}
 			}
-
 			private IEnumerator LateEngage()
 			{
 				yield return new WaitForSeconds(0.5f);
-				base.aiActor.HasBeenEngaged = true;
+				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+				{
+					base.aiActor.HasBeenEngaged = true;
+				}
 				yield break;
 			}
 			private void Start()

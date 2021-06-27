@@ -73,7 +73,6 @@ namespace Planetside
 			CustomSynergies.Add("Below Zero", mandatoryConsoleIDs, optionalConsoleID2s, true);
 		}
 
-		// Token: 0x06000661 RID: 1633 RVA: 0x0003A8AC File Offset: 0x00038AAC
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			try

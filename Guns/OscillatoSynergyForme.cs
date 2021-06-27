@@ -62,6 +62,7 @@ namespace Planetside
 			gun.Volley.projectiles[0].projectiles[0] = projectile;
 			projectile.baseData.damage = 3f;
 			projectile.baseData.speed *= 0.8f;
+			projectile.gameObject.AddComponent<OscillatorProjectile>();
 			PierceProjModifier spook = projectile.gameObject.AddComponent<PierceProjModifier>();
 			spook.penetration = 1;
 
@@ -112,6 +113,7 @@ namespace Planetside
 			gun.Volley.projectiles[1].projectiles[0] = projectile1;
 			projectile1.baseData.damage = 3f;
 			projectile1.baseData.speed *= 0.8f;
+			projectile1.gameObject.AddComponent<OscillatorProjectile>();
 			PierceProjModifier spookY = projectile1.gameObject.AddComponent<PierceProjModifier>();
 			spookY.penetration = 1;
 

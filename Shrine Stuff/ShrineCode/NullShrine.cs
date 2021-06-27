@@ -24,11 +24,11 @@ namespace Planetside
 			OldShrineFactory aa = new OldShrineFactory
 			{
 
-				name = "Null Shrine",
+				name = "NullShrine",
 				modID = "psog",
 				text = "A shrine of nothings. You feel like somethings missing, or maybe its intentional...",
 				spritePath = "Planetside/Resources/Shrines/NullPedestal.png",
-				room = RoomFactory.BuildFromResource("Planetside/ShrineRooms/NullShrineRoom.room").room,
+				room = RoomFactory.BuildFromResource("Planetside/Resources/ShrineRooms/NullShrineRoom.room").room,
 				RoomWeight = 0.6f,
 				acceptText = "Bestow your nothings.",
 				declineText = "Leave",
@@ -47,6 +47,8 @@ namespace Planetside
 			SpriteBuilder.AddSpriteToCollection(spriteDefinition1, SpriteBuilder.ammonomiconCollection);
 
 		}
+		public static string spriteDefinition1 = "Planetside/Resources/ShrineIcons/NullShrineIconKing";
+		public static string spriteDefinition = "Planetside/Resources/ShrineIcons/NullShrineIcon";
 		public static bool CanUse(PlayerController player, GameObject shrine)
 		{
 			bool canuse = (player.CurrentGun.CurrentAmmo == 0) || (player.carriedConsumables.KeyBullets == 0) || (player.carriedConsumables.Currency == 0) || (player.Blanks == 0);
@@ -132,8 +134,6 @@ namespace Planetside
 		}
 		private static float random;
 		public static int spriteId;
-		public static string spriteDefinition = "Planetside/Resources/ShrineIcons/NullShrineIcon";
-		public static string spriteDefinition1 = "Planetside/Resources/ShrineIcons/NullShrineIconKing";
 		public class KingOfNulling : BraveBehaviour
 		{
 			public void Start()
@@ -155,7 +155,7 @@ namespace Planetside
 				bool flag2 = OtherTools.Randomizer(0.1f);
 				if (flag2)
 				{
-					ETGModConsole.Log("ROOM CLEARED.", false);
+					//ETGModConsole.Log("ROOM CLEARED.", false);
 					IntVector2 bestRewardLocation2 = obj.CurrentRoom.GetBestRewardLocation(IntVector2.One * 3, RoomHandler.RewardLocationStyle.PlayerCenter, true);
 
 					LootEngine.SpawnItem(PickupObjectDatabase.GetById(NullPickupInteractable.NollahID).gameObject, bestRewardLocation2.ToVector3(), Vector2.up, 1f, true, true, false);

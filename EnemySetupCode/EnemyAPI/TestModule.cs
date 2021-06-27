@@ -5,15 +5,16 @@ using Brave.BulletScript;
 using Dungeonator;
 using FullInspector;
 using UnityEngine;
+using ItemAPI;
+using EnemyBulletBuilder;
 
-/*
 namespace Planetside
 {
 
 
 	public class TestOverrideBehavior : OverrideBehavior
 	{
-		public override string OverrideAIActorGUID => "c4cf0620f71c4678bb8d77929fd4feff"; // Replace the GUID with whatever enemy you want to modify. This GUID is for the bullet kin.
+		public override string OverrideAIActorGUID => "8bb5578fba374e8aae8e10b754e61d62"; // Replace the GUID with whatever enemy you want to modify. This GUID is for the bullet kin.
 																						  // You can find a full list of GUIDs at https://github.com/ModTheGungeon/ETGMod/blob/master/Assembly-CSharp.Base.mm/Content/gungeon_id_map/enemies.txt
 		public override void DoOverride()
 		{
@@ -25,114 +26,70 @@ namespace Planetside
 
 			//The BehaviorSpeculator is responsible for almost everything an enemy does, from shooting a gun to teleporting.
 			// Tip: To debug an enemy's BehaviorSpeculator, you can uncomment the line below. This will print all the behavior information to the console.
-			ToolsEnemy.DebugInformation(behaviorSpec);
+			//ToolsEnemy.DebugInformation(behaviorSpec);
 
 			// For this first change, we're just going to increase the lead amount of the bullet kin's ShootGunBehavior so its shots fire like veteran kin.
 			//ShootBehavior shootGunBehavior2 = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[0].Behavior as ShootBehavior;
 			//ShootBehavior shootGunBehavior1 = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[1].Behavior as ShootBehavior;
-		   //ShootBehavior shootGunBehavior = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[2].Behavior as ShootBehavior;
-			//ShootBehavior shootGunBehavior1 = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[1].Behavior as ShootBehavior;
-			//ShootBehavior shootGunBehavior = behaviorSpec.AttackBehaviors[0] as ShootBehavior;
-			ShootGunBehavior shootGunBehavior1 = behaviorSpec.AttackBehaviors[0] as ShootGunBehavior;
+			//ShootBehavior shootGunBehavior = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[2].Behavior as ShootBehavior;
+			//ShootBehavior shootGunBehavior1 = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[0].Behavior as ShootBehavior;
+			//ShootGunBehavior shootGunBehavior = behaviorSpec.AttackBehaviors[0] as ShootGunBehavior;
 			//base.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("41ee1c8538e8474a82a74c4aff99c712").bulletBank.GetBullet("big"));
 			//base.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("ec6b674e0acd4553b47ee94493d66422").bulletBank.GetBullet("bigBullet"));
 			//yah.chargeSpeed = 30;
 			//yah.chargeRange = 30;
 			//yah.AttackCooldown = 1f;
 			//yah.delayWallRecoil = false;
-			//yah.wallRecoilForce = 160000;
-			shootGunBehavior1.WeaponType = WeaponType.BulletScript;
-			//shootGunBehavior.BulletScript = new CustomBulletScriptSelector(typeof(Speeeeeeen));
-			shootGunBehavior1.BulletScript = new CustomBulletScriptSelector(typeof(TheBiggerUkulele));
+			//yah.wallRecoilForce = 160000;	
+			//shootGunBehavior.WeaponType = WeaponType.BulletScript;
 
-			//shootGunBehavior1.BulletScript = new CustomBulletScriptSelector(typeof(Gear));
-			//shootGunBehavior.LeadAmount = 0.9f;
+			//shootGunBehavior.BulletScript = new CustomBulletScriptSelector(typeof(Bullettest));
+			//actor.bulletBank.Bullets.Add(BulletBuilder.GetBulletEntryByName("HammerOfTheMoon"));
+			
 
 
 			// Next, we're going to change another few things on the ShootGunBehavior so that it has a custom BulletScript.
-			//shootGunBehavior.WeaponType = WeaponType.BulletScript; // Makes it so the bullet kin will shoot our bullet script instead of his own gun shot.
+			// Makes it so the bullet kin will shoot our bullet script instead of his own gun shot.
 			//shootGunBehavior.BulletScript = new CustomBulletScriptSelector(typeof(Death)); // Sets the bullet kin's bullet script to our custom bullet script.
-		}
 
-		public class TheBiggerUkulele : Script
+		}
+		//public AIBulletBank.Entry ThesporeEntry;
+		public AIBulletBank.Entry lol; 
+
+
+		public class Bullettest : Script
 		{
 			protected override IEnumerator Top()
 			{
-				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("fa76c8cfdf1c4a88b55173666b4bc7fb").bulletBank.GetBullet("fastBullet"));
-				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("fa76c8cfdf1c4a88b55173666b4bc7fb").bulletBank.GetBullet("homingBullet"));
-				for (int j = 0; j < 2; j++)
-				{
-					base.Fire(new Direction(0, DirectionType.Aim, -1f), new Speed(20f, SpeedType.Absolute), new TheBiggerUkulele.BigCannon());
-					for (int e = -1; e < 1; e++)
-					{
-						base.Fire(new Direction(30f*e, DirectionType.Aim, -1f), new Speed(7f, SpeedType.Absolute), new TheBiggerUkulele.Missiles());
-					}
-					yield return base.Wait(45);
-				}				
+				this.Fire(new Direction(0, DirectionType.Aim, -1f), new Speed(1f, SpeedType.Absolute), new SkellBullet());
+
 				yield break;
 			}
+		}
 
 
-			private const int NumBullets = 24;
-
-			private class BigCannon : Bullet
+		public class SkellBullet : Bullet
+		{
+			public SkellBullet() : base("HammerOfTheMoon", false, false, false)
 			{
-				public BigCannon() : base("fastBullet", false, false, false)
-				{
 
-				}
 			}
-			public class Missiles : Bullet
+
+			protected override IEnumerator Top()
 			{
-				public Missiles() : base("homingBullet", false, false, false)
-				{
-
-					this.SuppressVfx = true;
-				}
-				protected override IEnumerator Top()
-				{
-					float waittime = UnityEngine.Random.Range(90, 30);
-					for (int i = 0; i < 150-waittime; i++)
-					{
-						base.ChangeDirection(new Direction(0f, DirectionType.Aim, 1f), 1);
-						if (i == 120-waittime)
-						{
-							this.Projectile.spriteAnimator.Play("enemy_projectile_rocket_impact");
-						}
-						yield return base.Wait(1);
-					}
-					base.Vanish(false);
-					yield break;
-				}
-
-				public override void OnBulletDestruction(Bullet.DestroyType destroyType, SpeculativeRigidbody hitRigidbody, bool preventSpawningProjectiles)
-				{
-					if (preventSpawningProjectiles)
-					{
-						return;
-					}
-					float num = base.RandomAngle();
-					float num2 = 90f;
-					for (int e = 0; e < 2; e++)
-                    {
-						for (int i = 0; i < 4; i++)
-						{
-							base.Fire(new Direction(num + num2 * (float)i +(30*e), DirectionType.Absolute, -1f), new Speed(5+(e+5), SpeedType.Absolute), new Base());
-						}
-						AkSoundEngine.PostEvent("Play_WPN_golddoublebarrelshotgun_shot_01", this.Projectile.gameObject);
-					}
-				}
-			}
-			public class Base : Bullet
-			{
-				public Base() : base(null, false, false, false)
-				{
-
-					this.SuppressVfx = true;
-				}
 				
+				OtherTools.EasyTrailBullet yup = base.Projectile.gameObject.AddComponent<OtherTools.EasyTrailBullet>();
+				//yup.StartPositionX = 40;
+				//yup.StartPositionY = 23;
+				yup.LifeTime = 2.5f;
+				yup.StartWidth = 35;
+				yup.StartColor = Color.white;
+				yup.BaseColor = Color.white;
+				yup.EndColor = Color.red;
+				
+				base.ChangeSpeed(new Speed(20f, SpeedType.Absolute), 60);
+				yield break;
 			}
 		}
 	}
 }
-*/

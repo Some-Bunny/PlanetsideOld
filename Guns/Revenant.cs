@@ -53,39 +53,33 @@ namespace Planetside
 			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
 			projectile.PenetratesInternalWalls = true;
+			projectile.gameObject.AddComponent<RevenantProjectile>();
 			PierceProjModifier spook = projectile.gameObject.AddComponent<PierceProjModifier>();
 			spook.penetration = 3;
 			spook.penetratesBreakables = true;
 			//projectile.baseData.range = 5.8f;
 			gun.encounterTrackable.EncounterGuid = "https://www.youtube.com/watch?v=HKmYRsnMsOk";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
+			Revenant.RevenantID = gun.PickupObjectId;
+
+			List<string> mandatoryConsoleIDs = new List<string>
+			{
+				"psog:revenant",
+			};
+			List<string> optionalConsoleIDs = new List<string>
+			{
+				"skull_spitter",
+				"vertebraek47"
+			};
+			CustomSynergies.Add("Boring Eternity", mandatoryConsoleIDs, optionalConsoleIDs, true);
 
 		}
+		public static int RevenantID;
 		public override void PostProcessProjectile(Projectile projectile)
 		{
-			try
-			{
-				projectile.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(projectile.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandlePreCollision));
-			}
-			catch (Exception ex)
-			{
-				ETGModConsole.Log(ex.Message, false);
-			}
+			
 		}
-		private void HandlePreCollision(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
-		{
-			bool flag = otherRigidbody.gameObject.name != null;
-			if (flag)
-			{
-				bool flag2 = otherRigidbody.gameObject.name == "Table_Vertical" || otherRigidbody.gameObject.name == "Table_Horizontal";
-				if (flag2)
-				{
-					myRigidbody.projectile.baseData.damage *= 1.05f;
-					PhysicsEngine.SkipCollision = true;
-				}
-			}
-		}
-
+		
 		private bool HasReloaded;
 
 		protected void Update()

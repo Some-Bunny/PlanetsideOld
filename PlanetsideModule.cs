@@ -17,6 +17,7 @@ using Gungeon;
 using GungeonAPI;
 using SaveAPI;
 using Planetside;
+using EnemyBulletBuilder;
 
 namespace Planetside
 {
@@ -24,26 +25,41 @@ namespace Planetside
     public class PlanetsideModule : ETGModule
     {
         public static readonly string MOD_NAME = "Planetside Of Gunymede";
-        public static readonly string VERSION = "1.0.0";
+        public static readonly string VERSION = "1.1";
         public static readonly string TEXT_COLOR = "#9006FF";
 
         public static string ZipFilePath;
         public static string FilePath;
+        public static string FilePathAudio;
+
+        public static ETGModuleMetadata metadata = new ETGModuleMetadata(); 
+        public static string ZipFilePath1;
+
         public static AdvancedStringDB Strings;
+        public static HellDragZoneController hellDrag;
 
         public override void Start()
         {
 
+            var forgeDungeon = DungeonDatabase.GetOrLoadByName("Base_Forge");
+            PlanetsideModule.hellDrag = forgeDungeon.PatternSettings.flows[0].AllNodes.Where(node => node.overrideExactRoom != null && node.overrideExactRoom.name.Contains("EndTimes")).First().overrideExactRoom.placedObjects.Where(ppod => ppod != null && ppod.nonenemyBehaviour != null).First().nonenemyBehaviour.gameObject.GetComponentsInChildren<HellDragZoneController>()[0];
+            forgeDungeon = null;
+
             ZipFilePath = this.Metadata.Archive;
             FilePath = this.Metadata.Directory + "/rooms";
+            FilePathAudio = this.Metadata.Directory;
+
+            metadata = this.Metadata;
+            ZipFilePath1 = this.Metadata.Archive;
+
             StaticReferences.Init();
             DungeonHandler.Init(); 
             EnemyHooks.Init();
             ToolsEnemy.Init();
-            DungeonHandler.Init();
             Hooks.Init();
+            EasyGoopDefinitions.DefineDefaultGoops();
             PlanetsideModule.Strings = new AdvancedStringDB();
-
+            AudioResourceLoader.InitAudio();
 
             MultiActiveReloadManager.SetupHooks();
             Tools.Init();
@@ -56,6 +72,8 @@ namespace Planetside
                 ETGModConsole.Log($"Planetside flow {status}", false);
             });
 
+            BulletBuilder.Init();
+            CustomEnemyBulletsInitialiser.Init();
             ShrineFakePrefabHooks.Init();
             ShrineFactory.Init();
             OldShrineFactory.Init();
@@ -85,7 +103,9 @@ namespace Planetside
             BrokenChamber.Init();
             //Unlocked by beating Lich with Broken Chamber
             DiamondChamber.Init();
+            NetheriteChamber.Init();
             TableTechNullReferenceException.Init();
+            WispInABottle.Init();
 
             TestActiveItem.Init();
             //Unlocked by killing Shellrax
@@ -118,6 +138,7 @@ namespace Planetside
             Revenant.Add();
             //Unlocked By Beating Bullet Banker
             SoulLantern.Add();
+
             VeteranShotgun.Add();
             VeteranerShotgun.Add();
             GTEE.Add();
@@ -137,7 +158,6 @@ namespace Planetside
 
             ForgiveMePlease.Init();
             ForgiveMePlease.BuildPrefab();
-            //ForgiveMePleaseAiActor.Init();
 
             PortablePylon.Init();
             LoaderPylonController.Init();
@@ -151,10 +171,45 @@ namespace Planetside
             BrokenArmorEffect.Init();
             FrailtyHealthEffect.Init();
             PossessedEffect.Init();
+            HolyBlessingEffect.Init();
+            HeatStrokeEffect.Init();
 
             LeSackPickup.Init();
             NullPickupInteractable.Init();
-            
+
+            //=================
+            KineticStrike.Init();
+            ShellsOfTheMountain.Init();
+            InjectorRounds.Init();
+            Capactior.Add();
+            TatteredRobes.Init();
+            BulletGuonMaker.Init();
+            JammedJar.Init();
+            DamnedGuonStone.Init();
+            Petrifier.Add();
+            Funcannon.Add();
+            GunWarrant.Init();
+            SirenSynergyForme.Add();
+            BanditsRevolver.Add();
+            Mop.Add();
+            ParasiticHeart.Add();
+            EyeOfAnnihilation.Add();
+            UnknownGun.Add();
+            EnergyShield.Init();
+            BloodIdol.Init();
+            Riftaker.Add();
+            HeresyHammer.Init();
+            Colossus.Add();
+            PerfectedColossus.Add();
+            ResourceGuonMaker.Init();
+
+            Ophanaim.Init();
+            Fungannon.Init();
+            Coallet.Init();
+            Shamber.Init();
+            ProperCube.Init();
+            Detscavator.Init();
+
             DeTurretRight.Init();
             DeTurretLeft.Init();
             Barretina.Init();
@@ -164,6 +219,7 @@ namespace Planetside
             RevolverSkull.Init();
             FodderEnemy.Init();
             JammedGuard.Init();
+            AnnihiChamber.Init();
 
             An3sBullet.Init();
             HunterBullet.Init();
@@ -189,6 +245,8 @@ namespace Planetside
             Wailer.Init();
 
             CelBullet.Init();
+            Grenadier.Init();
+
 
             InitialiseSynergies.DoInitialisation();
             SynergyFormInitialiser.AddSynergyForms();
@@ -196,16 +254,31 @@ namespace Planetside
             HoveringGunsAdder.AddHovers();
 
             BrokenChamberShrine.Add();
+            //ShrineOfEvil.Add();
+            ShrineOfDarkness.Add();
+            ShrineOfCurses.Add();
+            ShrineOfPetrification.Add();
+            ShrineOfSomething.Add();
+            ShrineOfPurity.Add();
 
-            Log($"{MOD_NAME} v{VERSION} started successfully.", TEXT_COLOR);
+            RandomPiecesOfStuffToInitialise.BuildPrefab();
+
+            RoomReader.Init();
+            QuestWanderer.Add();
+            DungeonHooks.OnPostDungeonGeneration += this.PlaceHellShrines;
+            DungeonHooks.OnPostDungeonGeneration += this.PlaceOtherHellShrines;
+
+            //AdvancedLogging.Log($"{MOD_NAME} v{VERSION} started successfully.", new Color(144, 6, 255, 255), false, true, null);
+            PlanetsideModule.Log($"{MOD_NAME} v{VERSION} started successfully.", TEXT_COLOR);
             List<string> RandomFunnys = new List<string>
             {
+                "Powered by SaveAPI!",
                 "Now With 100% Less Nulls!",
                 "You Lost The Game.",
                 "UwU",
                 "Bullet Banks are not to rob!",
                 "Art By SirWow!",
-                "Download Some Bunnys Content Pack",
+                "*Don't* Download Some Bunnys Content Pack",
                 "weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
                 "If you see this, you owe me 10 bucks you nerd.",
                 "https://www.youtube.com/watch?v=qn0YdT_pQF8",
@@ -250,7 +323,18 @@ namespace Planetside
                 "pootis",
                 "Frogs are cool!",
                 "It's... so... warm...",
-                "Poor aim, and a poor Reaper."
+                "Poor aim, and a poor Reaper.",
+                "egassem sdrawkcab",
+                "The Sun! The Sun! The Sun!",
+                "if(player.IsStupid){  }",
+                "cultist_comits_tax_evasion.mp3",
+                "Stop it, I'm bees!",
+                "bonk",
+                "fwendship",
+                "nice",
+                "Powered By AudioBuilder!",
+                "Powered By BeamBuilder!",
+                "Powered By Friendship!"
             };
             Random r = new Random();
             int index = r.Next(RandomFunnys.Count);
@@ -266,110 +350,431 @@ namespace Planetside
             string e = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BROKEN_CHAMBER_RUN_COMPLETED) ? " Done!\n" : " -Defeat The Lich With A Broken Remnant In Hand.\n";
             string f = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_LOOP_1) ? " Done!\n" : " -Beat The Game On Ouroborous Level 0.\n";
             string g = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND) ? " Done!\n" : " -Kill A Boss After Dealing 500 Damage Or More At Once.\n";
+            string h = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_FUNGANNON) ? " Done!\n" : " -Defeat The Fungal Beast Of The Sewers.\n";
+            string i = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_OPHANAIM) ? " Done!\n" : " -Defeat The Eternal Eye Of The Abbey.\n";
+            string j = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER) ? " Done!\n" : " -Defeat A Ravenous, Violent Chamber.\n";
+            string k = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK) ? " Done!\n" : " -Remove Each Hell-Bound Curse At Least Once.\n";
+
             string color1 = "9006FF";
-            OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g, color1);
+            OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g +h+i+j+k, color1);
             OtherTools.Init();
+            //ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.Jamnation));
         }
 
-        public static void Log(string text, string color="#FFFFFF")
+        public static void Log(string text, string color= "#9006FF")
         {
             ETGModConsole.Log($"<color={color}>{text}</color>");
         }
 
-        public static void aNGERgODScOMPONENT(Action<PlayerController, float> orig, PlayerController self, float invisibleDelay)
+        public static void RunStartHook(Action<PlayerController, float> orig, PlayerController self, float invisibleDelay)
         {
             orig(self, invisibleDelay);
-            self.gameObject.AddComponent<TellThePlayerTofuckRightOff>();
+            self.gameObject.GetOrAddComponent<AngryGodsManager>();
+            float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
+            bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+            if (LoopOn == true)
+            {
+                if (Loop == 69)
+                {
+                    UIToolbox.TextBox(Color.red, "Ouroborous Level: " + Loop.ToString() +"? Nice.", self.gameObject, dfPivotPoint.TopCenter, new Vector3(0.625f, 1.5f), 3, 0.5f, 0.75f, 1.25f, 1);
+                }
+                else
+                {
+                    UIToolbox.TextBox(Color.red, "Ouroborous Level: " + Loop.ToString(), self.gameObject, dfPivotPoint.TopCenter, new Vector3(0.625f, 1.5f), 3, 0.5f, 0.75f, 1.25f, 1);
+                }
+            }
         }
 
-
- 
-        /*
-        public static void SpawnProjectilesLOTJ(Action<SuperReaperController> orig, SuperReaperController self)
+       
+        private void PlaceHellShrines()
         {
-            GameObject obj = new GameObject();
-            if (GameManager.Instance.PreventPausing || BossKillCam.BossDeathCamRunning)
+            bool flag = GameManager.Instance.Dungeon.tileIndices.tilesetId == GlobalDungeonData.ValidTilesets.HELLGEON;
+            if (flag)
             {
-                return;
+                bool flag2 = false;
+                try
+                {
+                    for (int i = 0; i < GameManager.Instance.Dungeon.data.rooms.Count; i++)
+                    {
+                        RoomHandler roomHandler = GameManager.Instance.Dungeon.data.rooms[i];
+                        string name =roomHandler.GetRoomName();
+                        bool flag3 = !flag2 && name == "Hell Entrance";
+                        if (flag3)
+                        {
+                            IntVector2 randomVisibleClearSpot = roomHandler.GetCenterCell();
+                            bool flag4 = randomVisibleClearSpot != IntVector2.Zero;
+                            if (flag4)
+                            {
+                                GameObject original;
+                                OldShrineFactory.builtShrines.TryGetValue("psog:shrineofdarkness", out original);
+                                GameObject gObj = UnityEngine.Object.Instantiate<GameObject>(original, new Vector3((float)randomVisibleClearSpot.x + 5.0625f, (float)randomVisibleClearSpot.y+ 5.0625f), Quaternion.identity);
+                                gObj.AddComponent<HellShrineController>();
+                                IPlayerInteractable[] interfaces = gObj.GetInterfaces<IPlayerInteractable>();
+                                IPlaceConfigurable[] interfaces2 = gObj.GetInterfaces<IPlaceConfigurable>();
+                                RoomHandler roomHandler2 = roomHandler;
+                                for (int j = 0; j < interfaces.Length; j++)
+                                {
+                                    roomHandler2.RegisterInteractable(interfaces[j]);
+                                }
+                                for (int k = 0; k < interfaces2.Length; k++)
+                                {
+                                    interfaces2[k].ConfigureOnPlacement(roomHandler2);
+                                }
+                                GameObject original1;
+                                OldShrineFactory.builtShrines.TryGetValue("psog:shrineofcurses", out original1);
+                                GameObject gObj1 = UnityEngine.Object.Instantiate<GameObject>(original1, new Vector3((float)randomVisibleClearSpot.x - 6.0625f, (float)randomVisibleClearSpot.y - 6.0625f), Quaternion.identity);
+                                gObj1.AddComponent<HellShrineController>();
+
+                                IPlayerInteractable[] interfaces1 = gObj1.GetInterfaces<IPlayerInteractable>();
+                                IPlaceConfigurable[] interfaces21 = gObj1.GetInterfaces<IPlaceConfigurable>();
+                                RoomHandler roomHandler21 = roomHandler;
+                                for (int j = 0; j < interfaces.Length; j++)
+                                {
+                                    roomHandler2.RegisterInteractable(interfaces1[j]);
+                                }
+                                for (int k = 0; k < interfaces2.Length; k++)
+                                {
+                                    interfaces21[k].ConfigureOnPlacement(roomHandler21);
+                                }
+
+                                GameObject original11;
+                                OldShrineFactory.builtShrines.TryGetValue("psog:shrineofpetrification", out original11);
+                                GameObject gObj11 = UnityEngine.Object.Instantiate<GameObject>(original11, new Vector3((float)randomVisibleClearSpot.x + 5.0625f, (float)randomVisibleClearSpot.y - 6.0625f), Quaternion.identity);
+                                gObj11.AddComponent<HellShrineController>();
+
+                                IPlayerInteractable[] interfaces11 = gObj11.GetInterfaces<IPlayerInteractable>();
+                                IPlaceConfigurable[] interfaces211 = gObj11.GetInterfaces<IPlaceConfigurable>();
+                                RoomHandler roomHandler211 = roomHandler;
+                                for (int j = 0; j < interfaces.Length; j++)
+                                {
+                                    roomHandler2.RegisterInteractable(interfaces11[j]);
+                                }
+                                for (int k = 0; k < interfaces2.Length; k++)
+                                {
+                                    interfaces21[k].ConfigureOnPlacement(roomHandler21);
+                                }
+
+                                GameObject original2;
+                                OldShrineFactory.builtShrines.TryGetValue("psog:shrineofsomething", out original2);
+                                GameObject gObj2 = UnityEngine.Object.Instantiate<GameObject>(original2, new Vector3((float)randomVisibleClearSpot.x -6.25f , (float)randomVisibleClearSpot.y + 5.0625f), Quaternion.identity);
+                                HellShrineController deez = gObj2.AddComponent<HellShrineController>();
+
+                                IPlayerInteractable[] interfaces221 = gObj2.GetInterfaces<IPlayerInteractable>();
+                                IPlaceConfigurable[] interfaces22 = gObj2.GetInterfaces<IPlaceConfigurable>();
+                                RoomHandler roomHandler22 = roomHandler;
+                                for (int j = 0; j < interfaces.Length; j++)
+                                {
+                                    roomHandler22.RegisterInteractable(interfaces221[j]);
+                                }
+                                for (int k = 0; k < interfaces2.Length; k++)
+                                {
+                                    interfaces2[k].ConfigureOnPlacement(roomHandler22);
+                                }
+                                flag2 = true;
+                            }
+                        }
+                        
+                    }
+                }
+                catch
+                {
+                    ETGModConsole.Log("Catastrophic Failure In Placing Curse Shrines! Send A Screenshot of this and associated error in F3 Console.");
+                }
             }
-            if (SuperReaperController.PreventShooting)
-            {
-                return;
-            }
-            CellData cellData = GameManager.Instance.Dungeon.data[self.ShootPoint.position.IntXY(VectorConversions.Floor)];
-            if (cellData == null || cellData.type == CellType.WALL)
-            {
-                return;
-            }
-            if (!PlanetsideModule.m_bulletSource)
-            {
-                PlanetsideModule.m_bulletSource = self.ShootPoint.gameObject.GetOrAddComponent<BulletScriptSource>();
-            }
-            PlanetsideModule.m_bulletSource.BulletManager = self.bulletBank;
-            PlanetsideModule.m_bulletSource.BulletScript = new CustomBulletScriptSelector(typeof(LJ));
-            PlanetsideModule.m_bulletSource.Initialize();
         }
-        */
-        public static BulletScriptSource m_bulletSource;
-
-
-
-        public class TellThePlayerTofuckRightOff : BraveBehaviour
+        private void PlaceOtherHellShrines()
         {
-            // Token: 0x060004A9 RID: 1193 RVA: 0x0002A69C File Offset: 0x0002889C
+            bool flag = GameManager.Instance.Dungeon.tileIndices.tilesetId == GlobalDungeonData.ValidTilesets.HELLGEON;
+            if (flag)
+            {
+                try
+                {
+                    List<int> list = Enumerable.Range(0, GameManager.Instance.Dungeon.data.rooms.Count).ToList<int>().Shuffle<int>();
+                    List<int> list2 = list;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        RoomHandler roomHandler = GameManager.Instance.Dungeon.data.rooms[list2[i]];
+                        string name = roomHandler.GetRoomName();
+                        bool flag3 = roomHandler.IsStandardRoom && name != "Hell Entrance" && name != "Boss Foyer" && name != "LichRoom1" && name != "LichRoom2" && name != "LichRoom3" && name != "BigDumbIdiotBossRoom1";
+                        if (flag3)
+                        {
+                            IntVector2 randomVisibleClearSpot = roomHandler.GetRandomVisibleClearSpot(6, 6);
+                            bool flag4 = randomVisibleClearSpot != IntVector2.Zero;
+                            if (flag4)
+                            {
+                                GameObject original;
+                                OldShrineFactory.builtShrines.TryGetValue("psog:shrineofpurity", out original);
+                                GameObject gObj = UnityEngine.Object.Instantiate<GameObject>(original, new Vector3((float)randomVisibleClearSpot.x, (float)randomVisibleClearSpot.y), Quaternion.identity);
+
+                                gObj.gameObject.AddComponent<PurityShrineController>();
+
+                                IPlayerInteractable[] interfaces = gObj.GetInterfaces<IPlayerInteractable>();
+                                IPlaceConfigurable[] interfaces2 = gObj.GetInterfaces<IPlaceConfigurable>();
+                                RoomHandler roomHandler2 = roomHandler;
+                                for (int j = 0; j < interfaces.Length; j++)
+                                {
+                                    roomHandler2.RegisterInteractable(interfaces[j]);
+                                }
+                                for (int k = 0; k < interfaces2.Length; k++)
+                                {
+                                    interfaces2[k].ConfigureOnPlacement(roomHandler2);
+                                }
+                                this.m_instanceMinimapIcon = Minimap.Instance.RegisterRoomIcon(roomHandler, (GameObject)BraveResources.Load("Global Prefabs/Minimap_Shrine_Icon", ".prefab"), false);
+                            }
+                            list2.Remove(i);
+                        }
+
+                    }
+                }
+                catch
+                {
+                    ETGModConsole.Log("Catastrophic Failure In Placing Purity Shrines! Send A Screenshot of this and associated error in F3 Console.");
+                }
+            }
+        }
+
+        private GameObject m_instanceMinimapIcon;
+
+        public class PurityShrineController : BraveBehaviour
+        {
             public void Start()
             {
-                //Gun gun;
-                //ETGModConsole.Log("AAAAAAAAAAAAAAAAAAAAAA");
-                PlayerController player = GameManager.Instance.PrimaryPlayer;
-                player.OnUsedBlank += this.HandleTriedAttack;
-                GameManager.Instance.OnNewLevelFullyLoaded += this.OnNewFloor;
+                Trigger = false;
+                player = GameManager.Instance.PrimaryPlayer;
+                obj = base.gameObject;
+                base.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, CollisionLayer.PlayerHitBox,
+                CollisionLayer.Projectile, CollisionLayer.PlayerCollider, CollisionLayer.PlayerBlocker, CollisionLayer.BeamBlocker));
+
+                Vector2 vector = new Vector2(base.specRigidbody.UnitCenter.x, base.specRigidbody.UnitCenter.y);
+                Vector3 vector2 = new Vector3(vector.x, vector.y, 0f);
+                PurityShrineController component = base.gameObject.GetComponent<PurityShrineController>();
+                PurityShrineController.HoleObject = PickupObjectDatabase.GetById(155).GetComponent<SpawnObjectPlayerItem>();
+
+                component.synergyobject = PurityShrineController.HoleObject.objectToSpawn;
+                BlackHoleDoer component2 = this.synergyobject.GetComponent<BlackHoleDoer>();
+                this.gameObject1 = UnityEngine.Object.Instantiate<GameObject>(component2.HellSynergyVFX, new Vector3(base.transform.position.x + 1f, base.transform.position.y, base.transform.position.z + 5f), Quaternion.Euler(0f, 0f, 0f));
+                MeshRenderer component3 = this.gameObject1.GetComponent<MeshRenderer>();
+                base.StartCoroutine(this.HoldPortalOpen(component3, vector, this.gameObject1));
+
+
+                var texture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\nebula_reducednoise.png");
+                component3.material.SetTexture("_PortalTex", texture);
+                hole = component3;
+
+                tk2dSprite sprite = obj.GetComponent<tk2dSprite>();
+                Material material = sprite.sprite.renderer.material;
+                material.shader = Shader.Find("Brave/GoopShader");
+                material.SetFloat("_OilGoop", 1f);
+                material.SetFloat("_OpaquenessMultiply", 0.5f);
+                material.SetTexture("_WorldTex", texture);
+            }
+            private IEnumerator HoldPortalOpen(MeshRenderer component, Vector2 vector, GameObject gameObject1)
+            {
+                float elapsed = 0f;
+                while (component != null)
+                {
+                    elapsed += BraveTime.DeltaTime;
+                    float t = Mathf.Clamp01(elapsed / 0.25f);
+                    component.material.SetFloat("_UVDistCutoff", Mathf.Lerp(0f, 0.30f, t));
+                    yield return null;
+                }
+
+                yield break;
+            }
+            private IEnumerator ClosePortal(MeshRenderer portal, tk2dSprite self) // this be closing coroutine
+            {
+                AkSoundEngine.PostEvent("Play_BOSS_spacebaby_charge_01", self.gameObject);
+                var texture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\nebula_reducednoise.png");
+                Material material = self.sprite.renderer.material;
+                material.shader = Shader.Find("Brave/GoopShader");
+                material.SetFloat("_OilGoop", 1f);
+                material.SetFloat("_OpaquenessMultiply", 0.5f);
+                material.SetTexture("_WorldTex", texture);
+
+                //0.25 is the size of portal, so noteice it for the Mathf.Lerp and here. maybe put it into a variable?
+                portal.material.SetFloat("_UVDistCutoff", 0.30f);
+                yield return new WaitForSeconds(1);//time it waits  before it starts closing
+                float elapsed = 0f;
+                float duration = 2;//time it takes it to close
+                float t = 0f;
+                while (elapsed < duration)//idk dodgeroll black magic
+                {
+                    material.SetFloat("_OilGoop", 1 - (elapsed/5));
+                    material.SetFloat("_OpaquenessMultiply", 0.5f + (elapsed/10));
+                    elapsed += BraveTime.DeltaTime;
+                    t = Mathf.Clamp01(elapsed / 1.25f);
+                    portal.material.SetFloat("_UVDistCutoff", Mathf.Lerp(0.30f-(elapsed/30f), 0f, t));
+                    yield return null;
+                }
+                AkSoundEngine.PostEvent("Play_OBJ_dice_bless_01", self.gameObject);
+                for (int i = 0; i < 15; i++)
+                {
+                    SpawnManager.SpawnVFX((PickupObjectDatabase.GetById(538) as SilverBulletsPassiveItem).SynergyPowerVFX, self.sprite.WorldCenter.ToVector3ZisY(0f) + new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f), 100), Quaternion.identity).GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(base.sprite.WorldCenter.ToVector3ZisY(0f), tk2dBaseSprite.Anchor.MiddleCenter);
+                    //SpawnManager.SpawnVFX((PickupObjectDatabase.GetById(565) as PlayerOrbitalItem).BreakVFX, self.sprite.WorldCenter.ToVector3ZisY(0f) + new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f),100 ), Quaternion.identity);
+                }
+                material.shader = Shader.Find("Brave/PlayerShader");
+                UnityEngine.Object.Destroy(portal.gameObject);
+
+                yield break;
+            }
+
+            public void Update()
+            {
+                RoomHandler absoluteRoom = obj.transform.position.GetAbsoluteRoom();
+                if (absoluteRoom == player.CurrentRoom && !player.IsInCombat && Trigger == false)
+                {
+                    tk2dSprite sprite = obj.GetComponent<tk2dSprite>();
+                    base.StartCoroutine(this.ClosePortal(hole, sprite));
+                    Trigger = true;
+                    base.specRigidbody.AddCollisionLayerOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, CollisionLayer.PlayerHitBox,
+                    CollisionLayer.Projectile, CollisionLayer.PlayerCollider, CollisionLayer.PlayerBlocker, CollisionLayer.BeamBlocker));
+                }
+            }
+            MeshRenderer hole;
+            private GameObject synergyobject;
+            private static SpawnObjectPlayerItem HoleObject;
+            private GameObject gameObject1;
+            bool Trigger;
+            GameObject obj;
+            PlayerController player;
+        }
+        public class HellShrineController : BraveBehaviour
+        {
+
+            public HellShrineController()
+            {
+                shrine = base.gameObject;
+            }
+            public void Start()
+            {
+                Trigger = false;
+                player = GameManager.Instance.PrimaryPlayer;
+                obj = base.gameObject;
+
+                ID = ItemAPI.SpriteBuilder.AddSpriteToCollection("Planetside/Resources/Shrines/HellShrines/shrinebroken", obj.GetComponent<tk2dBaseSprite>().Collection);
+
             }
             public void Update()
             {
 
+                RoomHandler absoluteRoom = obj.transform.position.GetAbsoluteRoom();
+                if (absoluteRoom != player.CurrentRoom && player.IsInCombat && Trigger == false)
+                {
+                    Trigger = true;
+                    LootEngine.DoDefaultPurplePoof(obj.transform.position, false);
+                    tk2dSprite sprite = obj.GetComponent<tk2dSprite>();
+
+                    sprite.GetComponent<tk2dBaseSprite>().SetSprite(ID);
+
+                    try
+                    {
+                        SimpleShrine shrine = base.gameObject.GetComponent<SimpleShrine>();
+                        shrine.text = "The spirits that have once inhabited the shrine have departed.";
+                        shrine.OnAccept = null;
+                        shrine.OnDecline = null;
+                        shrine.acceptText = "Leave, with style.";
+                        shrine.declineText = "Leave.";
+                        shrine.CanUse = CanUse;
+                    }
+                    catch
+                    {
+                        ETGModConsole.Log("Failure in modifying shrines (1)");
+                    }
+
+                   
+
+                }
+            }
+            public static bool CanUse(PlayerController player, GameObject shrine)
+            {
+                return false;
+            }
+            int ID;
+            GameObject shrine;
+            bool Trigger;
+            GameObject obj;
+            PlayerController player;
+        }
+        public class AngryGodsManager : BraveBehaviour
+        {
+            public void Start()
+            {
+                PlayerController player = GameManager.Instance.PrimaryPlayer;
+                player.OnUsedBlank += this.HandleTriedAttack;
+                GameManager.Instance.OnNewLevelFullyLoaded += this.OnNewFloor;
             }
             private void OnNewFloor()
             {
                 this.SummonedOnFloor = 0f;
             }
 
+            protected override void OnDestroy()
+            {
+                this.SummonedOnFloor = 0f;
+                base.OnDestroy();
+            }
             private void HandleTriedAttack(PlayerController obj, int what)
             {
-                //ETGModConsole.Log("ITS THIS TRIGGERING EVEN");
                 if ((CheckforSpeciRoom.Contains(obj.CurrentRoom.GetRoomName())))
                 {
                     bool TryForGuard = this.SummonedOnFloor == 0;
                     if (TryForGuard)
                     {
-                        string header = "DEFILER!";
-                        string text = "The Gods Have Been Angered.";
-                        if ((GameManager.Instance.PrimaryPlayer.HasPickupID(ETGMod.Databases.Items["Diamond Chamber"].PickupObjectId)))
+                        if (obj.GetComponent<HERETIC>() != null)
                         {
-                            //this.SummonedOnFloor += 1f;
-                            header = "YOU ARE FORGIVEN.";
-                            text = "FOR NOW.";
+                            AkSoundEngine.PostEvent("Play_BOSS_lichB_grab_01", base.gameObject);
+                            GameObject hand = UnityEngine.Object.Instantiate<GameObject>(PlanetsideModule.hellDrag.HellDragVFX);
+                            tk2dBaseSprite component1 = hand.GetComponent<tk2dBaseSprite>();
+                            component1.usesOverrideMaterial = true;
+                            component1.PlaceAtLocalPositionByAnchor(obj.specRigidbody.UnitCenter, tk2dBaseSprite.Anchor.LowerCenter);
+                            component1.renderer.material.shader = ShaderCache.Acquire("Brave/Effects/StencilMasked");
+                            Pixelator.Instance.FadeToBlack(0.5f, false, 0f);
+                            base.StartCoroutine(this.HandleGrabbyGrab(obj));
+
+                            this.SummonedOnFloor += 1f;
                         }
                         else
                         {
-                            AkSoundEngine.PostEvent("Play_BOSS_lichB_intro_01", base.gameObject);
-                            GameObject gameObject = new GameObject();
-                            gameObject.transform.position = obj.transform.position;
-                            BulletScriptSource source = gameObject.GetOrAddComponent<BulletScriptSource>();
-                            gameObject.AddComponent<BulletSourceKiller>();
-                            var bulletScriptSelected = new CustomBulletScriptSelector(typeof(AngerGodsScript));
-                            AIActor aIActor = EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5");
-                            AIBulletBank bulletBank = aIActor.GetComponent<AIBulletBank>();
-                            bulletBank.CollidesWithEnemies = false;
-                            source.BulletManager = bulletBank;
-                            source.BulletScript = bulletScriptSelected;
-                            source.Initialize();//to fire the script once
+                            string header = "DEFILER!";
+                            string text = "The Gods Have Been Angered.";
+                            if (GameManager.Instance.PrimaryPlayer.HasPickupID(ETGMod.Databases.Items["Diamond Chamber"].PickupObjectId) || ((GameManager.Instance.PrimaryPlayer.HasPickupID(ETGMod.Databases.Items["Netherite Chamber"].PickupObjectId))))
+                            {
+                                //this.SummonedOnFloor += 1f;
+                                header = "YOU ARE FORGIVEN.";
+                                text = "FOR NOW.";
+                            }
+                            else
+                            {
+                                AkSoundEngine.PostEvent("Play_BOSS_lichB_intro_01", base.gameObject);
+                                GameObject gameObject = new GameObject();
+                                gameObject.transform.position = obj.transform.position;
+                                BulletScriptSource source = gameObject.GetOrAddComponent<BulletScriptSource>();
+                                gameObject.AddComponent<BulletSourceKiller>();
+                                var bulletScriptSelected = new CustomBulletScriptSelector(typeof(AngerGodsScript));
+                                AIActor aIActor = EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5");
+                                AIBulletBank bulletBank = aIActor.GetComponent<AIBulletBank>();
+                                bulletBank.CollidesWithEnemies = false;
+                                source.BulletManager = bulletBank;
+                                source.BulletScript = bulletScriptSelected;
+                                source.Initialize();//to fire the script once
+                            }
+                            this.SummonedOnFloor += 1f;
+                            AngryGodsManager.Notify(header, text);
                         }
-                        this.SummonedOnFloor += 1f;
-                        TellThePlayerTofuckRightOff.Notify(header, text);
+                        
                     }
                 }
             }
+            private IEnumerator HandleGrabbyGrab(PlayerController grabbedPlayer)
+            {
+
+                Pixelator.Instance.FadeToBlack(0.5f, false, 0f);
+                {
+                    GameManager.Instance.LoadCustomLevel("tt_bullethell");
+                }
+                yield break;
+            }
+
             private static void Notify(string header, string text)
             {
                 tk2dSpriteCollectionData encounterIconCollection = AmmonomiconController.Instance.EncounterIconCollection;
@@ -394,7 +799,6 @@ namespace Planetside
         public static void ReloadBreachShrinesPSOG(Action<Foyer> orig, Foyer self1)
         {
             orig(self1);
-            //Bugun.ThisIsBasicallyCelsRNGUNButTakenToASillyLevel();
             bool flag = PlanetsideModule.hasInitialized;
             if (!flag)
             {
@@ -410,132 +814,6 @@ namespace Planetside
     }
 }
 
-/*
-public class LJ : Script
-{
-    protected override IEnumerator Top()
-    {
-
-        base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("41ee1c8538e8474a82a74c4aff99c712").bulletBank.GetBullet("big"));
-        base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("6868795625bd46f3ae3e4377adce288b").bulletBank.GetBullet("dagger"));
-        this.Fire(new Direction(0f, DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new LJ.Superball());
-        /*
-        float startingDir = UnityEngine.Random.Range(0f, 360f);
-        for (int e = 0; e < 4; e++)
-        {
-            for (int i = -3; i < 2; i++)
-            {
-                base.Fire(new Direction((float)(i * 7) + 90 * e + startingDir, DirectionType.Aim, -1f), new Speed(2f - (float)Mathf.Abs(i) * 0.5f, SpeedType.Absolute), new WaveBullet());
-
-            }
-            for (int i = -3; i < 2; i++)
-            {
-                base.Fire(new Direction(((float)(i * 7) + 90 * e + startingDir)+45, DirectionType.Aim, -1f), new Speed(5f - (float)Mathf.Abs(i) * 0.5f, SpeedType.Absolute), new WaveBullet());
-
-            }
-        }
-        
-        yield break;
-    }
-
-
-    public class Superball : Bullet
-    {
-        public Superball() : base("big", false, false, false)
-        {
-        }
-        protected override IEnumerator Top()
-        {
-
-            base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("ec6b674e0acd4553b47ee94493d66422").bulletBank.GetBullet("bigBullet"));
-            yield return this.Wait(120);
-            base.Vanish(false);
-            yield break;
-        }
-        public override void OnBulletDestruction(Bullet.DestroyType destroyType, SpeculativeRigidbody hitRigidbody, bool preventSpawningProjectiles)
-        {
-            base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("ec6b674e0acd4553b47ee94493d66422").bulletBank.GetBullet("bigBullet"));
-
-            if (!preventSpawningProjectiles)
-            {
-                float startAngle = base.RandomAngle();
-                float delta = 90f;
-                for (int A = 0; A < 4; A++)
-                {
-                    float num = startAngle + (float)A * delta;
-                    this.Fire(new Direction(num, DirectionType.Absolute, -1f), new Speed(2.5f, SpeedType.Relative), new LJ.Break(base.Position,false ,num));
-                }
-                for (int A = 0; A < 4; A++)
-                {
-                    float num = startAngle + (float)A * delta;
-                    this.Fire(new Direction(num + 9, DirectionType.Absolute, -1f), new Speed(2f, SpeedType.Relative), new LJ.Break(base.Position,true ,num));
-                }
-            }
-
-        }
-        
-    }
-    public class Break : Bullet
-    {
-        public Break(Vector2 centerPoint, bool speeen, float startAngle) : base("bigBullet", false, false, false)
-        {
-            this.centerPoint = centerPoint;
-            this.yesToSpeenOneWay = speeen;
-            this.startAngle = startAngle;
-        }
-        protected override IEnumerator Top()
-        {
-            for (int E = 0; E < 2; E++)
-            {
-                base.ManualControl = true;
-                float radius = Vector2.Distance(this.centerPoint, base.Position);
-                float speed = this.Speed;
-                float spinAngle = this.startAngle;
-                float spinSpeed = 0f;
-                for (int i = 0; i < 180; i++)
-                {
-                    speed += 0.13333334f;
-                    radius += speed / 60f;
-                    if (yesToSpeenOneWay == true)
-                    {
-                        spinSpeed -= 0.666f;
-                    }
-                    else
-                    {
-                        spinSpeed += 0.666f;
-
-                    }
-                    spinAngle += spinSpeed / 60f;
-                    base.Position = this.centerPoint + BraveMathCollege.DegreesToVector(spinAngle, radius);
-                    yield return base.Wait(1);
-                }
-                base.Vanish(false);
-                yield break;
-            }
-            yield break;
-        }
-        public Vector2 centerPoint;
-        public bool yesToSpeenOneWay;
-        public float startAngle;
-    }
-    public class WaveBullet : Bullet
-    {
-        public WaveBullet() : base("dagger", false, false, false)
-        {
-        }
-
-        protected override IEnumerator Top()
-        {
-            yield return base.Wait(20);
-            float speed = base.Speed;
-            base.ChangeSpeed(new Speed(speed+10, SpeedType.Absolute), 60);
-
-            yield break;
-        }
-    }
-
-}
-*/
 public class AngerGodsScript : Script
 {
     protected override IEnumerator Top()
@@ -593,19 +871,20 @@ public class AngerGodsScript : Script
             if (!preventSpawningProjectiles)
             {
                 base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("reversible"));
-                var list = new List<string> {
-				//"shellet",
+                var list = new List<string> 
+                {
 				"jammed_guardian"
-            };
+                };
                 string guid = BraveUtility.RandomElement<string>(list);
                 var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
+
+                AIActor.Spawn(Enemy.aiActor, this.Projectile.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
                 if ((GameManager.Instance.PrimaryPlayer.HasPickupID(DiamondChamber.ChamberID)))
                 {
-                    Enemy.IsHarmlessEnemy = true;
-                    Enemy.CanTargetPlayers = false;
-                    Enemy.CanTargetEnemies = true;
+                    Enemy.aiActor.IsHarmlessEnemy = true;
+                    Enemy.aiActor.CanTargetPlayers = false;
+                    Enemy.aiActor.CanTargetEnemies = true;
                 }
-                AIActor.Spawn(Enemy.aiActor, this.Projectile.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
                 float num = base.RandomAngle();
                 float Amount = 12;
                 float Angle = 360 / Amount;

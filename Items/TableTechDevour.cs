@@ -46,8 +46,9 @@ namespace Planetside
                 "bloody_9mm"
             };
             CustomSynergies.Add("KILL KILL KILL", mandatoryConsoleIDs, optionalConsoleIDs, true);
+            TableTechDevour.DevourID = minigunrounds.PickupObjectId;
         }
-
+        public static int DevourID;
         public override void Pickup(PlayerController player)
         {
             player.OnTableFlipped = (Action<FlippableCover>)Delegate.Combine(player.OnTableFlipped, new Action<FlippableCover>(this.HandleFlip));

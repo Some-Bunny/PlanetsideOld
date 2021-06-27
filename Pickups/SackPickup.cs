@@ -39,7 +39,7 @@ namespace Planetside
 
 			WeightedGameObject weightedObject = new WeightedGameObject();
 			weightedObject.SetGameObject(gameObject);
-			weightedObject.weight = 1.25f;
+			weightedObject.weight = 2.5f;
 			weightedObject.rawGameObject = gameObject;
 			weightedObject.pickupId = pickup.PickupObjectId;
 			weightedObject.forceDuplicatesPossible = true;
@@ -158,7 +158,6 @@ namespace Planetside
 			600,//partial-ammo
 			78,//ammo
 			565//glass guon stone
-
 		};
 	}
 }

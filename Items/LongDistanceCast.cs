@@ -50,7 +50,7 @@ namespace Planetside
 								List<AIActor> activeEnemies = owner.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 								bool flag5 = activeEnemies == null | activeEnemies.Count <= 0;
 								{
-									AIActor nearestEnemy = this.GetNearestEnemy(activeEnemies, owner.sprite.WorldCenter, out num2, null);
+									AIActor nearestEnemy = this.GetNearestEnemy(activeEnemies, owner.sprite.WorldCenter, out num2, null, 8);
 									bool flag8 = nearestEnemy && nearestEnemy != null;
 									if (flag8)
 									{
@@ -98,10 +98,10 @@ namespace Planetside
 			base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
 			base.OnDestroy();
 		}
-		public AIActor GetNearestEnemy(List<AIActor> activeEnemies, Vector2 position, out float nearestDistance, string[] filter)
+		public AIActor GetNearestEnemy(List<AIActor> activeEnemies, Vector2 position, out float nearestDistance, string[] filter, float range)
 		{
 			AIActor aiactor = null;
-			nearestDistance = float.MaxValue;
+			nearestDistance = range;
 			bool flag = activeEnemies == null;
 			bool flag2 = flag;
 			bool flag3 = flag2;
@@ -299,7 +299,6 @@ namespace Planetside
 			this.InternalPostProcessProjectile(component);
 		}
 
-		// Token: 0x06007629 RID: 30249 RVA: 0x002F0650 File Offset: 0x002EE850
 		private void InternalPostProcessProjectile(Projectile proj)
 		{
 			if (proj && !this.ForceAllowGoop)

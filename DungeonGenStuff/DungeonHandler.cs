@@ -58,6 +58,10 @@ namespace GungeonAPI
                 additionalPrerequisites = new DungeonPrerequisite[0],
                 weight = roomData.weight
             };
+
+            AssetBundle shared_auto_001 = ResourceManager.LoadAssetBundle("shared_auto_001");
+
+            GameObject iconPrefab = RoomFactory.MinimapIconPrefab ?? (shared_auto_001.LoadAsset("assets/data/prefabs/room icons/minimap_boss_icon.prefab") as GameObject);
             //bool success = false;
             switch (room.category)
             {
@@ -85,9 +89,66 @@ namespace GungeonAPI
                     StaticReferences.RoomTables["secret"].includedRooms.Add(wRoom);
                     //success = true;
                     break;
+                    //===========================PUTS YOUR BOSS ROOMS IN THE POOLS DEFINED IN STATICREFERENCES ====================
                 case RoomCategory.BOSS:
-                    // get trolled lol 
+                    switch (room.subCategoryBoss)
+                    {
+                        case RoomBossSubCategory.FLOOR_BOSS:  
+                            foreach (var p in room.prerequisites)
+
+                                if (p.requiredTileset == GlobalDungeonData.ValidTilesets.CASTLEGEON)
+                                {
+                                    StaticReferences.RoomTables["boss1"].includedRooms.Add(wRoom);
+                                    StaticReferences.RoomTables["boss2"].includedRooms.Add(wRoom);
+                                    StaticReferences.RoomTables["boss3"].includedRooms.Add(wRoom);
+                                }
+                                else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.SEWERGEON)
+                                {
+                                    StaticReferences.RoomTables["blobby"].includedRooms.Add(wRoom);
+                                }
+                                else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.GUNGEON)
+                                {
+                                    StaticReferences.RoomTables["gorgun"].includedRooms.Add(wRoom);
+                                    StaticReferences.RoomTables["beholster"].includedRooms.Add(wRoom);
+                                    StaticReferences.RoomTables["ammoconda"].includedRooms.Add(wRoom);
+                                }
+                                else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.CATHEDRALGEON)
+                                {
+                                    StaticReferences.RoomTables["oldking"].includedRooms.Add(wRoom);
+                                }
+                                else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.MINEGEON)
+                                {
+                                    StaticReferences.RoomTables["tank"].includedRooms.Add(wRoom);
+                                    StaticReferences.RoomTables["cannonballrog"].includedRooms.Add(wRoom);
+                                    StaticReferences.RoomTables["flayer"].includedRooms.Add(wRoom);
+                                }
+                                else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.CATHEDRALGEON)
+                                {
+                                    StaticReferences.RoomTables["pillars"].includedRooms.Add(wRoom);
+                                    StaticReferences.RoomTables["priest"].includedRooms.Add(wRoom);
+                                    StaticReferences.RoomTables["monger"].includedRooms.Add(wRoom);
+                                }
+                                else
+                                {
+                                    //StaticReferences.RoomTables["doorlord"].includedRooms.Add(wRoom);
+                                }
+                            room.associatedMinimapIcon = iconPrefab;
+
+                            break;
+                        case RoomBossSubCategory.MINI_BOSS:
+                            StaticReferences.RoomTables["blockner"].includedRooms.Add(wRoom);
+                            StaticReferences.RoomTables["shadeagunim"].includedRooms.Add(wRoom);
+                            //StaticReferences.RoomTables["fuselier"].includedRooms.Add(wRoom);
+                            room.associatedMinimapIcon = iconPrefab;
+                            break;
+                        default:
+                            //StaticReferences.RoomTables["doorlord"].includedRooms.Add(wRoom);
+                           // room.associatedMinimapIcon = iconPrefab;
+                            break;
+                    }
                     break;
+                   
+                    //===============================================
                 default:
                     foreach (var p in room.prerequisites)
                         if (p.requireTileset)
@@ -99,6 +160,63 @@ namespace GungeonAPI
             RemoveTilesetPrereqs(room);
 
            
+        }
+        public static GameObject MinimapShrineIconPrefab;
+
+        public static void RegisterForShrine(RoomData roomData)
+        {
+            var room = roomData.room;
+            var wRoom = new WeightedRoom()
+            {
+                room = room,
+                additionalPrerequisites = new DungeonPrerequisite[0],
+                weight = roomData.weight
+            };
+            //AssetBundle shared_auto_001 = ResourceManager.LoadAssetBundle("shared_auto_001");
+
+            GameObject iconPrefab = (GameObject)BraveResources.Load("Global Prefabs/Minimap_Shrine_Icon", ".prefab");
+            room.associatedMinimapIcon = iconPrefab;
+            // bool success = false;
+            switch (room.category)
+            {
+                case RoomCategory.SPECIAL:
+                    switch (room.subCategorySpecial)
+                    {
+                        case RoomSpecialSubCategory.STANDARD_SHOP:  //shops
+                            StaticReferences.RoomTables["shop"].includedRooms.Add(wRoom);
+                            // Tools.Print($"Registering {roomData.room.name} with weight {wRoom.weight} as {roomData.category}:{roomData.specialSubCategory}");
+                        //    success = true;
+                            break;
+                        case RoomSpecialSubCategory.WEIRD_SHOP:    //subshops
+                            StaticReferences.subShopTable.InjectionData.AddRange(GetFlowModifier(roomData));
+                            /// Tools.Print($"Registering {roomData.room.name} with weight {wRoom.weight} as {roomData.category}:{roomData.specialSubCategory}");
+                        //    success = true;
+                            break;
+                        default:
+                            StaticReferences.RoomTables["special"].includedRooms.Add(wRoom);
+                            //Tools.Print($"Registering {roomData.room.name} with weight {wRoom.weight} as {roomData.category}:{roomData.specialSubCategory}");
+                          //  success = true;
+                            break;
+                    }
+                    break;
+                case RoomCategory.SECRET:
+                    StaticReferences.RoomTables["secret"].includedRooms.Add(wRoom);
+                    //success = true;
+                    break;
+                case RoomCategory.BOSS:
+                    // TODO
+                    break;
+                default:
+                    foreach (var p in room.prerequisites)
+                        if (p.requireTileset)
+                            StaticReferences.GetRoomTable(p.requiredTileset).includedRooms.Add(wRoom);
+                   // success = true;
+                    break;
+            }
+            //success = true;
+            RemoveTilesetPrereqs(room);
+
+
         }
 
         public static List<ProceduralFlowModifierData> GetFlowModifier(RoomData roomData)

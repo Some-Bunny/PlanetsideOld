@@ -18,10 +18,8 @@ using UnityEngine.Serialization;
 
 namespace Planetside
 {
-	// Token: 0x0200002D RID: 45
 	public class BurningSun : GunBehaviour
 	{
-		// Token: 0x0600013F RID: 319 RVA: 0x0000D468 File Offset: 0x0000B668
 		public static void Add()
 		{
 			Gun gun = ETGMod.Databases.Items.NewGun("Burning Sun", "burningsun");
@@ -40,7 +38,7 @@ namespace Planetside
 			gun.DefaultModule.ammoCost = 1;
 			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
 			gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
-			gun.reloadTime = 3f;
+			gun.reloadTime = 2.5f;
 			gun.DefaultModule.cooldownTime = 1f;
 			gun.DefaultModule.numberOfShotsInClip = 1;
 			gun.SetBaseMaxAmmo(50);
@@ -72,6 +70,18 @@ namespace Planetside
 			Values.TimeBetweenDamageEvents = 0.33f;
 			Values.DealsDamage = false;
 			Values.InflictsFire = true;
+			Values.HeatStrokeSynergy = true;
+			projectile2.gameObject.AddComponent<BurningSunProjectile>();
+
+			OtherTools.EasyTrailBullet trail = projectile2.gameObject.AddComponent<OtherTools.EasyTrailBullet>();
+			trail.TrailPos = projectile2.transform.position;
+			trail.StartColor = Color.white;
+			trail.StartWidth = 0.7f;
+			trail.EndWidth = 0;
+			trail.LifeTime = 1f;
+			trail.BaseColor = new Color(5f, 1f, 0f, 2f);
+			trail.EndColor = new Color(5f, 1f, 1f, 0f);
+
 			ProjectileModule.ChargeProjectile item2 = new ProjectileModule.ChargeProjectile
 			{
 				Projectile = projectile2,
@@ -83,6 +93,18 @@ namespace Planetside
 			};
 			gun.quality = PickupObject.ItemQuality.A;
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
+			List<string> mandatoryConsoleIDs = new List<string>
+			{
+				"psog:burning_sun",
+			};
+			List<string> optionalConsoleIDs = new List<string>
+			{
+				"psog:wisp_in_a_bottle",
+				"sunlight_javelin",
+				"old_knights_flask",
+				"gun_soul"
+			};
+			CustomSynergies.Add("Praise The Gun!", mandatoryConsoleIDs, optionalConsoleIDs, true);
 		}
 
 		private bool HasReloaded;
@@ -108,29 +130,8 @@ namespace Planetside
 		public override void PostProcessProjectile(Projectile projectile)
 		{
 
-
-			TrailRenderer tr;
-			var tro = projectile.gameObject.AddChild("trail object");
-			tro.transform.position = projectile.transform.position;
-			tro.transform.localPosition = new Vector3(0f, 0f, 0f);
-
-			tr = tro.AddComponent<TrailRenderer>();
-			tr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-			tr.receiveShadows = false;
-			var mat = new Material(Shader.Find("Sprites/Default"));
-			mat.mainTexture = _gradTexture;
-			mat.SetColor("_Color", new Color(5f, 1f, 0f, 2f));
-			tr.material = mat;
-			tr.time = 1f;
-			tr.minVertexDistance = 0.1f;
-			tr.startWidth = 0.7f;
-			tr.endWidth = 0f;
-			tr.startColor = Color.white;
-			tr.endColor = new Color(5f, 1f, 1f, 0f);
-			
 			PlayerController player = projectile.Owner as PlayerController;
-			this.ShockRing(projectile);
-            projectile.OnDestruction += this.EndRingEffect;
+
 		}
 
 		private void EndRingEffect(Projectile projectile)

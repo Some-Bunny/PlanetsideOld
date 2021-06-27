@@ -56,6 +56,7 @@ namespace Planetside
 			gun.Volley.projectiles[0].projectiles[0] = projectile;
 			projectile.baseData.damage = 2f;
 			projectile.baseData.speed *= 3f;
+			projectile.gameObject.AddComponent<ShockChainProjectile>();
 			PierceProjModifier spook = projectile.gameObject.AddComponent<PierceProjModifier>();
 			spook.penetration = 20;
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
@@ -79,8 +80,9 @@ namespace Planetside
 			Projectile projectile1 = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[1].projectiles[0]);
 			projectile1.gameObject.SetActive(false);
 			gun.Volley.projectiles[1].projectiles[0] = projectile1;
-			projectile1.baseData.damage = 2f;
+			projectile1.baseData.damage = 8f;
 			projectile1.baseData.speed *= 3f;
+			projectile1.gameObject.AddComponent<ShockChainProjectile>();
 			PierceProjModifier spooky = projectile1.gameObject.AddComponent<PierceProjModifier>();
 			spooky.penetration = 20;
 			FakePrefab.MarkAsFakePrefab(projectile1.gameObject);
@@ -126,27 +128,7 @@ namespace Planetside
 
 		public override void PostProcessProjectile(Projectile projectile)
 		{
-			PlayerController player = this.gun.CurrentOwner as PlayerController;
-			float ElectricDamage = 6;
-			bool flagA = player.PlayerHasActiveSynergy("Single A");
-			if (flagA)
-            {
-				ElectricDamage *= 2;
-            }
-			ComplexProjectileModifier complexProjectileModifier = PickupObjectDatabase.GetById(298) as ComplexProjectileModifier;
-			ChainLightningModifier orAddComponent = projectile.gameObject.GetOrAddComponent<ChainLightningModifier>();
-			orAddComponent.LinkVFXPrefab = complexProjectileModifier.ChainLightningVFX;
-			orAddComponent.damageTypes = complexProjectileModifier.ChainLightningDamageTypes;
-			orAddComponent.maximumLinkDistance = 100;
-			orAddComponent.damagePerHit = ElectricDamage;
-			orAddComponent.damageCooldown = complexProjectileModifier.ChainLightningDamageCooldown;
-			orAddComponent.UsesDispersalParticles = true;
-			orAddComponent.DispersalParticleSystemPrefab = complexProjectileModifier.ChainLightningDispersalParticles;
-			orAddComponent.DispersalDensity = complexProjectileModifier.ChainLightningDispersalDensity;
-			orAddComponent.DispersalMinCoherency = complexProjectileModifier.ChainLightningDispersalMinCoherence;
-			orAddComponent.DispersalMaxCoherency = complexProjectileModifier.ChainLightningDispersalMaxCoherence;
-			orAddComponent.UsesDispersalParticles = true;
-			orAddComponent.CanChainToAnyProjectile = false;
+			
 		}
 
 		private bool HasReloaded;

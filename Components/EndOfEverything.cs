@@ -13,7 +13,7 @@ using Gungeon;
 using MonoMod.RuntimeDetour;
 using MonoMod;
 using System.Collections.ObjectModel;
-
+using SaveAPI;
 using UnityEngine.Serialization;
 
 namespace Planetside
@@ -38,6 +38,7 @@ namespace Planetside
 		{
 			try
 			{
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.HAS_FIRED_GTEE, true);
 				Gun gun = PickupObjectDatabase.GetByEncounterName(InitialiseGTEE.GunIDForEOE) as Gun;
 				int StoredGunID = gun.PickupObjectId;
 				PlayerController player = GameManager.Instance.PrimaryPlayer;

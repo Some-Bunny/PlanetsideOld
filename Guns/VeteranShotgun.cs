@@ -45,7 +45,8 @@ namespace Planetside
 				projectile.baseData.damage = 7;
 				projectile.AdditionalScaleMultiplier = 0.75f;
 				projectile.baseData.speed = 12f;
-				
+				projectile.gameObject.AddComponent<VeteranShotgunProjectile>();
+
 				FakePrefab.MarkAsFakePrefab(projectile.gameObject);
 				UnityEngine.Object.DontDestroyOnLoad(projectile);
 				gun.DefaultModule.projectiles[0] = projectile;
@@ -91,7 +92,7 @@ namespace Planetside
 				if (num < 0.5f)
 				{
 					float num2 = 0.5f / num;
-					UnityEngine.Debug.Log(num + "|" + num2);
+					//UnityEngine.Debug.Log(num + "|" + num2);
 					projectile.sprite.scale = new Vector3(num2, num2, num2);
 					if (num2 != 1f && projectile.specRigidbody != null)
 					{

@@ -44,12 +44,12 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(40f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(35f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = true;
 				companion.aiActor.CanTargetPlayers = true;
 				companion.aiActor.SetIsFlying(false, "Gamemode: Creative");
-				companion.aiActor.healthHaver.SetHealthMaximum(40f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(35f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
 				{
@@ -282,7 +282,7 @@ namespace Planetside
 					BulletScript = new CustomBulletScriptSelector(typeof(SkullScript)),
 					LeadAmount = 0f,
 					AttackCooldown = 0f,
-					Cooldown = 2.5f,
+					Cooldown = 5f,
 					RequiresLineOfSight = true,
 					MultipleFireEvents = true,
 					Uninterruptible = false,
@@ -381,9 +381,13 @@ namespace Planetside
 
 			private RoomHandler m_StartRoom;
 
-			private void Update()
+			public void Update()
 			{
-				if (!base.aiActor.HasBeenEngaged) { CheckPlayerRoom(); }
+				m_StartRoom = aiActor.GetAbsoluteParentRoom();
+				if (!base.aiActor.HasBeenEngaged)
+				{
+					CheckPlayerRoom();
+				}
 			}
 			private void CheckPlayerRoom()
 			{
@@ -391,12 +395,18 @@ namespace Planetside
 				{
 					GameManager.Instance.StartCoroutine(LateEngage());
 				}
+				else
+				{
+					base.aiActor.HasBeenEngaged = false;
+				}
 			}
-
 			private IEnumerator LateEngage()
 			{
 				yield return new WaitForSeconds(0.5f);
-				base.aiActor.HasBeenEngaged = true;
+				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+				{
+					base.aiActor.HasBeenEngaged = true;
+				}
 				yield break;
 			}
 			private void Start()

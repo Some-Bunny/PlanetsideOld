@@ -42,7 +42,7 @@ namespace Planetside
 				companion.aiActor.IgnoreForRoomClear = false;
 				companion.aiActor.aiAnimator.HitReactChance = 0f;
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
-				companion.aiActor.specRigidbody.CollideWithTileMap = false;
+				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
 				companion.aiActor.healthHaver.ForceSetCurrentHealth(90f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
@@ -528,9 +528,13 @@ namespace Planetside
 
 			private RoomHandler m_StartRoom;
 
-			private void Update()
+			public void Update()
 			{
-				if (!base.aiActor.HasBeenEngaged) { CheckPlayerRoom(); }
+				m_StartRoom = aiActor.GetAbsoluteParentRoom();
+				if (!base.aiActor.HasBeenEngaged)
+				{
+					CheckPlayerRoom();
+				}
 			}
 			private void CheckPlayerRoom()
 			{
@@ -538,14 +542,21 @@ namespace Planetside
 				{
 					GameManager.Instance.StartCoroutine(LateEngage());
 				}
+				else
+				{
+					base.aiActor.HasBeenEngaged = false;
+				}
 			}
-
 			private IEnumerator LateEngage()
 			{
 				yield return new WaitForSeconds(0.5f);
-				base.aiActor.HasBeenEngaged = true;
+				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+				{
+					base.aiActor.HasBeenEngaged = true;
+				}
 				yield break;
 			}
+
 			private void Start()
 			{
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.bulletBank.GetBullet("default"));
@@ -646,7 +657,7 @@ namespace Planetside
 				float aim = base.AimDirection;
 				this.Direction = aim;
 
-				base.ChangeSpeed(new Speed(18f, SpeedType.Absolute), 60);
+				base.ChangeSpeed(new Speed(15f, SpeedType.Absolute), 60);
 				yield break;
 			}
 			public override void OnBulletDestruction(Bullet.DestroyType destroyType, SpeculativeRigidbody hitRigidbody, bool preventSpawningProjectiles)
@@ -659,7 +670,7 @@ namespace Planetside
 					}
 					base.PostWwiseEvent("Play_OBJ_nuke_blast_01", null);
 					float num = base.RandomAngle();
-					float Amount = 12;
+					float Amount = 8;
 					float Angle = 360 / Amount;
 					for (int i = 0; i < Amount; i++)
 					{

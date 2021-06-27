@@ -44,8 +44,8 @@ namespace Planetside
 			gun.SetBaseMaxAmmo(60);
 			gun.DefaultModule.ammoType = GameUIAmmoType.AmmoType.ARROW;
 
-			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).frames[0].eventAudio = "SND_WPN_crossbow_shot_01";
-			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).frames[0].triggerEvent = true;
+			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).frames[1].eventAudio = "SND_WPN_crossbow_shot_01";
+			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).frames[1].triggerEvent = true;
 			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.reloadAnimation).frames[0].eventAudio = "SND_WPN_crossbow_reload_01";
 			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.reloadAnimation).frames[0].triggerEvent = true;
 
@@ -60,7 +60,7 @@ namespace Planetside
 			FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile2);
 			gun.DefaultModule.projectiles[0] = projectile2;
-			projectile2.baseData.damage = 25f;
+			projectile2.baseData.damage = 30f;
 			projectile2.baseData.speed = 40f;
 			projectile2.baseData.force = 1f;
 			projectile2.baseData.range = 100f;
@@ -76,7 +76,7 @@ namespace Planetside
 			FakePrefab.MarkAsFakePrefab(projectile3.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile3);
 			gun.DefaultModule.projectiles[0] = projectile3;
-			projectile3.baseData.damage = 30f;
+			projectile3.baseData.damage = 15f;
 			projectile3.baseData.speed = 45f;
 			projectile3.baseData.force = 3f;
 			projectile3.baseData.range = 100f;
@@ -87,7 +87,7 @@ namespace Planetside
 			projectile3.SetProjectileSpriteRight("executionerscrossbowprojectile2", 20, 5, false, tk2dBaseSprite.Anchor.MiddleCenter, 20, 5);
 			projectile3.sprite.usesOverrideMaterial = true;
 			
-			ExecutionersCrossbowSpecial ee = projectile3.gameObject.AddComponent<ExecutionersCrossbowSpecial>();
+			projectile3.gameObject.AddComponent<ExecutionersCrossbowSpecial>();
 
 			PierceProjModifier aaaa = projectile3.gameObject.AddComponent<PierceProjModifier>();
 			aaaa.penetration = 100;

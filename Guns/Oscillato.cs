@@ -46,13 +46,12 @@ namespace Planetside
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile);
 			gun.DefaultModule.projectiles[0] = projectile;
-			projectile.baseData.damage = 3.5f;
+			projectile.baseData.damage = 4f;
 			projectile.baseData.speed *= 0.7f;
 			projectile.AdditionalScaleMultiplier *= 1f;
 			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
-			projectile.PenetratesInternalWalls = true;
-
+			projectile.gameObject.AddComponent<OscillatorProjectile>();
 			projectile.AnimateProjectile(new List<string> {
 				"oscillato_projectile_001",
 				"oscillato_projectile_002",
@@ -90,15 +89,12 @@ namespace Planetside
 			Oscillato.AAID = gun.PickupObjectId;
 		}
 		public static int AAID;
-
 		public override void PostProcessProjectile(Projectile projectile)
 		{
-			projectile.OverrideMotionModule = new OscillatingeMotionModule();
 		}
 		public override void OnReloadPressed(PlayerController player, Gun bruhgun, bool bSOMETHING)
 		{
 			
 		}
 	}
-
 }

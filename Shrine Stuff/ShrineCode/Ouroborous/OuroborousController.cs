@@ -34,6 +34,7 @@ namespace Planetside
 			catch (Exception e)
 			{
 				Tools.PrintException(e, "FF0000");
+				ETGModConsole.Log("Shits fucked, man");
 			}
 		}
 
@@ -102,16 +103,15 @@ namespace Planetside
 			});
 			global::ETGModConsole.Commands.GetGroup("psog").AddUnit("toggleloops", delegate (string[] args)
 			{
-				if (LoopingOn == true)
+				bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+				if (LoopOn == true)
 				{
-					File.WriteAllText(SaveFilePath, "false");
-					LoopingOn = false;
+					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.LOOPING_ON, false);
 					global::ETGModConsole.Log("Ouroborous Disabled.", false);
 				}
 				else
 				{
-					LoopingOn = true;
-					File.WriteAllText(SaveFilePath, "true");
+					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.LOOPING_ON, true);
 					float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 					global::ETGModConsole.Log("Ouroborous set to: " + Loop, false);
 				}
@@ -126,6 +126,13 @@ namespace Planetside
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BULLETBANK_DEFEATED, true);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_LOOP_1, true);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND, true);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_FUNGANNON, true);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_OPHANAIM, true);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER, true);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, true);
+
+
+
 			});
 			global::ETGModConsole.Commands.GetGroup("psog").AddUnit("lock_all", delegate (string[] args)
 			{
@@ -137,6 +144,16 @@ namespace Planetside
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BULLETBANK_DEFEATED, false);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_LOOP_1, false);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND, false);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_FUNGANNON, false);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_OPHANAIM, false);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER, false);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, false);
+
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEJAM, false);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEPETRIFY, false);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEDARKEN, false);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEBOLSTER, false);
+
 			});
 			ETGMod.AIActor.OnPostStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPostStart, new Action<AIActor>(LoopScale));
 			ETGMod.AIActor.OnPostStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPostStart, new Action<AIActor>(AssignUnlocks));
@@ -170,11 +187,15 @@ namespace Planetside
 				string e = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BROKEN_CHAMBER_RUN_COMPLETED) ? " Done!\n" : " -Defeat The Lich With A Broken Remnant In Hand.\n";
 				string f = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_LOOP_1) ? " Done!\n" : " -Beat The Game On Ouroborous Level 0.\n";
 				string g = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND) ? " Done!\n" : " -Kill A Boss After Dealing 500 Damage Or More At Once.\n";
+				string h = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_FUNGANNON) ? " Done!\n" : " -Defeat The Fungal Beast Of The Sewers.\n";
+				string i = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_OPHANAIM) ? " Done!\n" : " -Defeat The Eternal Eye Of The Abbey.\n";
+				string j = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER) ? " Done!\n" : " -Defeat A Ravenous, Violent Chamber.\n";
+				string k = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK) ? " Done!\n" : " -Remove Each Hell-Bound Curse At Least Once.\n";
 				string color1 = "9006FF";
-				OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g, color1);
+				OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g + h+i+j+k, color1);
 			});
 
-			global::ETGModConsole.Commands.GetGroup("psog").AddUnit("toggleui", delegate (string[] args)
+			global::ETGModConsole.Commands.GetGroup("psog").AddUnit("uitoggle", delegate (string[] args)
 			{
 				if (!disabled)
 				{
@@ -203,7 +224,9 @@ namespace Planetside
 			{
 				target.healthHaver.OnDeath += (obj) =>
 				{
-					if (LoopingOn == true)
+					bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+
+					if (LoopOn == true)
 					{
 						float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 						if (Loop == 0 || Loop <= 0)
@@ -249,9 +272,10 @@ namespace Planetside
 		private void LoopScale(AIActor target)
 		{
 			float value = UnityEngine.Random.value;
-			if (LoopingOn && !target.CompanionOwner && !BannedEnemies.Contains(target.EnemyGuid))
+			bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+			if (LoopOn && !target.CompanionOwner && !BannedEnemies.Contains(target.EnemyGuid))
 			{
-				if (!LoopingOn)
+				if (!LoopOn)
 				{
 
 				}
@@ -287,9 +311,9 @@ namespace Planetside
                 {
 					target.MovementSpeed *= 1 + ((Loop / 25f)+InitialScale)-DownScaler;
 				}
-				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/8.75f)+InitialScale)- DownScaler);
-				target.knockbackDoer.weight *= 1 + ((Loop / 1.66f)+InitialScale)- -DownScaler;
-				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/1.75f)) + InitialScale)-DownScaler;
+				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/50f)+InitialScale)- DownScaler);
+				target.knockbackDoer.weight *= 1 + ((Loop / 1.5f)+InitialScale)- -DownScaler;
+				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/4f)) + InitialScale)-DownScaler;
 				//target.behaviorSpeculator.CooldownScale *= 0;
 				float random = UnityEngine.Random.Range(0.0f, 1.0f);
 				if (random <= Loop/25)
@@ -301,12 +325,29 @@ namespace Planetside
 				}
 			}
 		}
+		private void FUCKYOU(Projectile proj)
+        {
+
+			List<string> log = new List<string>()
+			{
+
+
+			};
+			foreach (Component fuck in proj.GetComponents(typeof(Component)))
+            {
+				log.Add("Componenet: " + fuck.GetType().Name);
+				log.Add("----------");
+            }
+			var Hatred = string.Join("\n", log.ToArray());
+			ETGModConsole.Log(Hatred);
+        }
 
 		public static void TrappedChest(Action<Chest, PlayerController> orig, Chest self, PlayerController player)
 		{
 			orig(self, player);
             {
-				if (LoopingOn == true)
+				bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+				if (LoopOn == true)
                 {
 					float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 					if (Loop == 10 || Loop >= 10)
@@ -356,7 +397,8 @@ namespace Planetside
 
 		public static void MimicGunScaler(Action<Gun> orig, Gun spawnedGun)
 		{
-			if (LoopingOn == true)
+			bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+			if (LoopOn == true)
             {
 				float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 				spawnedGun.gameObject.SetActive(true);
@@ -378,12 +420,28 @@ namespace Planetside
 		public static void DoFairy(Action<MinorBreakable> orig, MinorBreakable self)
 		{
 			orig(self);
-			if (LoopingOn == true)
+			bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+			if (LoopOn == true)
             {
+				float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
+				int GoopScaler;
+				GoopScaler = (int)UnityEngine.Random.Range(0, 75 - Loop);
+				if (GoopScaler == 1)
+                {
+					Ouroborous yes = new Ouroborous();
+					bool bankName = (UnityEngine.Random.value > 0.50f) ? true : false;
+					if (bankName == true)
+                    {
+						yes.DoPoisonGoop(self.transform.position);
+					}
+					if (bankName == false)
+                    {
+						yes.DoFireGoop(self.transform.position);
+					}
+				}
 				bool flag = !self.name.ToLower().Contains("pot");
 				if (!flag)
 				{
-					float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 					if (Loop == 75 | Loop >= 75)
 					{
 						int FairyScaler;
@@ -411,23 +469,23 @@ namespace Planetside
 				}
 			}
 		}
-		private void DoPoisonGoop(Vector2 v)
+		public void DoPoisonGoop(Vector2 v)
 		{
 			float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 			AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");
 			GoopDefinition goopDef = assetBundle.LoadAsset<GoopDefinition>("assets/data/goops/poison goop.asset");
 			DeadlyDeadlyGoopManager goopManagerForGoopType = DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(goopDef);
-			goopManagerForGoopType.TimedAddGoopCircle(v, 1f + (Loop / 10)+InitialScaling, 0.35f, false);
+			goopManagerForGoopType.TimedAddGoopCircle(v, 1f + (Loop / 25)+InitialScaling, 0.35f, false);
 			goopDef.damagesEnemies = false;
 		}
 
-		private void DoFireGoop(Vector2 v)
+		public void DoFireGoop(Vector2 v)
 		{
 			float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 			AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");
 			GoopDefinition goopDef = assetBundle.LoadAsset<GoopDefinition>("assets/data/goops/napalmgoopquickignite.asset");
 			DeadlyDeadlyGoopManager goopManagerForGoopType = DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(goopDef);
-			goopManagerForGoopType.TimedAddGoopCircle(v, 1f+(Loop/10) + InitialScaling, 0.35f, false);
+			goopManagerForGoopType.TimedAddGoopCircle(v, 1f+(Loop/25) + InitialScaling, 0.35f, false);
 			goopDef.damagesEnemies = false;
 		}
 		public static string[] BannedEnemies = new string[]
@@ -440,7 +498,7 @@ namespace Planetside
 			 "4d37ce3d666b4ddda8039929225b7ede",
 			 "3cadf10c489b461f9fb8814abc1a09c1",
 		};
-		public static float InitialScaling = 0.33f;
+		public static float InitialScaling = 0.2f;
 	}
 }
 

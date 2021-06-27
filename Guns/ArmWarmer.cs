@@ -145,18 +145,40 @@ namespace Planetside
 				{
 					foreach (Projectile proj in allProjectiles)
 					{
-						bool ae = Vector2.Distance(proj.sprite.WorldCenter, centerPosition) < 1.66f && proj != null && proj.specRigidbody != null && player != null && proj.Owner != player;
-						if (ae)
-						{
-							GameManager.Instance.Dungeon.StartCoroutine(this.HandleBulletSuck(proj));
-							proj.DieInAir();
-						}
+						GameManager.Instance.Dungeon.StartCoroutine(this.HandleBulletDeletionFrames(player.sprite.WorldCenter, 1.7f, 0.4f));
 					}
 				}
 			}
 		}
+		private IEnumerator HandleBulletDeletionFrames(Vector3 centerPosition, float bulletDeletionSqrRadius, float duration)
+		{
+			float elapsed = 0f;
+			while (elapsed < duration)
+			{
+				elapsed += BraveTime.DeltaTime;
+				ReadOnlyCollection<Projectile> allProjectiles = StaticReferenceManager.AllProjectiles;
+				for (int i = allProjectiles.Count - 1; i >= 0; i--)
+				{
+					Projectile projectile = allProjectiles[i];
+					if (projectile)
+					{
+						if (!(projectile.Owner is PlayerController))
+						{
+							Vector2 vector = (projectile.transform.position - centerPosition).XY();
+							if (projectile.CanBeKilledByExplosions && vector.sqrMagnitude < bulletDeletionSqrRadius)
+							{
+								GameManager.Instance.Dungeon.StartCoroutine(this.HandleBulletSucc(projectile));
+								projectile.DieInAir();
+							}
+						}
+					}
+				}
+				yield return null;
+			}
+			yield break;
 
-		private IEnumerator HandleBulletSuck(Projectile target)
+		}
+		private IEnumerator HandleBulletSucc(Projectile target)
 		{
 			EatenBullets += 1;
 			PlayerController player = this.gun.CurrentOwner as PlayerController;

@@ -31,7 +31,6 @@ namespace Planetside
 			bool flag2 = flag;
 			if (!flag2)
 			{
-				//float AttackAnimationThingAMaWhatIts = 0.5f;
 				prefab = EnemyBuilder.BuildPrefab("Jammed Guardian", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 800;
@@ -44,19 +43,16 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(200f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(150f);
 				companion.aiActor.CollisionKnockbackStrength = 2f;
 				companion.aiActor.CanTargetPlayers = true;
-				companion.aiActor.healthHaver.SetHealthMaximum(200f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(150f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.ActorName = "Jammed Guardian";
 				companion.aiActor.name = "Jammed Guardian";
 				companion.aiActor.HasShadow = true;
 				companion.aiActor.SetIsFlying(true, "Gamemode: Creative");
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").ShadowObject;
-				//companion.aiActor.gameObject.GetComponent<TrailController>();
-				//companion.aiActor.gameObject.GetComponent<ObjectVisibilityManager>();
-				//companion.aiActor.gameObject.GetComponent<tk2dSpriteAttachPoint>();
 				companion.aiActor.gameObject.AddComponent<ImprovedAfterImage>().dashColor = Color.red;
 				companion.aiActor.gameObject.AddComponent<ImprovedAfterImage>().spawnShadows = true;
 				companion.aiActor.gameObject.AddComponent<AfterImageTrailController>().spawnShadows = false;
@@ -340,68 +336,12 @@ namespace Planetside
 					FireAnimation = "tell",
 					RequiresLineOfSight = true,
 					MultipleFireEvents = true,
-					//EnabledDuringAttack = new PowderSkullSpinBulletsBehavior(),
-					//StopDuring = ShootBehavior.StopType.Attack,
 					Uninterruptible = false,
 
 
 				},
-				/*
-				new ShootBeamBehavior()
-				{
-					
-					Cooldown = 1f,
-				},*//*
-				new TeleportBehavior()
-				{
-
-					AttackableDuringAnimation = true,
-					AllowCrossRoomTeleportation = false,
-					teleportRequiresTransparency = false,
-					hasOutlinesDuringAnim = true,
-					ManuallyDefineRoom = false,
-					MaxHealthThreshold = 1f,
-					StayOnScreen = true,
-					AvoidWalls = true,
-					GoneTime = 1f,
-					OnlyTeleportIfPlayerUnreachable = false,
-					MinDistanceFromPlayer = 4f,
-					MaxDistanceFromPlayer = -1f,
-					//teleportInAnim = "wail",
-					//teleportOutAnim = "wail",
-					AttackCooldown = 1f,
-					InitialCooldown = 0f,
-					RequiresLineOfSight = false,
-					roomMax = new Vector2(0,0),
-					roomMin = new Vector2(0,0),
-					//teleportInBulletScript = new CustomBulletScriptSelector(typeof(Wail)),
-					//teleportOutBulletScript = new CustomBulletScriptSelector(typeof(Wail)),
-					GlobalCooldown = 0.5f,
-					Cooldown = 4f,
-					CooldownVariance = 1f,
-					InitialCooldownVariance = 0f,
-					goneAttackBehavior = null,
-					IsBlackPhantom = false,
-					GroupName = null,
-					GroupCooldown = 2f,
-					MinRange = 0,
-					Range = 0,
-					MinHealthThreshold = 0,
-					MaxEnemiesInRoom = 1,
-					MaxUsages = 0,
-					AccumulateHealthThresholds = true,
-					//shadowInAnim = null,
-					//shadowOutAnim = null,
-					targetAreaStyle = null,
-					HealthThresholds = new float[0],
-					MinWallDistance = 0,
-					//resetCooldownOnDamage = null,
-					//shadowSupport = (TeleportBehavior.ShadowSupport)1,
-
-				}*/
 				new DashBehavior()
 				{
-					//dashAnim = "wail",
 					ShootPoint = m_CachedGunAttachPoint,
 					dashDistance = 3f,
 					dashTime = 0.2f,
@@ -411,18 +351,7 @@ namespace Planetside
 					dashDirection = DashBehavior.DashDirection.Random,
 					warpDashAnimLength = true,
 					hideShadow = true,
-					//BulletScript = new CustomBulletScriptSelector(typeof(Wail)),
-					//LeadAmount = 0f,
-					//AttackCooldown = 5f,
-					//InitialCooldown = 4f,
-					//TellAnimation = "wail",
-					//FireAnimation = "wail",
 					RequiresLineOfSight = false,
-					//StopDuring = ShootBehavior.StopType.Attack,
-					//FireVfx = ,
-					//ChargeVfx = ,
-					//	MoveSpeedModifier = 0f,
-					//GlobalCooldown = 0.5f,
 					
 				}
 				};
@@ -454,8 +383,6 @@ namespace Planetside
 			};
 
 
-				//BehaviorSpeculator load = EnemyDatabase.GetOrLoadByGuid("6e972cd3b11e4b429b888b488e308551").behaviorSpeculator;
-				//Tools.DebugInformation(load);
 				bs.InstantFirstTick = behaviorSpeculator.InstantFirstTick;
 				bs.TickInterval = behaviorSpeculator.TickInterval;
 				bs.PostAwakenDelay = behaviorSpeculator.PostAwakenDelay;
@@ -466,7 +393,7 @@ namespace Planetside
 				Game.Enemies.Add("psog:jammed_guardian", companion.aiActor);
 
 
-				SpriteBuilder.AddSpriteToCollection("Planetside/JammedGuardian/stevelord_idle_left_001", SpriteBuilder.ammonomiconCollection);
+				SpriteBuilder.AddSpriteToCollection("Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_left_001", SpriteBuilder.ammonomiconCollection);
 				if (companion.GetComponent<EncounterTrackable>() != null)
 				{
 					UnityEngine.Object.Destroy(companion.GetComponent<EncounterTrackable>());
@@ -479,7 +406,7 @@ namespace Planetside
 				companion.encounterTrackable.journalData.IsEnemy = true;
 				companion.encounterTrackable.journalData.SuppressInAmmonomicon = false;
 				companion.encounterTrackable.ProxyEncounterGuid = "";
-				companion.encounterTrackable.journalData.AmmonomiconSprite = "Planetside/JammedGuardian/stevelord_idle_left_001";
+				companion.encounterTrackable.journalData.AmmonomiconSprite = "Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_left_001";
 				companion.encounterTrackable.journalData.enemyPortraitSprite = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\Ammocom\\jammedguardicon.png");
 				PlanetsideModule.Strings.Enemies.Set("#JAMMED_GUARD", "Jammed Guardian");
 				PlanetsideModule.Strings.Enemies.Set("#JAMMED_GUARD_SHORTDESC", "You Have Angered The Gods");
@@ -499,55 +426,54 @@ namespace Planetside
 		{
 			
 			//idles
-			"Planetside/JammedGuardian/stevelord_idle_left_001.png",
-			"Planetside/JammedGuardian/stevelord_idle_left_002.png",
-			"Planetside/JammedGuardian/stevelord_idle_left_003.png",
-			"Planetside/JammedGuardian/stevelord_idle_left_004.png",
-			"Planetside/JammedGuardian/stevelord_idle_left_005.png",
-			"Planetside/JammedGuardian/stevelord_idle_left_006.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_left_001.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_left_002.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_left_003.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_left_004.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_left_005.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_left_006.png",
 
-			"Planetside/JammedGuardian/stevelord_idle_right_001.png",
-			"Planetside/JammedGuardian/stevelord_idle_right_002.png",
-			"Planetside/JammedGuardian/stevelord_idle_right_003.png",
-			"Planetside/JammedGuardian/stevelord_idle_right_004.png",
-			"Planetside/JammedGuardian/stevelord_idle_right_005.png",
-			"Planetside/JammedGuardian/stevelord_idle_right_006.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_right_001.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_right_002.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_right_003.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_right_004.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_right_005.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_idle_right_006.png",
 
-			//
-			//run
-			"Planetside/JammedGuardian/stevelord_attack_left_001.png",
-			"Planetside/JammedGuardian/stevelord_attack_left_002.png",
-			"Planetside/JammedGuardian/stevelord_attack_left_003.png",
-			"Planetside/JammedGuardian/stevelord_attack_left_004.png",
-			"Planetside/JammedGuardian/stevelord_attack_left_005.png",
-			"Planetside/JammedGuardian/stevelord_attack_left_006.png",
-			"Planetside/JammedGuardian/stevelord_attack_left_007.png",
+			
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_left_001.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_left_002.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_left_003.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_left_004.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_left_005.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_left_006.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_left_007.png",
 
-			"Planetside/JammedGuardian/stevelord_attack_right_001.png",
-			"Planetside/JammedGuardian/stevelord_attack_right_002.png",
-			"Planetside/JammedGuardian/stevelord_attack_right_003.png",
-			"Planetside/JammedGuardian/stevelord_attack_right_004.png",
-			"Planetside/JammedGuardian/stevelord_attack_right_005.png",
-			"Planetside/JammedGuardian/stevelord_attack_right_006.png",
-			"Planetside/JammedGuardian/stevelord_attack_right_007.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_right_001.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_right_002.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_right_003.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_right_004.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_right_005.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_right_006.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_attack_right_007.png",
 
-			"Planetside/JammedGuardian/stevelord_death_left_001.png",
-			"Planetside/JammedGuardian/stevelord_death_left_002.png",
-			"Planetside/JammedGuardian/stevelord_death_left_003.png",
-			"Planetside/JammedGuardian/stevelord_death_left_004.png",
-			"Planetside/JammedGuardian/stevelord_death_left_005.png",
-			"Planetside/JammedGuardian/stevelord_death_left_006.png",
-			"Planetside/JammedGuardian/stevelord_death_left_007.png",
-			"Planetside/JammedGuardian/stevelord_death_left_008.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_left_001.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_left_002.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_left_003.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_left_004.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_left_005.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_left_006.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_left_007.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_left_008.png",
 
-			"Planetside/JammedGuardian/stevelord_death_right_001.png",
-			"Planetside/JammedGuardian/stevelord_death_right_002.png",
-			"Planetside/JammedGuardian/stevelord_death_right_003.png",
-			"Planetside/JammedGuardian/stevelord_death_right_004.png",
-			"Planetside/JammedGuardian/stevelord_death_right_005.png",
-			"Planetside/JammedGuardian/stevelord_death_right_006.png",
-			"Planetside/JammedGuardian/stevelord_death_right_007.png",
-			"Planetside/JammedGuardian/stevelord_death_right_008.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_right_001.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_right_002.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_right_003.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_right_004.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_right_005.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_right_006.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_right_007.png",
+			"Planetside/Resources/Enemies/JammedGuardian/stevelord_death_right_008.png",
 
 
 		};
@@ -587,27 +513,17 @@ namespace Planetside
 
 		}
 
-
-		private Dictionary<IList, BehaviorBase> m_classSpecificContinuousBehavior = new Dictionary<IList, BehaviorBase>();
-
-		public class SalamanderScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.
+		public class SalamanderScript : Script
 		{
-			protected override IEnumerator Top() // This is just a simple example, but bullet scripts can do so much more.
+			protected override IEnumerator Top() 
 			{
 				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
 				{
-					//base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.GetBullet("default"));
 					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("41ee1c8538e8474a82a74c4aff99c712").bulletBank.GetBullet("big"));
 				}
 				base.PostWwiseEvent("Play_ENM_kali_shockwave_01", null);
 				this.Fire(new Direction(0f, DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SalamanderScript.Superball());
 				yield return base.Wait(20);
-				//AkSoundEngine.PostEvent("Play_ENM_ironmaiden_stomp_01", base.BulletBank.gameObject);
-				//this.Fire(new Direction(0f, DirectionType.Aim, -1f), new Speed(5f, SpeedType.Absolute), new JammedJammedGat.Superball());
-				//yield return base.Wait(20);
-				//AkSoundEngine.PostEvent("Play_ENM_ironmaiden_stomp_01", base.BulletBank.gameObject);
-				//this.Fire(new Direction(-60f, DirectionType.Aim, -1f), new Speed(5f, SpeedType.Absolute), new JammedJammedGat.Superball());
-
 				yield break;
 			}
 			public class Flames : Bullet
@@ -618,6 +534,7 @@ namespace Planetside
 				}
 				protected override IEnumerator Top()
 				{
+					this.Projectile.specRigidbody.CollideWithOthers = false;
 					base.ChangeSpeed(new Speed(12f, SpeedType.Absolute), 25);
 					yield break;
 				}
@@ -629,26 +546,6 @@ namespace Planetside
 				}
 				protected override IEnumerator Top()
 				{
-					/*
-					TrailRenderer tr;
-					var tro = base.Projectile.gameObject.AddChild("trail object");
-					tro.transform.position = base.Projectile.transform.position;
-					tro.transform.localPosition = new Vector3(0f, 0f, 0f);
-
-					tr = tro.AddComponent<TrailRenderer>();
-					tr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-					tr.receiveShadows = false;
-					var mat = new Material(Shader.Find("Sprites/Default"));
-					mat.mainTexture = _gradTexture;
-					mat.SetColor("_Color", new Color(7f, 0f, 0f, 2f));
-					tr.material = mat;
-					tr.time = 0.7f;
-					tr.minVertexDistance = 0.1f;
-					tr.startWidth = 2f;
-					tr.endWidth = 0f;
-					tr.startColor = Color.white;
-					tr.endColor = new Color(7f, 0f, 1f, 0f);
-					*/
 					base.ChangeSpeed(new Speed(40f, SpeedType.Absolute), 180);
 					yield break;
 
@@ -661,6 +558,7 @@ namespace Planetside
 					}
 					if (!preventSpawningProjectiles)
 					{
+
 						base.PostWwiseEvent("Play_OBJ_nuke_blast_01", null);
 						float num = base.RandomAngle();
 						float Amount = 24;
@@ -673,18 +571,19 @@ namespace Planetside
 						}
 					}
 				}
-				//public Texture _gradTexture;
 			}
 
 		}
 		public class BurstBullet : Bullet
 		{
-			// Token: 0x06000A99 RID: 2713 RVA: 0x000085A7 File Offset: 0x000067A7
 			public BurstBullet() : base("reversible", false, false, false)
 			{
 			}
+			protected override IEnumerator Top()
+			{
+				yield break;
+			}
 		}
-
 
 		public class WallBullet : Bullet
 		{

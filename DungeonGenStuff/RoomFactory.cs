@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.IO;
-using UnityEngine;
+﻿using Dungeonator;
 using Ionic.Zip;
-using Dungeonator;
-using Random = UnityEngine.Random;
-using CustomShrineController = GungeonAPI.ShrineFactory.CustomShrineController;
-using FloorType = Dungeonator.CellVisualData.CellFloorType;
 using ItemAPI;
 using Planetside;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using UnityEngine;
+using CustomShrineController = GungeonAPI.ShrineFactory.CustomShrineController;
+using FloorType = Dungeonator.CellVisualData.CellFloorType;
+using Random = UnityEngine.Random;
 
 namespace GungeonAPI
 {
@@ -144,6 +142,9 @@ namespace GungeonAPI
 
             return CreateEmptyRoom(12, 12);
         }
+        public static GameObject MinimapIconPrefab;
+
+
 
         public static void ApplyRoomData(PrototypeDungeonRoom room, RoomData roomData)
         {
@@ -195,8 +196,10 @@ namespace GungeonAPI
                 room.category = ShrineTools.GetEnumValue<PrototypeDungeonRoom.RoomCategory>(roomData.category);
             if (!string.IsNullOrEmpty(roomData.normalSubCategory))
                 room.subCategoryNormal = ShrineTools.GetEnumValue<PrototypeDungeonRoom.RoomNormalSubCategory>(roomData.normalSubCategory);
+           //========================
             if (!string.IsNullOrEmpty(roomData.bossSubCategory))
                 room.subCategoryBoss = ShrineTools.GetEnumValue<PrototypeDungeonRoom.RoomBossSubCategory>(roomData.bossSubCategory);
+            //========================
             if (!string.IsNullOrEmpty(roomData.specialSubCategory))
                 room.subCategorySpecial = ShrineTools.GetEnumValue<PrototypeDungeonRoom.RoomSpecialSubCategory>(roomData.specialSubCategory);
             room.usesProceduralDecoration = true;
@@ -204,6 +207,12 @@ namespace GungeonAPI
             room.allowWallDecoration = roomData.doWallDecoration;
             room.usesProceduralLighting = roomData.doLighting;
         }
+
+
+        public static GameObject Minimap_Maintenance_Icon;
+        public static AssetBundle sharedAssets2;
+
+
 
         public static RoomData ExtractRoomDataFromBytes(byte[] data)
         {
@@ -645,5 +654,6 @@ namespace GungeonAPI
             [NonSerialized]
             public PrototypeDungeonRoom room;
         }
+
     }
 }

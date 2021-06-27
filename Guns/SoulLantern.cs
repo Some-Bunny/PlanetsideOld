@@ -48,6 +48,7 @@ namespace Planetside
 			projectile.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile);
+
 			gun.DefaultModule.projectiles[0] = projectile;
 			projectile.baseData.damage = 4f;
 			projectile.baseData.speed = 1f;
@@ -55,6 +56,7 @@ namespace Planetside
 			projectile.AdditionalScaleMultiplier *= 0.5f;
 			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
+			projectile.gameObject.AddComponent<SoulLanternProjectile>();
 			//projectile.baseData.range = 5.8f;
 			gun.carryPixelOffset = new IntVector2((int)2f, (int)2f);
 			PierceProjModifier spook = projectile.gameObject.AddComponent<PierceProjModifier>();
@@ -64,6 +66,30 @@ namespace Planetside
 			HomingModifier homing = projectile.gameObject.AddComponent<HomingModifier>();
 			homing.HomingRadius = 250f;
 			homing.AngularVelocity = 120f;
+
+			OtherTools.EasyTrailBullet trail = projectile.gameObject.AddComponent<OtherTools.EasyTrailBullet>();
+
+			trail.TrailPos = projectile.transform.position;
+			//Where the trail attaches itself to. 
+			//You can input a custom Vector3 but its best to use the base preset, since it usually attaches directly to the center of the projectile, even ones with custom sprites. , unless fuckery ensues. (Namely"projectile.transform.position;")
+
+			trail.StartWidth = 0.1f;
+			//The Starting Width of your Trail
+
+			trail.EndWidth = 0;
+			//The Ending Width of your Trail. Not sure why youd want it to be something other than 0, but the options there.
+
+			trail.LifeTime = 0.3f;
+			//How much time your trail lives for
+
+			trail.BaseColor = new Color(3f, 2f, 0f, 0.7f);
+			//The Base Color of your trail. Your trail will completely/mostly consist of this color
+
+			trail.StartColor = Color.white;
+			//The Starting Color of your trail. Ive not really found much use of this if you have a Base Color set, but maybe it has a use 
+
+			trail.EndColor = new Color(3f, 2f, 0f, 0f);
+			//The End color of your trail. Having it different to the StartColor/BaseColor will make it transition from the Starting/Base Color to its End Color during its lifetime.
 
 			gun.encounterTrackable.EncounterGuid = "The Jar";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
@@ -76,56 +102,9 @@ namespace Planetside
 		private bool HasReloaded;
 		public override void PostProcessProjectile(Projectile projectile)
 		{
-			TrailRenderer tr;
-			var tro = projectile.gameObject.AddChild("trail object");
-			tro.transform.position = projectile.transform.position;
-			tro.transform.localPosition = new Vector3(0f, 0f, 0f);
-			tr = tro.AddComponent<TrailRenderer>();
-			tr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-			tr.receiveShadows = false;
-			var mat = new Material(Shader.Find("Sprites/Default"));
-			mat.mainTexture = _gradTexture;
-			mat.SetColor("_Color", new Color(3f, 2f, 0f, 0.7f));
-			tr.material = mat;
-			tr.time = 0.3f;
-			tr.minVertexDistance = 0.1f;
-			tr.startWidth = 0.1f;
-			tr.endWidth = 0f;
-			tr.startColor = Color.white;
-			tr.endColor = new Color(3f, 2f, 0f, 0f);
-			projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHit));
-			base.StartCoroutine(this.Speed(projectile));
 		}
 		public Texture _gradTexture;
-		public IEnumerator Speed(Projectile projectile)
-		{
-			bool flag = this.gun.CurrentOwner != null;
-			bool flag3 = flag;
-			if (flag3)
-			{
-				for (int i = 0; i < 15; i++)
-				{
-					projectile.baseData.speed += 1f;
-					projectile.UpdateSpeed();
-					yield return new WaitForSeconds(0.1f);
-				}
-			}
-			yield break;
-		}
-		private void HandleHit(Projectile arg1, SpeculativeRigidbody arg2, bool arg3)
-		{
-			PlayerController player = this.gun.CurrentOwner as PlayerController;
-
-			bool flag = arg2.aiActor != null && !arg2.healthHaver.IsDead && arg2.aiActor.behaviorSpeculator && !arg2.aiActor.IsHarmlessEnemy && arg2.aiActor != null;
-			if (flag)
-			{
-				arg1.AppliesPoison = true;
-				arg1.PoisonApplyChance = 1f;
-				arg1.healthEffect = DebuffLibrary.Possessed;
-			}
-
-
-		}
+		
 
 		public override void OnPostFired(PlayerController player, Gun bruhgun)
 		{

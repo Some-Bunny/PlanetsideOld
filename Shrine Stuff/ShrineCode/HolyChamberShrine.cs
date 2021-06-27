@@ -24,12 +24,12 @@ namespace Planetside
 			OldShrineFactory iei = new OldShrineFactory
 			{
 
-				name = "Holy Chamber Shrine",
+				name = "HolyChamberShrine",
 				modID = "psog",
 				text = "The Shrine of the Holy Chamber. It's so quiet here it very feels wrong to make any noise. Seems like it's missing something...",
 				spritePath = "Planetside/Resources/Shrines/HolyChamberShrine.png",
-				room = RoomFactory.BuildFromResource("Planetside/ShrineRooms/HolyChamberRoom.room").room,
-				RoomWeight = 1f,
+				room = RoomFactory.BuildFromResource("Planetside/Resources/ShrineRooms/HolyChamberRoom.room").room,
+				RoomWeight = 2f,
 				acceptText = "Grant a Heart, and some supplies.",
 				declineText = "Leave.",
 				OnAccept = Accept,

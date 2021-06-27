@@ -16,11 +16,11 @@ namespace Planetside
 			OldShrineFactory OHFUUCK = new OldShrineFactory
 			{
 
-				name = "Gun Orbiting Shrine",
+				name = "GunOrbitingShrine",
 				modID = "psog",
 				text = "A shrine dedicated to an old gunslinger, who could sling guns with such proficiency that they fired while in mid-air.",
 				spritePath = "Planetside/Resources/Shrines/GunOrbitShrinel.png",
-				room = RoomFactory.BuildFromResource("Planetside/ShrineRooms/GunOrbitShrineRoom.room").room,
+				room = RoomFactory.BuildFromResource("Planetside/Resources/ShrineRooms/GunOrbitShrineRoom.room").room,
 				RoomWeight = 0.4f,
 				acceptText = "Grant an offering to bestow similar power.",
 				declineText = "Leave",
@@ -45,28 +45,31 @@ namespace Planetside
 			int armorInt = Convert.ToInt32(player.healthHaver.Armor);	
 			float num = 0f;
 			num = (player.stats.GetStatValue(PlayerStats.StatType.Health));
-			bool DorC = currentGun.quality == PickupObject.ItemQuality.D | currentGun.quality == PickupObject.ItemQuality.C | currentGun.quality == PickupObject.ItemQuality.B;
-			if (DorC)
-			{
-				if (player.characterIdentity == PlayableCharacters.Robot)
-                {
-					return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 2;
-				}
-				else
-                {
-					return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 1;
-				}
-			}
-			bool Sonly = currentGun.quality == PickupObject.ItemQuality.A| currentGun.quality == PickupObject.ItemQuality.S;
-			if (Sonly)
-			{
-				if (player.characterIdentity == PlayableCharacters.Robot)
+			if (currentGun.InfiniteAmmo == false)
+            {
+				bool DorC = currentGun.quality == PickupObject.ItemQuality.D | currentGun.quality == PickupObject.ItemQuality.C | currentGun.quality == PickupObject.ItemQuality.B;
+				if (DorC)
 				{
-					return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 4;
+					if (player.characterIdentity == PlayableCharacters.Robot)
+					{
+						return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 2;
+					}
+					else
+					{
+						return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 1;
+					}
 				}
-				else
+				bool Sonly = currentGun.quality == PickupObject.ItemQuality.A | currentGun.quality == PickupObject.ItemQuality.S;
+				if (Sonly)
 				{
-					return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 2;
+					if (player.characterIdentity == PlayableCharacters.Robot)
+					{
+						return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 4;
+					}
+					else
+					{
+						return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 2;
+					}
 				}
 			}
 			return false;
@@ -113,7 +116,7 @@ namespace Planetside
 			hover.Aim = HoveringGunController.AimType.PLAYER_AIM;
 			hover.Trigger = HoveringGunController.FireType.ON_RELOAD;
 			hover.CooldownTime = 1f;
-			hover.ShootDuration = 0.66f;
+			hover.ShootDuration = 1f;
 			hover.OnlyOnEmptyReload = false;
 			hover.Initialize(gun, player);
 			player.ownerlessStatModifiers.Add(item2);

@@ -41,13 +41,13 @@ namespace Planetside
 				companion.aiActor.IgnoreForRoomClear = true;
 				companion.aiActor.aiAnimator.HitReactChance = 0f;
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
-				companion.aiActor.specRigidbody.CollideWithTileMap = false;
+				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(45f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(20f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = false;
 				companion.aiActor.CanTargetPlayers = true;
-				companion.aiActor.healthHaver.SetHealthMaximum(45f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(20f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
 
@@ -61,8 +61,8 @@ namespace Planetside
 					BagelColliderNumber = 0,
 					ManualOffsetX = 0,
 					ManualOffsetY = 0,
-					ManualWidth = 16,
-					ManualHeight = 16,
+					ManualWidth = 20,
+					ManualHeight = 20,
 					ManualDiameter = 0,
 					ManualLeftX = 0,
 					ManualLeftY = 0,
@@ -79,9 +79,9 @@ namespace Planetside
 					SpecifyBagelFrame = string.Empty,
 					BagelColliderNumber = 0,
 					ManualOffsetX = 0,
-					ManualOffsetY = 15,
-					ManualWidth = 17,
-					ManualHeight = 16,
+					ManualOffsetY = 0,
+					ManualWidth = 20,
+					ManualHeight = 20,
 					ManualDiameter = 0,
 					ManualLeftX = 0,
 					ManualLeftY = 0,
@@ -277,19 +277,19 @@ namespace Planetside
 		private static string[] spritePaths = new string[]
 		{
 
-			"Planetside/ModderBullets/neighborino/neighbullet_idle_001.png",
-			"Planetside/ModderBullets/neighborino/neighbullet_idle_002.png",
-			"Planetside/ModderBullets/neighborino/neighbullet_idle_003.png",
-			"Planetside/ModderBullets/neighborino/neighbullet_idle_004.png",
+			"Planetside/Resources/Enemies/ModderBullets/neighborino/neighbullet_idle_001.png",
+			"Planetside/Resources/Enemies/ModderBullets/neighborino/neighbullet_idle_002.png",
+			"Planetside/Resources/Enemies/ModderBullets/neighborino/neighbullet_idle_003.png",
+			"Planetside/Resources/Enemies/ModderBullets/neighborino/neighbullet_idle_004.png",
 
 
 
 			//death
-			"Planetside/ModderBullets/neighborino/neighbullet_die_001.png",
-			"Planetside/ModderBullets/neighborino/neighbullet_die_002.png",
-			"Planetside/ModderBullets/neighborino/neighbullet_die_003.png",
-			"Planetside/ModderBullets/neighborino/neighbullet_die_004.png",
-			"Planetside/ModderBullets/neighborino/neighbullet_die_005.png",
+			"Planetside/Resources/Enemies/ModderBullets/neighborino/neighbullet_die_001.png",
+			"Planetside/Resources/Enemies/ModderBullets/neighborino/neighbullet_die_002.png",
+			"Planetside/Resources/Enemies/ModderBullets/neighborino/neighbullet_die_003.png",
+			"Planetside/Resources/Enemies/ModderBullets/neighborino/neighbullet_die_004.png",
+			"Planetside/Resources/Enemies/ModderBullets/neighborino/neighbullet_die_005.png",
 
 		};
 

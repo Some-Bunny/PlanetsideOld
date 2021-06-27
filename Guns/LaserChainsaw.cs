@@ -14,6 +14,7 @@ using MonoMod.RuntimeDetour;
 using MonoMod;
 using SaveAPI;
 
+/*
 namespace Planetside
 {
 	public class LaserChainsaw : GunBehaviour
@@ -29,49 +30,98 @@ namespace Planetside
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 30);
 			GunExt.SetAnimationFPS(gun, gun.reloadAnimation, 1);
 			GunExt.SetAnimationFPS(gun, gun.idleAnimation, 1);
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(56) as Gun, true, false);
-			gun.gunSwitchGroup = (PickupObjectDatabase.GetById(444) as Gun).gunSwitchGroup;
-			gun.DefaultModule.ammoCost = 1;
-			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Burst;
+			gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(86) as Gun, true, false);
+			gun.SetAnimationFPS(gun.shootAnimation, 8);
+			gun.isAudioLoop = true;
+			gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(86) as Gun, true, false);
+			gun.AddPassiveStatModifier(PlayerStats.StatType.Curse, 2f, StatModifier.ModifyMethod.ADDITIVE);
+
+			//GUN STATS
+			gun.doesScreenShake = false;
+			gun.DefaultModule.ammoCost = 10;
+			gun.DefaultModule.angleVariance = 0;
+			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
 			gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
-			gun.reloadTime = 0f;
-			gun.DefaultModule.cooldownTime = .05f;
-			gun.DefaultModule.numberOfShotsInClip = 100;
-			gun.SetBaseMaxAmmo(100);
-			gun.quality = PickupObject.ItemQuality.S;
-			gun.DefaultModule.angleVariance = 0f;
-			gun.DefaultModule.burstShotCount = 10000000;
-			gun.DefaultModule.burstCooldownTime = 0.05f;
+			gun.reloadTime = 1f;
+			gun.muzzleFlashEffects.type = VFXPoolType.None;
+			gun.DefaultModule.cooldownTime = 0.001f;
+			gun.DefaultModule.numberOfShotsInClip = 1000;
 			gun.DefaultModule.ammoType = GameUIAmmoType.AmmoType.BEAM;
-			gun.barrelOffset.transform.localPosition = new Vector3(1.0f, 0.25f, 0f);
-			gun.carryPixelOffset += new IntVector2((int)2.5f, (int)-0.5f);
-			gun.AddCurrentGunStatModifier(PlayerStats.StatType.MovementSpeed, 1.5f, StatModifier.ModifyMethod.MULTIPLICATIVE);
-			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(358) as Gun).DefaultModule.chargeProjectiles[1].Projectile);
+			gun.barrelOffset.transform.localPosition = new Vector3(0.93f, 0.18f, 0f);
+			gun.SetBaseMaxAmmo(1000);
+			gun.ammo = 1000;
+
+
+			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).wrapMode = tk2dSpriteAnimationClip.WrapMode.LoopSection;
+			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).loopStart = 1;
+
+			List<string> BeamAnimPaths = new List<string>()
+			{
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_001",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_002",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_003",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_004",
+			};
+			List<string> BeamEndPaths = new List<string>()
+			{
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_end_001",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_end_002",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_end_003",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_end_004",
+			};
+
+			//BULLET STATS
+			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(86) as Gun).DefaultModule.projectiles[0]);
+
+			BasicBeamController beamComp = projectile.GenerateBeamPrefab(
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_001",
+				new Vector2(5, 3),
+				new Vector2(0, 1),
+				BeamAnimPaths,
+				10,
+				//Impact
+				null,
+				10,
+				null,
+				null,
+				//End
+				BeamEndPaths,
+				10,
+				new Vector2(5, 3),
+				new Vector2(0, 1),
+				//Beginning
+				null,
+				10,
+				null,
+				null
+				);
+
 			projectile.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile);
-			gun.DefaultModule.projectiles[0] = projectile;
-			projectile.baseData.damage = 25f;
+			projectile.baseData.damage =  300;
+			projectile.baseData.force *= 0.1f;
+			projectile.baseData.range = 3.5f;
 			projectile.baseData.speed *= 1f;
-			projectile.AdditionalScaleMultiplier *= 0.66f;
-			projectile.shouldRotate = true;
-			projectile.pierceMinorBreakables = true;
-			projectile.baseData.range = 0.7f;
-			projectile.baseData.force = 0f;
-			projectile.ignoreDamageCaps = true;
-			PierceProjModifier spook = projectile.gameObject.AddComponent<PierceProjModifier>();
-			spook.penetration = 1000;
+			projectile.specRigidbody.CollideWithOthers = false;
 
-			spook.penetratesBreakables = true;
-			gun.encounterTrackable.EncounterGuid = "https://enterthegungeon.gamepedia.com/Modding/Some_Bunny%27s_Content_Pack";
+
+			beamComp.penetration = 100;
+			beamComp.boneType = BasicBeamController.BeamBoneType.Straight;
+			beamComp.interpolateStretchedBones = false;
+			beamComp.gameObject.AddComponent<EmmisiveBeams>(); ;
+			gun.DefaultModule.projectiles[0] = projectile;
+
+			gun.quality = PickupObject.ItemQuality.A; //D		
+		gun.encounterTrackable.EncounterGuid = "https://enterthegungeon.gamepedia.com/Modding/Some_Bunny%27s_Content_Pack";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.SetupUnlockOnCustomFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND, true);
 
 		}
 		public override void PostProcessProjectile(Projectile projectile)
 		{
-			projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHit));
-			projectile.OnWillKillEnemy = (Action<Projectile, SpeculativeRigidbody>)Delegate.Combine(projectile.OnWillKillEnemy, new Action<Projectile, SpeculativeRigidbody>(this.OnKill));
+			//projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHit));
+			//projectile.OnWillKillEnemy = (Action<Projectile, SpeculativeRigidbody>)Delegate.Combine(projectile.OnWillKillEnemy, new Action<Projectile, SpeculativeRigidbody>(this.OnKill));
 
 		}
 
@@ -80,7 +130,6 @@ namespace Planetside
 			bool flag = arg2.aiActor != null && !arg2.healthHaver.IsBoss && !arg2.healthHaver.IsDead && arg2.aiActor.behaviorSpeculator && !arg2.aiActor.IsHarmlessEnemy && arg2.aiActor != null;
 			if (flag)
 			{
-				this.gun.ammo += 1;
 				this.teleporter = PickupObjectDatabase.GetById(449).GetComponent<TeleporterPrototypeItem>();
 				UnityEngine.Object.Instantiate<GameObject>(this.teleporter.TelefragVFXPrefab, arg2.specRigidbody.UnitCenter, Quaternion.identity);
 			}
@@ -90,13 +139,21 @@ namespace Planetside
 			bool flag = !arg2.aiActor.healthHaver.IsDead;
 			if (flag)
 			{
-				int ammo = this.gun.CurrentAmmo;
-				this.gun.ammo += 100- ammo;
-				PlayerController player = this.gun.CurrentOwner as PlayerController;
+				PlayerController player = arg1.Owner as PlayerController;
+				float num = (player.stats.GetStatValue(PlayerStats.StatType.AmmoCapacityMultiplier));
+				int ammo = 100*(int)num;
+				if (this.gun.CurrentAmmo > (ammo-25))
+                {
+					this.gun.ammo = ammo;
+				}
+				else
+                {
+					this.gun.ammo += 25;
+				}
 			}
 		}
 
-		private bool m_usedOverrideMaterial;
+		//private bool m_usedOverrideMaterial;
 		private TeleporterPrototypeItem teleporter;
 		private bool HasReloaded;
 
@@ -110,8 +167,8 @@ namespace Planetside
 		}
 		public override void OnPostFired(PlayerController player, Gun bruhgun)
 		{
-			TriggerRipAndTear = true;
-			this.gun.ClipShotsRemaining += 2;
+			//TriggerRipAndTear = true;
+			this.gun.ClipShotsRemaining = 100;
 
 		}
 		protected void Update()
@@ -119,6 +176,7 @@ namespace Planetside
 			PlayerController player = this.gun.CurrentOwner as PlayerController;
 			if (gun.CurrentOwner)
 			{
+				/*
 				if (this.gun.IsFiring)
                 {
 					TriggerRipAndTear = true;
@@ -142,8 +200,128 @@ namespace Planetside
 					player.inventory.GunLocked.SetOverride("RIP", false, null);
 					player.healthHaver.IsVulnerable = true;
 				}
+				*/
+/*
 			}
 		}
-		private bool TriggerRipAndTear;
+		//private bool TriggerRipAndTear;
+		public static bool UnderChainsawNoRoll;
+	}
+}
+
+
+*/
+namespace Planetside
+{
+	public class LaserChainsaw : AdvancedGunBehavior
+	{
+		public static void Add()
+		{
+
+			Gun gun = ETGMod.Databases.Items.NewGun("Laser Chainsaw", "laserchainsaw");
+			Game.Items.Rename("outdated_gun_mods:laser_chainsaw", "psog:laser_chainsaw");
+			var behav = gun.gameObject.AddComponent<LaserChainsaw>();
+			//behav.overrideNormalFireAudio = "Play_ENM_shelleton_beam_01";
+			behav.preventNormalFireAudio = true;
+			behav.preventNormalReloadAudio = true;
+
+			gun.SetShortDescription("KILL KILL KILL");
+			gun.SetLongDescription("SHRED EVERYTHING IN SIGHT.\n\nLEAVE NO WITNESSES.\n\nHOLD THE TRIGGER UNTIL ALL THAT'S LEFT IS BLOOD.");
+
+			gun.SetupSprite(null, "laserchainsaw_idle_001", 8);
+
+			gun.SetAnimationFPS(gun.shootAnimation, 8);
+			gun.isAudioLoop = true;
+			gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(86) as Gun, true, false);
+			gun.AddPassiveStatModifier(PlayerStats.StatType.Curse, 2f, StatModifier.ModifyMethod.ADDITIVE);
+			gun.AddCurrentGunStatModifier(PlayerStats.StatType.MovementSpeed, 1.3f, StatModifier.ModifyMethod.MULTIPLICATIVE);
+
+			//GUN STATS
+			gun.doesScreenShake = false;
+			gun.DefaultModule.ammoCost = 10;
+			gun.DefaultModule.angleVariance = 0;
+			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
+			gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
+			gun.reloadTime = 1f;
+			gun.muzzleFlashEffects.type = VFXPoolType.None;
+			gun.DefaultModule.cooldownTime = 0.001f;
+			gun.DefaultModule.numberOfShotsInClip = 600;
+			gun.DefaultModule.ammoType = GameUIAmmoType.AmmoType.BEAM;
+			gun.barrelOffset.transform.localPosition = new Vector3(0.93f, 0.18f, 0f);
+			gun.SetBaseMaxAmmo(600);
+			gun.ammo = 600;
+
+			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).wrapMode = tk2dSpriteAnimationClip.WrapMode.LoopSection;
+			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).loopStart = 1;
+
+			List<string> BeamAnimPaths = new List<string>()
+			{
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_001",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_002",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_003",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_004",
+			};
+			List<string> BeamEndPaths = new List<string>()
+			{
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_end_001",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_end_002",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_end_003",
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_end_004",
+			};
+
+			//BULLET STATS
+			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(86) as Gun).DefaultModule.projectiles[0]);
+
+			BasicBeamController beamComp = projectile.GenerateBeamPrefab(
+				"Planetside/Resources/Beams/LaserChainsaw/chainsaw_mid_001",
+				new Vector2(5, 3),
+				new Vector2(0, 1),
+				BeamAnimPaths,
+				60,
+				//Impact
+				null,
+				60,
+				null,
+				null,
+				//End
+				BeamEndPaths,
+				60,
+				new Vector2(5, 3),
+				new Vector2(0, 1),
+				//Beginning
+				null,
+				60,
+				null,
+				null
+				);
+
+			projectile.gameObject.SetActive(false);
+			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
+			UnityEngine.Object.DontDestroyOnLoad(projectile);
+			projectile.baseData.damage = 200f;
+			projectile.baseData.force *= 0.1f;
+			projectile.baseData.range = 3.5f;
+			projectile.baseData.speed *= 1f;
+
+			beamComp.startAudioEvent = "Play_ENM_deathray_shot_01";
+			beamComp.endAudioEvent = "Stop_ENM_deathray_loop_01";
+			beamComp.penetration = 100;
+			beamComp.boneType = BasicBeamController.BeamBoneType.Straight;
+			beamComp.interpolateStretchedBones = false;
+			beamComp.gameObject.AddComponent<LaserChainsawProjectile>();
+			EmmisiveBeams emiss = beamComp.gameObject.AddComponent<EmmisiveBeams>();
+			emiss.EmissiveColorPower = 1.7f;
+			emiss.EmissivePower = 70;
+			gun.DefaultModule.projectiles[0] = projectile;
+
+			gun.quality = PickupObject.ItemQuality.S; //D
+			gun.encounterTrackable.EncounterGuid = "https://enterthegungeon.gamepedia.com/Modding/Some_Bunny%27s_Content_Pack";
+			ETGMod.Databases.Items.Add(gun, null, "ANY");
+			gun.SetupUnlockOnCustomFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND, true);
+		}
+		public LaserChainsaw()
+		{
+
+		}
 	}
 }

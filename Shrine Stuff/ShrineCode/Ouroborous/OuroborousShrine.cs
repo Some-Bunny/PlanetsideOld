@@ -47,17 +47,21 @@ namespace Planetside
 			string text = "";
 			float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 
-			if (Ouroborous.LoopingOn == true)
+			bool LoopOn =AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+
+			if (LoopOn == true)
 			{
-				Ouroborous.LoopingOn = false;
-				File.WriteAllText(Ouroborous.SaveFilePath, "false");
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.LOOPING_ON, false);
+				//Ouroborous.LoopingOn = false;
+				//File.WriteAllText(Ouroborous.SaveFilePath, "false");
 				header = "Ouroborous Disabled.";
 
 			}
 			else
 			{
-				Ouroborous.LoopingOn = true;
-				File.WriteAllText(Ouroborous.SaveFilePath, "true");
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.LOOPING_ON, true);
+				//Ouroborous.LoopingOn = true;
+				//File.WriteAllText(Ouroborous.SaveFilePath, "true");
 				header = "Ouroborous set to: " + Loop;
 			}
 			Notify(header, text);

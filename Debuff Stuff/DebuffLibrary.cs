@@ -31,7 +31,18 @@ namespace Planetside
 			AppliesDeathTint = false,
 
 		};
+		public static HeatStrokeEffect HeatStroke = new HeatStrokeEffect
+		{
+			DamagePerSecondToEnemies = 0f,
+			effectIdentifier = "Heat Stroke",
+			AffectsEnemies = true,
+			resistanceType = EffectResistanceType.None,
+			duration = 5f,
+			TintColor = new Color(0, 0, 0, 0),
+			AppliesTint = true,
+			AppliesDeathTint = false,
 
+		};
 		public static BrokenArmorEffect brokenArmor = new BrokenArmorEffect
 		{
 			DamagePerSecondToEnemies = 0f,
@@ -45,8 +56,21 @@ namespace Planetside
 
 		};
 
+		public static HolyBlessingEffect Holy = new HolyBlessingEffect
+		{
+			DamagePerSecondToEnemies = 0f,
+			effectIdentifier = "Holy",
+			AffectsEnemies = true,
+			resistanceType = EffectResistanceType.None,
+			duration = 5f,
+			AppliesTint = false,
+			AppliesDeathTint = false,
+
+		};
+
 		public static GoopDefinition PossesedPuddle = new GoopDefinition
 		{
+			name = "Possessive Goop",
 			CanBeIgnited = false,
 			damagesEnemies = false,
 			damagesPlayers = false,
@@ -54,6 +78,30 @@ namespace Planetside
 			goopTexture = ResourceExtractor.GetTextureFromResource("Planetside/Resources/possessed_standard_base_001.png"),
 			AppliesDamageOverTime = true,
 			HealthModifierEffect = DebuffLibrary.Possessed
+
+		};
+		public static GoopDefinition FrailPuddle = new GoopDefinition
+		{
+			name = "Frail Goop",
+			CanBeIgnited = false,
+			damagesEnemies = false,
+			damagesPlayers = false,
+			baseColor32 = new Color32(170, 0, 170, byte.MaxValue),
+			goopTexture = ResourceExtractor.GetTextureFromResource("Planetside/Resources/possessed_standard_base_001.png"),
+			AppliesDamageOverTime = true,
+			HealthModifierEffect = DebuffLibrary.Frailty
+
+		};
+
+		public static GoopDefinition HolyPuddle = new GoopDefinition
+		{
+			CanBeIgnited = false,
+			damagesEnemies = false,
+			damagesPlayers = false,
+			baseColor32 = new Color32(255, 255, 255, byte.MaxValue),
+			goopTexture = ResourceExtractor.GetTextureFromResource("Planetside/Resources/possessed_standard_base_001.png"),
+			AppliesDamageOverTime = true,
+			HealthModifierEffect = DebuffLibrary.Holy
 
 		};
 		public static Color LightGreen = new Color(0.55f, 1.76428568f, 0.871428549f);

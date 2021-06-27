@@ -46,9 +46,26 @@ namespace Planetside
 				material.DisableKeyword("BRIGHTNESS_CLAMP_ON");
 				material.EnableKeyword("BRIGHTNESS_CLAMP_OFF");
 				GameManager.Instance.StartCoroutine(this.EndTime(component));
+				component.StartCoroutine(this.Speed(component));
+
 			}
 		}
-
+		public IEnumerator Speed(Projectile projectile)
+		{
+			bool flag = projectile != null;
+			bool flag3 = flag;
+			if (flag3)
+			{
+				float speed = projectile.baseData.speed / 15;
+				for (int i = 0; i < 15; i++)
+				{
+					projectile.baseData.speed -= speed;
+					projectile.UpdateSpeed();
+					yield return new WaitForSeconds(0.05f);
+				}
+			}
+			yield break;
+		}
 		private IEnumerator EndTime(Projectile position)
 		{
 			float DamageScalar = 0f;

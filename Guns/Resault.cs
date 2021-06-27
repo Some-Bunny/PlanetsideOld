@@ -18,7 +18,11 @@ namespace Planetside
 {
 	public class Resault : AdvancedGunBehaviourMultiActive
 	{
-		// FINISH GUN
+		public static void ResetMaxAmmo()
+		{
+			Gun gun = (PickupObjectDatabase.GetById(Resault.ResaultID) as Gun);
+			gun.SetBaseMaxAmmo(200);
+		}
 		public static void Add()
 		{
 			Gun gun = ETGMod.Databases.Items.NewGun("Re-Sault", "resault");
@@ -48,12 +52,12 @@ namespace Planetside
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile);
 			gun.DefaultModule.projectiles[0] = projectile;
-			projectile.baseData.damage = 9f;
+			projectile.baseData.damage = 5f;
 			projectile.baseData.speed *= 1f;
 			projectile.AdditionalScaleMultiplier *= 1.1f;
 			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
-			projectile.ignoreDamageCaps = true;
+			//projectile.ignoreDamageCaps = true;
 			gun.barrelOffset.transform.localPosition = new Vector3(2.375f, 0.75f, 0f);
 			gun.carryPixelOffset = new IntVector2((int)2f, (int)-1.5f);
 			gun.encounterTrackable.EncounterGuid = "IUJFDHUBJKHHGUJGHJUKGJHJGHJGJGJGJGJGHJGJHHDFBSFJSHFGJSDHKJHJJJJJJJJJJJJJJ";
@@ -238,9 +242,10 @@ namespace Planetside
 		private void OnKill(Projectile arg1, SpeculativeRigidbody arg2)
 		{
 			PlayerController player = this.gun.CurrentOwner as PlayerController;
-			bool flag = !arg2.aiActor.healthHaver.IsDead && arg2.aiActor != null;
+			bool flag = !arg2.aiActor.healthHaver.IsDead && arg2.aiActor != null && arg2.aiActor.GetComponent<MarkResault>() == null;
 			if (flag)
 			{
+				arg2.aiActor.gameObject.AddComponent<MarkResault>();
 				int AmmoRegained = 10;
 				int ae = 5;
 				AkSoundEngine.PostEvent("Play_OBJ_spears_clank_01", base.gameObject);
@@ -298,4 +303,9 @@ namespace Planetside
 
 
 	}
+	public class MarkResault : BraveBehaviour
+	{
+
+	}
 }
+

@@ -168,7 +168,7 @@ namespace Planetside
 
 		public override void PostProcessProjectile(Projectile projectile)
 		{
-			base.StartCoroutine(this.Speed(projectile));
+			//base.StartCoroutine(this.Speed(projectile));
 		}
 		public IEnumerator Speed(Projectile projectile)
 		{

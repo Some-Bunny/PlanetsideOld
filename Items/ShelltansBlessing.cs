@@ -48,8 +48,10 @@ namespace Planetside
             CustomSynergies.Add("Invigorated", mandatoryConsoleIDs, optionalConsoleIDs, true);
             item.SetupUnlockOnCustomFlag(CustomDungeonFlags.JAMMED_GUARD_DEFEATED, true);
             item.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
+            ShelltansBlessing.ShelltainsBlessingID = item.PickupObjectId;
 
         }
+        public static int ShelltainsBlessingID;
         private void OnEnemyDamaged(float damage, bool fatal, HealthHaver enemy)
         {
             PlayerController player = base.Owner;
@@ -59,7 +61,7 @@ namespace Planetside
                 if (deathed)
                 {
                     this.random = UnityEngine.Random.Range(0.0f, 1.0f);
-                    if (random <= 0.3f)
+                    if (random <= 0.35f)
                     {
                         bool flagA = player.PlayerHasActiveSynergy("Invigorated");
                         if (flagA)
@@ -68,13 +70,13 @@ namespace Planetside
                             {
                                 if (player.inventory.AllGuns[i] && player.CurrentGun != player.inventory.AllGuns[i])
                                 {
-                                    player.inventory.AllGuns[i].GainAmmo(Mathf.FloorToInt((float)player.inventory.AllGuns[i].AdjustedMaxAmmo * 0.01f));
+                                    player.inventory.AllGuns[i].GainAmmo(Mathf.FloorToInt((float)player.inventory.AllGuns[i].AdjustedMaxAmmo * 0.02f));
                                 }
                             }
                         }
                         else
                         {
-                            player.inventory.CurrentGun.GainAmmo(Mathf.FloorToInt((float)player.inventory.CurrentGun.AdjustedMaxAmmo * 0.02f));
+                            player.inventory.CurrentGun.GainAmmo(Mathf.FloorToInt((float)player.inventory.CurrentGun.AdjustedMaxAmmo * 0.04f));
                         }
                         player.CurrentGun.ForceImmediateReload(false);
                     }

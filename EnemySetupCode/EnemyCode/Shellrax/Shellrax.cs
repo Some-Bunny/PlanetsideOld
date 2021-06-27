@@ -21,7 +21,7 @@ namespace Planetside
 		private static tk2dSpriteCollectionData ShellraxClooection;
 		public static GameObject shootpoint;
 		public static GameObject shootpoint1;
-		private static Texture2D BossCardTexture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside/Resources/shellrax_bosscard.png");
+		private static Texture2D BossCardTexture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside/Resources/BossCards/shellrax_bosscard.png");
 		public static string TargetVFX;
 		public static void Init()
 		{
@@ -426,6 +426,11 @@ namespace Planetside
 					}, "death", tk2dSpriteAnimationClip.WrapMode.Once).fps = 10f;
 
 				}
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("intro").frames[1].eventAudio = "Play_ENM_shells_gather_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("intro").frames[1].triggerEvent = true;
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("intro").frames[2].eventAudio = "Play_BOSS_lichC_intro_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("intro").frames[2].triggerEvent = true;
+
 				var bs = fuckyouprefab.GetComponent<BehaviorSpeculator>();
 				BehaviorSpeculator behaviorSpeculator = EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5").behaviorSpeculator;
 				bs.OverrideBehaviors = behaviorSpeculator.OverrideBehaviors;
@@ -1094,6 +1099,7 @@ namespace Planetside
 			}
 			protected override IEnumerator Top()
 			{
+				
 				float speed = base.Speed;
 				base.ChangeSpeed(new Speed(speed * 2, SpeedType.Absolute), 30);
 				yield break;
@@ -1203,6 +1209,36 @@ namespace Planetside
 	public class EnemyBehavior : BraveBehaviour
 	{
 
+		private RoomHandler m_StartRoom;
+
+		public void Update()
+		{
+			m_StartRoom = aiActor.GetAbsoluteParentRoom();
+			if (!base.aiActor.HasBeenEngaged)
+			{
+				CheckPlayerRoom();
+			}
+		}
+		private void CheckPlayerRoom()
+		{
+			if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+			{
+				GameManager.Instance.StartCoroutine(LateEngage());
+			}
+			else
+			{
+				base.aiActor.HasBeenEngaged = false;
+			}
+		}
+		private IEnumerator LateEngage()
+		{
+			yield return new WaitForSeconds(0.5f);
+			if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+			{
+				base.aiActor.HasBeenEngaged = true;
+			}
+			yield break;
+		}
 		private void Start()
 		{
 			base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("4d164ba3f62648809a4a82c90fc22cae").bulletBank.GetBullet("big_one"));
@@ -1223,6 +1259,8 @@ namespace Planetside
 
 				Chest chest2 = GameManager.Instance.RewardManager.SpawnTotallyRandomChest(GameManager.Instance.PrimaryPlayer.CurrentRoom.GetRandomVisibleClearSpot(1, 1));
 				chest2.IsLocked = false;
+				chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
+
 
 			}; ;
 			this.aiActor.knockbackDoer.SetImmobile(true, "nope.");

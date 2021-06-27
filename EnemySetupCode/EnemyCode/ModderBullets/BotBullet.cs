@@ -41,13 +41,13 @@ namespace Planetside
 				companion.aiActor.IgnoreForRoomClear = true;
 				companion.aiActor.aiAnimator.HitReactChance = 0f;
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
-				companion.aiActor.specRigidbody.CollideWithTileMap = false;
+				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(30f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(20f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = false;
 				companion.aiActor.CanTargetPlayers = true;
-				companion.aiActor.healthHaver.SetHealthMaximum(30f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(20f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.specRigidbody.PixelColliders.Add(new PixelCollider
 
@@ -79,8 +79,8 @@ namespace Planetside
 					SpecifyBagelFrame = string.Empty,
 					BagelColliderNumber = 0,
 					ManualOffsetX = 0,
-					ManualOffsetY = 15,
-					ManualWidth = 17,
+					ManualOffsetY = 0,
+					ManualWidth = 16,
 					ManualHeight = 16,
 					ManualDiameter = 0,
 					ManualLeftX = 0,
@@ -280,19 +280,19 @@ namespace Planetside
 		private static string[] spritePaths = new string[]
 		{
 
-			"Planetside/ModderBullets/bot/botbullet_idle_001.png",
-			"Planetside/ModderBullets/bot/botbullet_idle_002.png",
-			"Planetside/ModderBullets/bot/botbullet_idle_003.png",
-			"Planetside/ModderBullets/bot/botbullet_idle_004.png",
+			"Planetside/Resources/Enemies/ModderBullets/bot/botbullet_idle_001.png",
+			"Planetside/Resources/Enemies/ModderBullets/bot/botbullet_idle_002.png",
+			"Planetside/Resources/Enemies/ModderBullets/bot/botbullet_idle_003.png",
+			"Planetside/Resources/Enemies/ModderBullets/bot/botbullet_idle_004.png",
 
 
 
 			//death
-			"Planetside/ModderBullets/bot/botbullet_die_001.png",
-			"Planetside/ModderBullets/bot/botbullet_die_002.png",
-			"Planetside/ModderBullets/bot/botbullet_die_003.png",
-			"Planetside/ModderBullets/bot/botbullet_die_004.png",
-			"Planetside/ModderBullets/bot/botbullet_die_005.png",
+			"Planetside/Resources/Enemies/ModderBullets/bot/botbullet_die_001.png",
+			"Planetside/Resources/Enemies/ModderBullets/bot/botbullet_die_002.png",
+			"Planetside/Resources/Enemies/ModderBullets/bot/botbullet_die_003.png",
+			"Planetside/Resources/Enemies/ModderBullets/bot/botbullet_die_004.png",
+			"Planetside/Resources/Enemies/ModderBullets/bot/botbullet_die_005.png",
 		};
 
 		public class EnemyBehavior : BraveBehaviour

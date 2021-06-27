@@ -21,7 +21,7 @@ namespace Planetside
 		private static tk2dSpriteCollectionData TheBulletBankClooection;
 		public static GameObject shootpoint;
 		public static GameObject shootpoint1;
-		private static Texture2D BossCardTexture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside/Resources/bulletbanker_bosscard.png");
+		private static Texture2D BossCardTexture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside/Resources/BossCards/bulletbanker_bosscard.png");
 		public static string TargetVFX;
 		public static Texture _gradTexture;
 
@@ -50,10 +50,9 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(450f);
-				companion.aiActor.healthHaver.SetHealthMaximum(450f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(350f);
+				companion.aiActor.healthHaver.SetHealthMaximum(350f);
 				companion.aiActor.CollisionKnockbackStrength = 2f;
-				companion.aiActor.procedurallyOutlined = false;
 				companion.aiActor.CanTargetPlayers = true;
 				companion.aiActor.procedurallyOutlined = true;
 				companion.aiActor.HasShadow = true;
@@ -457,6 +456,13 @@ namespace Planetside
 					}, "death", tk2dSpriteAnimationClip.WrapMode.Once).fps = 10f;
 
 				}
+
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("intro").frames[15].eventAudio = "Play_ENV_time_shatter_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("intro").frames[15].triggerEvent = true;
+
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("intro").frames[17].eventAudio = "Play_ENM_bombshee_scream_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("intro").frames[17].triggerEvent = true;
+
 				var bs = fuckyouprefab.GetComponent<BehaviorSpeculator>();
 				BehaviorSpeculator behaviorSpeculator = EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5").behaviorSpeculator;
 				bs.OverrideBehaviors = behaviorSpeculator.OverrideBehaviors;
@@ -741,7 +747,7 @@ namespace Planetside
 						};
 							string guid = BraveUtility.RandomElement<string>(advanced);
 							var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
-							Enemy.healthHaver.SetHealthMaximum(25f);
+							Enemy.healthHaver.SetHealthMaximum(15f);
 							AIActor.Spawn(Enemy.aiActor, this.Projectile.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
 						}
 						else
@@ -775,7 +781,7 @@ namespace Planetside
 						float Angle = 360 / Amount;
 						for (int i = 0; i < Amount; i++)
 						{
-							base.Fire(new Direction(num + Angle * (float)i + 10, DirectionType.Absolute, -1f), new Speed(5f, SpeedType.Absolute), new SpawnDash.BurstBullet());
+							base.Fire(new Direction(num + Angle * (float)i + 10, DirectionType.Absolute, -1f), new Speed(7f, SpeedType.Absolute), new SpawnDash.BurstBullet());
 						}
 						return;
 					}
@@ -834,7 +840,7 @@ namespace Planetside
 						base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("da797878d215453abba824ff902e21b4").bulletBank.GetBullet("snakeBullet"));
 					}
 					base.PostWwiseEvent("Play_OBJ_lantern_shatter_01", null);
-					base.ChangeSpeed(new Speed(20f, SpeedType.Absolute), 90);
+					base.ChangeSpeed(new Speed(20f, SpeedType.Absolute), 80);
 					yield return this.Wait(120);
 					base.Vanish(false);
 					yield break;
@@ -857,7 +863,7 @@ namespace Planetside
 						};
 							string guid = BraveUtility.RandomElement<string>(advanced);
 							var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
-							Enemy.healthHaver.SetHealthMaximum(25f);
+							Enemy.healthHaver.SetHealthMaximum(15f);
 							AIActor.Spawn(Enemy.aiActor, this.Projectile.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
 						}
 						else
@@ -882,7 +888,7 @@ namespace Planetside
 					    };
 							string guid = BraveUtility.RandomElement<string>(basic);
 							var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
-							Enemy.healthHaver.SetHealthMaximum(20f);
+							Enemy.healthHaver.SetHealthMaximum(24f);
 							AIActor.Spawn(Enemy.aiActor, this.Projectile.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
 						}
 
@@ -936,7 +942,7 @@ namespace Planetside
 				{
 					base.Fire(new Direction(Aim +i*7.2f, DirectionType.Absolute, -1f), new Speed(9, SpeedType.Absolute), new BigWhips.BasicBullet());
 					base.Fire(new Direction(Aim - i*7.2f, DirectionType.Absolute, -1f), new Speed(9, SpeedType.Absolute), new BigWhips.BasicBullet());
-					yield return this.Wait(2);
+					yield return this.Wait(1.66f);
 
 				}
 				yield break;
@@ -1043,6 +1049,36 @@ namespace Planetside
 
 		public class EnemyBehavior : BraveBehaviour
 		{
+			private RoomHandler m_StartRoom;
+
+			public void Update()
+			{
+				m_StartRoom = aiActor.GetAbsoluteParentRoom();
+				if (!base.aiActor.HasBeenEngaged)
+				{
+					CheckPlayerRoom();
+				}
+			}
+			private void CheckPlayerRoom()
+			{
+				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+				{
+					GameManager.Instance.StartCoroutine(LateEngage());
+				}
+				else
+				{
+					base.aiActor.HasBeenEngaged = false;
+				}
+			}
+			private IEnumerator LateEngage()
+			{
+				yield return new WaitForSeconds(0.5f);
+				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+				{
+					base.aiActor.HasBeenEngaged = true;
+				}
+				yield break;
+			}
 			private void Start()
 			{
 
@@ -1063,6 +1099,7 @@ namespace Planetside
 					}
 
 					Chest chest2 = GameManager.Instance.RewardManager.SpawnTotallyRandomChest(GameManager.Instance.PrimaryPlayer.CurrentRoom.GetRandomVisibleClearSpot(1, 1));
+					chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
 					chest2.IsLocked = false;
 
 				}; ;

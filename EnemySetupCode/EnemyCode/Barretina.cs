@@ -46,14 +46,14 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(55f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(50f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = true;
 				companion.aiActor.CanTargetPlayers = true;
 				companion.aiActor.HasShadow = true;
 				companion.aiActor.SetIsFlying(true, "Gamemode: Creative");
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").ShadowObject; 
-				companion.aiActor.healthHaver.SetHealthMaximum(55f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(50f, null, false);
 
 				companion.aiActor.gameObject.AddComponent<ImprovedAfterImage>().dashColor = Color.grey;
 				companion.aiActor.gameObject.AddComponent<ImprovedAfterImage>().spawnShadows = true;
@@ -315,7 +315,7 @@ namespace Planetside
 					RequiresLineOfSight = true,
 					MultipleFireEvents = false,
 					Uninterruptible = false,
-
+					
 
 				},
 				new DashBehavior()
@@ -453,9 +453,13 @@ namespace Planetside
 
 			private RoomHandler m_StartRoom;
 
-			private void Update()
+			public void Update()
 			{
-				if (!base.aiActor.HasBeenEngaged) { CheckPlayerRoom(); }
+				m_StartRoom = aiActor.GetAbsoluteParentRoom();
+				if (!base.aiActor.HasBeenEngaged)
+				{
+					CheckPlayerRoom();
+				}
 			}
 			private void CheckPlayerRoom()
 			{
@@ -463,12 +467,18 @@ namespace Planetside
 				{
 					GameManager.Instance.StartCoroutine(LateEngage());
 				}
+				else
+				{
+					base.aiActor.HasBeenEngaged = false;
+				}
 			}
-
 			private IEnumerator LateEngage()
 			{
 				yield return new WaitForSeconds(0.5f);
-				base.aiActor.HasBeenEngaged = true;
+				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+				{
+					base.aiActor.HasBeenEngaged = true;
+				}
 				yield break;
 			}
 			private void Start()
@@ -499,12 +509,12 @@ namespace Planetside
 				base.PostWwiseEvent("Play_WPN_eyeballgun_impact_01", null);
 				for (int i = -4; i <= -1; i++)
 				{
-					this.Fire(new Direction(i * 20, DirectionType.Aim, -1f), new Speed(10f, SpeedType.Absolute), new SpitNormal());
+					this.Fire(new Direction(i * 20, DirectionType.Aim, -1f), new Speed(9f, SpeedType.Absolute), new SpitNormal());
 				}
 				this.Fire(new Direction(0, DirectionType.Aim, -1f), new Speed(3f, SpeedType.Absolute), new SpitLarge());
 				for (int i = 1; i <= 4; i++)
 				{
-					this.Fire(new Direction(i * 20, DirectionType.Aim, -1f), new Speed(10f, SpeedType.Absolute), new SpitNormal());
+					this.Fire(new Direction(i * 20, DirectionType.Aim, -1f), new Speed(9f, SpeedType.Absolute), new SpitNormal());
 				}
 				yield break;
 			}
@@ -525,9 +535,9 @@ namespace Planetside
 			}
 			protected override IEnumerator Top()
 			{
-				base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 60);
+				base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 20);
 				yield return base.Wait(20);
-				base.ChangeSpeed(new Speed(30f, SpeedType.Absolute), 40);
+				base.ChangeSpeed(new Speed(20f, SpeedType.Absolute), 20);
 				yield break;
 			}
 		}
@@ -539,9 +549,9 @@ namespace Planetside
 				base.PostWwiseEvent("Play_WPN_eyeballgun_shot_01", null);
 				for (int i = -1; i <= 1; i++)
 				{
-					base.Fire(new Direction(10*i, DirectionType.Aim, -1f), new Speed(2.5f, SpeedType.Absolute), new Spit());
+					base.Fire(new Direction(10*i, DirectionType.Aim, -1f), new Speed(2f, SpeedType.Absolute), new Spit());
 				}
-				base.Fire(new Direction(0f, DirectionType.Aim, -1f), new Speed(15f, SpeedType.Absolute), new SpitNormal());
+				base.Fire(new Direction(0f, DirectionType.Aim, -1f), new Speed(12f, SpeedType.Absolute), new SpitNormal());
 				yield break;
 			}
 		}
@@ -552,7 +562,7 @@ namespace Planetside
 			}
 			protected override IEnumerator Top()
 			{
-				base.ChangeSpeed(new Speed(18f, SpeedType.Absolute), 20);
+				base.ChangeSpeed(new Speed(12f, SpeedType.Absolute), 20);
 				yield break;
 			}
 		}

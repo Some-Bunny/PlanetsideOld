@@ -6,7 +6,6 @@ namespace Planetside
 {
 	public class TinyPlanetMotionModule : ProjectileAndBeamMotionModule
 	{
-		// Token: 0x06008544 RID: 34116 RVA: 0x0036FA68 File Offset: 0x0036DC68
 		public static int GetOrbitersInGroup(int group)
 		{
 			if (TinyPlanetMotionModule.m_currentOrbiters.ContainsKey(group))
@@ -16,9 +15,6 @@ namespace Planetside
 			return 0;
 		}
 
-		// Token: 0x1700114D RID: 4429
-		// (get) Token: 0x060072F5 RID: 29429 RVA: 0x002DAE38 File Offset: 0x002D9038
-		// (set) Token: 0x060072F6 RID: 29430 RVA: 0x002DAE40 File Offset: 0x002D9040
 		public float BeamOrbitRadius
 		{
 			get
@@ -107,11 +103,11 @@ namespace Planetside
 			Vector2 vector2 = Vector2.zero;
 			if (this.usesAlternateOrbitTarget)
 			{
-				vector2 = this.alternateOrbitTarget.UnitCenter;
+				vector2 = vector;
 			}
 			else
 			{
-				vector2 = source.Owner.CenterPosition;
+				vector2 = vector;
 			}
 			Vector2 vector3 = vector2 + (Quaternion.Euler(0f, 0f, this.m_currentAngle) * Vector2.right * radius).XY();
 			if (this.StackHelix)
@@ -133,7 +129,7 @@ namespace Planetside
 				}
 				projectileTransform.localRotation = Quaternion.Euler(0f, 0f, num6);
 			}
-			specRigidbody.Velocity = velocity;
+			specRigidbody.Velocity = velocity/(60*(1+BraveTime.DeltaTime));
 		}
 
 		// Token: 0x060072FC RID: 29436 RVA: 0x002DB414 File Offset: 0x002D9614
@@ -158,7 +154,6 @@ namespace Planetside
 		{
 		}
 
-		// Token: 0x060072FF RID: 29439 RVA: 0x002DB44C File Offset: 0x002D964C
 		public void RegisterAsBeam(BeamController beam)
 		{
 			if (!this.m_isBeam)
@@ -176,24 +171,22 @@ namespace Planetside
 		// Token: 0x06007300 RID: 29440 RVA: 0x002DB4A0 File Offset: 0x002D96A0
 		public override Vector2 GetBoneOffset(BasicBeamController.BeamBone bone, BeamController sourceBeam, bool inverted)
 		{
-			if (sourceBeam.IsReflectedBeam)
-			{
-				return Vector2.zero;
-			}
 			PlayerController playerController = sourceBeam.Owner as PlayerController;
 			Vector2 vector = playerController.unadjustedAimPoint.XY() - playerController.CenterPosition;
 			float num = vector.ToAngle();
-			Vector2 b = bone.Position - playerController.CenterPosition;
+			Vector2 barrel = playerController.CurrentGun.barrelOffset.transform.position;
+			Vector2 b = bone.Position - barrel;
 			Vector2 vector2;
 			{
 				float aaaa = bone.PosX;
 				float num2 = aaaa / this.m_beamOrbitRadiusCircumference * 360f + num;
-				float x = Mathf.Cos(0.0174532924f * num2) * this.BeamOrbitRadius;
-				float y = Mathf.Sin(0.0174532924f * num2) * this.BeamOrbitRadius;
-				bone.RotationAngle = num2 + 72f;
+				float Fard = 0.25f * (aaaa) * 2;
+				float x = Mathf.Cos(0.0174532924f * num2) * Fard;
+				float y = Mathf.Sin(0.0174532924f * num2) * Fard;
+				bone.RotationAngle = num2 + 36f;
 				vector2 = new Vector2(x, y) - b;
 			}
-
+			
 			return vector2;
 		}
 

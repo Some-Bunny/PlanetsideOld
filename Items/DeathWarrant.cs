@@ -82,6 +82,11 @@ namespace Planetside
 				AIActor randomActiveEnemy;
 				randomActiveEnemy = base.Owner.CurrentRoom.GetRandomActiveEnemy(true);
 				GameObject lightning = randomActiveEnemy.PlayEffectOnActor(DeathMarkPrefab, new Vector3(0f, -1f, 0f));
+
+				lightning.transform.position.WithZ(transform.position.z + 99999);
+				lightning.GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(randomActiveEnemy.CenterPosition, tk2dBaseSprite.Anchor.MiddleCenter);
+				randomActiveEnemy.sprite.AttachRenderer(lightning.GetComponent<tk2dBaseSprite>());
+
 				lightning.GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(randomActiveEnemy.sprite.WorldTopCenter, tk2dBaseSprite.Anchor.LowerCenter);
 				lightning.transform.position.WithZ(transform.position.z + 2);
 				lightning.GetComponent<tk2dSpriteAnimator>().Play();

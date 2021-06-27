@@ -75,7 +75,7 @@ namespace Planetside
 			ProjectileModule.ChargeProjectile item2 = new ProjectileModule.ChargeProjectile
 			{
 				Projectile = projectile2,
-				ChargeTime = behav.ChargeTime
+				ChargeTime = 1
 			};
 			gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile>
 			{
@@ -108,6 +108,7 @@ namespace Planetside
 				{
 
 					PlayerController playerController = this.gun.CurrentOwner as PlayerController;
+					float dmg = (playerController.stats.GetStatValue(PlayerStats.StatType.Damage));
 					Projectile projectile1 = ((Gun)ETGMod.Databases.Items[26]).DefaultModule.projectiles[0];
 					GameObject gameObject = SpawnManager.SpawnProjectile(projectile1.gameObject, AAAA, Quaternion.Euler(0f, 0f, ((this.gun.CurrentOwner.CurrentGun == null) ? 1.2f : this.gun.CurrentOwner.CurrentGun.CurrentAngle) + (counter * 6) - 15), true);
 					Projectile component = gameObject.GetComponent<Projectile>();
@@ -123,12 +124,11 @@ namespace Planetside
 						component.AdditionalScaleMultiplier *= 1.25f;
 						component.SetOwnerSafe(this.gun.CurrentOwner, "Player");
 						component.ignoreDamageCaps = true;
-						component.baseData.damage = 8f;
+						component.baseData.damage = 7f * dmg;
 						component.baseData.range *= 2f;
 						component.baseData.speed *= 2f;
 
 					}
-					ChargeTime = 1f;
 					HasCommitedWeaponSwitch = false;
 				}
 			}
@@ -168,12 +168,10 @@ namespace Planetside
 					original = RebarPuncher.PlusNailsPrefab;
 					tk2dSprite ahfuck = original.GetComponent<tk2dSprite>();
 					player.BloopItemAboveHead(ahfuck, "");
-					ChargeTime = 0f;
 					HasCommitedWeaponSwitch = true;
 				}
 				else if (HasCommitedWeaponSwitch != true)
 				{
-					ChargeTime = 1f;
 					HasCommitedWeaponSwitch = false;
 				}
 			}
@@ -197,7 +195,6 @@ namespace Planetside
 			}
 		}
 		public bool HasCommitedWeaponSwitch;
-		public float ChargeTime = 1f;
 
 		private static string PlusNailsVFX = "Planetside/Resources/VFX/Rebar/plusnails";
 

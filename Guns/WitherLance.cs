@@ -54,6 +54,7 @@ namespace Planetside
 			projectile.pierceMinorBreakables = true;
 			projectile.DefaultTintColor = new Color(1f, 1f, 1f).WithAlpha(3f);
 			projectile.HasDefaultTint = true;
+			projectile.gameObject.AddComponent<WitherLancePROJECTILE>();
 			//projectile.baseData.range = 5.8f;
 			gun.AddPassiveStatModifier(PlayerStats.StatType.Curse, 1f, StatModifier.ModifyMethod.ADDITIVE);
 			gun.encounterTrackable.EncounterGuid = "Malachite Elite go BWOOOOOOOOOOOOOOOOOM";
@@ -74,34 +75,6 @@ namespace Planetside
 		}
 		public override void PostProcessProjectile(Projectile projectile)
 		{
-			projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHit));
-		}
-		private void HandleHit(Projectile arg1, SpeculativeRigidbody arg2, bool arg3)
-		{
-			PlayerController player = this.gun.CurrentOwner as PlayerController;
-
-			float scalar = 0f;
-			float scalarboss = 0f;
-			scalar = (player.stats.GetStatValue(PlayerStats.StatType.Damage)/8);
-			scalarboss = (player.stats.GetStatValue(PlayerStats.StatType.Damage) / 40);
-			if (arg2.aiActor != null && arg2.aiActor.IsBlackPhantom)
-            {
-				scalar *= 2;
-				scalarboss *= 2;
-
-			}
-			bool flag = arg2.aiActor != null && !arg2.healthHaver.IsBoss && !arg2.healthHaver.IsDead && arg2.aiActor.behaviorSpeculator && !arg2.aiActor.IsHarmlessEnemy && arg2.aiActor != null;
-			if (flag)
-			{
-				arg2.healthHaver.SetHealthMaximum(arg2.healthHaver.GetMaxHealth() * (1-scalar));
-
-			}
-			bool e = arg2.aiActor != null && arg2.healthHaver.IsBoss && !arg2.healthHaver.IsDead && arg2.aiActor.behaviorSpeculator && !arg2.aiActor.IsHarmlessEnemy && arg2.aiActor != null;
-			if (e)
-			{
-				arg2.healthHaver.SetHealthMaximum(arg2.healthHaver.GetMaxHealth() * (1 - scalarboss));
-
-			}
 		}
 	}
 }

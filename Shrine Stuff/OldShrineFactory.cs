@@ -64,6 +64,99 @@ namespace GungeonAPI
 					this.colliderSize = new IntVector2(intVector.x, intVector.y / 2);
 				}
 				SpeculativeRigidbody speculativeRigidbody = component.SetUpSpeculativeRigidbody(this.colliderOffset, this.colliderSize);
+
+				speculativeRigidbody.PixelColliders.Add(new PixelCollider
+				{
+					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
+					CollisionLayer = CollisionLayer.PlayerBlocker,
+					IsTrigger = false,
+					BagleUseFirstFrameOnly = false,
+					SpecifyBagelFrame = string.Empty,
+					BagelColliderNumber = 0,
+					ManualOffsetX = this.colliderOffset.x,
+					ManualOffsetY = this.colliderOffset.y,
+					ManualWidth = this.colliderSize.x,
+					ManualHeight = this.colliderSize.y,
+					ManualDiameter = 0,
+					ManualLeftX = 0,
+					ManualLeftY = 0,
+					ManualRightX = 0,
+					ManualRightY = 0,
+				});
+				speculativeRigidbody.PixelColliders.Add(new PixelCollider
+				{
+
+					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
+					CollisionLayer = CollisionLayer.EnemyBlocker,
+					IsTrigger = false,
+					BagleUseFirstFrameOnly = false,
+					SpecifyBagelFrame = string.Empty,
+					BagelColliderNumber = 0,
+					ManualOffsetX = this.colliderOffset.x,
+					ManualOffsetY = this.colliderOffset.y,
+					ManualWidth = this.colliderSize.x,
+					ManualHeight = this.colliderSize.y,
+					ManualDiameter = 0,
+					ManualLeftX = 0,
+					ManualLeftY = 0,
+					ManualRightX = 0,
+					ManualRightY = 0,
+				});
+				speculativeRigidbody.PixelColliders.Add(new PixelCollider
+				{
+					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
+					CollisionLayer = CollisionLayer.BulletBlocker,
+					IsTrigger = false,
+					BagleUseFirstFrameOnly = false,
+					SpecifyBagelFrame = string.Empty,
+					BagelColliderNumber = 0,
+					ManualOffsetX = this.colliderOffset.x,
+					ManualOffsetY = this.colliderOffset.y,
+					ManualWidth = this.colliderSize.x,
+					ManualHeight = this.colliderSize.y,
+					ManualDiameter = 0,
+					ManualLeftX = 0,
+					ManualLeftY = 0,
+					ManualRightX = 0,
+					ManualRightY = 0,
+				});
+				speculativeRigidbody.PixelColliders.Add(new PixelCollider
+				{
+					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
+					CollisionLayer = CollisionLayer.EnemyBulletBlocker,
+					IsTrigger = false,
+					BagleUseFirstFrameOnly = false,
+					SpecifyBagelFrame = string.Empty,
+					BagelColliderNumber = 0,
+					ManualOffsetX = this.colliderOffset.x,
+					ManualOffsetY = this.colliderOffset.y,
+					ManualWidth = this.colliderSize.x,
+					ManualHeight = this.colliderSize.y,
+					ManualDiameter = 0,
+					ManualLeftX = 0,
+					ManualLeftY = 0,
+					ManualRightX = 0,
+					ManualRightY = 0,
+				});
+				speculativeRigidbody.PixelColliders.Add(new PixelCollider
+				{
+					ColliderGenerationMode = PixelCollider.PixelColliderGeneration.Manual,
+					CollisionLayer = CollisionLayer.BeamBlocker,
+					IsTrigger = false,
+					BagleUseFirstFrameOnly = false,
+					SpecifyBagelFrame = string.Empty,
+					BagelColliderNumber = 0,
+					ManualOffsetX = this.colliderOffset.x,
+					ManualOffsetY = this.colliderOffset.y,
+					ManualWidth = this.colliderSize.x,
+					ManualHeight = this.colliderSize.y,
+					ManualDiameter = 0,
+					ManualLeftX = 0,
+					ManualLeftY = 0,
+					ManualRightX = 0,
+					ManualRightY = 0,
+				});
+
 				OldShrineFactory.CustomShrineController customShrineController = gameObject.AddComponent<OldShrineFactory.CustomShrineController>();
 				customShrineController.ID = text;
 				customShrineController.roomStyles = this.roomStyles;
@@ -167,7 +260,7 @@ namespace GungeonAPI
 		};
 			//RoomFactory.RoomData roomData = RoomFactory.ExtractRoomDataFromResource(roomPath);
 			RoomFactory.rooms.Add(ID, roomData);
-			DungeonHandler.Register(roomData);
+			DungeonHandler.RegisterForShrine(roomData);
 		}
 
 		// Token: 0x06000019 RID: 25 RVA: 0x00003ADC File Offset: 0x00001CDC
@@ -324,13 +417,13 @@ namespace GungeonAPI
 			public void ConfigureOnPlacement(RoomHandler room)
 			{
 				this.m_parentRoom = room;
-				this.RegisterMinimapIcon();
+				this.RegisterMinimapIcon(room);
 			}
 
 			// Token: 0x06000306 RID: 774 RVA: 0x00022107 File Offset: 0x00020307
-			public void RegisterMinimapIcon()
+			public void RegisterMinimapIcon(RoomHandler room)
 			{
-				this.m_instanceMinimapIcon = Minimap.Instance.RegisterRoomIcon(this.m_parentRoom, (GameObject)BraveResources.Load("Global Prefabs/Minimap_Shrine_Icon", ".prefab"), false);
+				this.m_instanceMinimapIcon = Minimap.Instance.RegisterRoomIcon(room, (GameObject)BraveResources.Load("Global Prefabs/Minimap_Shrine_Icon", ".prefab"));
 			}
 
 			// Token: 0x06000307 RID: 775 RVA: 0x00022138 File Offset: 0x00020338

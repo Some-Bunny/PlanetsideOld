@@ -4,6 +4,111 @@ using System.Linq;
 using System.Text;
 
 /*
+ *if (proj1.GetComponentInChildren<tk2dTiledSprite>() != null)
+            {
+                proj1.GetComponentInChildren<tk2dTiledSprite>().usesOverrideMaterial = true;
+                if (false)
+                {
+                    
+                    proj1.GetComponentInChildren<tk2dTiledSprite>().renderer.material.shader = ShaderCache.Acquire("Brave/Internal/RainbowChestShader");
+                    proj1.GetComponentInChildren<tk2dTiledSprite>().sprite.renderer.material.SetFloat("_HueTestValue", 0);
+                }
+                else
+                {
+                    proj1.GetComponentInChildren<tk2dTiledSprite>().renderer.material.SetFloat("_VertexColor", 1);
+                    proj1.GetComponentInChildren<tk2dTiledSprite>().color = Color.cyan;
+                }
+            }
+
+ *
+ *
+ *
+
+ * TextBoxManager.ShowTextBox(baseTransform.position + offset, baseTransform, duration, stringKey, string.Empty, false, TextBoxManager.BoxSlideOrientation.NO_ADJUSTMENT, false, false);
+ * 
+ * 
+ * 
+ * 
+ else if (user.CurrentRoom != null && user.CurrentRoom.GetNearestInteractable(user.CenterPosition, 2f, user) is Chest )
+{
+                Chest chest = (user.CurrentRoom.GetNearestInteractable(user.CenterPosition, 2f, user) as Chest);
+                List<PickupObject> contents = chest.PredictContents(user);
+}
+ * 
+ * 
+ * USING THE RAT TELL LASERS
+float angle = yourAngle;
+CrimsonChamberController component = this.BulletBank.GetComponent<CrimsonChamberController>();
+float num2 = 20f;
+Vector2 zero = Vector2.zero;
+if (BraveMathCollege.LineSegmentRectangleIntersection(this.Position, this.Position + BraveMathCollege.DegreesToVector(angle, 60f), area.UnitBottomLeft, area.UnitTopRight - new Vector2(0f, 6f), ref zero))
+{
+  num2 = (zero - this.Position).magnitude;
+}
+GameObject gameObject = SpawnManager.SpawnVFX(component.tellLaser, false);
+tk2dSlicedSprite component2 = gameObject.GetComponent<tk2dSlicedSprite>();
+component2.transform.position = new Vector3(this.Position.x, this.Position.y, this.Position.y) + BraveMathCollege.DegreesToVector(angle, 2f).ToVector3ZUp(0);
+component2.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
+component2.dimensions = new Vector2((num2 - 3f) * 16f, 5f);
+component2.UpdateZDepth();
+ * 
+ SpawnManager.Despawn(tellLaser);
+ * 
+ crimsonChamberController.tellLaser = EnemyDatabase.GetOrLoadByGuid("6868795625bd46f3ae3e4377adce288b").GetComponent<ResourcefulRatController>().ReticleQuad;  
+ * 
+ * 
+ * animation stuff
+ 
+ 
+ *tk2dSpriteAnimationClip chargeClip = gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.chargeAnimation);
+            foreach (tk2dSpriteAnimationFrame frame in chargeClip.frames)
+            {
+                tk2dSpriteDefinition def = frame.spriteCollection.spriteDefinitions[frame.spriteId];
+                if (def != null)
+                {
+                    def.MakeOffset(new Vector2(-0.56f, -2.31f));
+                }
+            }
+            tk2dSpriteAnimationClip fireClip = gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation);
+            foreach (tk2dSpriteAnimationFrame frame in fireClip.frames)
+            {
+                tk2dSpriteDefinition def = frame.spriteCollection.spriteDefinitions[frame.spriteId];
+                if (def != null)
+                {
+                    def.MakeOffset(new Vector2(-0.56f, -2.31f));
+                }
+            }
+ * 
+ * 
+ * 
+ * public class PierceDeadActors : MonoBehaviour
+        {
+            public PierceDeadActors()
+            {
+            }
+            private void Start()
+            {
+                this.m_projectile = base.GetComponent<Projectile>();
+                this.m_projectile.specRigidbody.OnPreRigidbodyCollision += this.PreCollision;
+            }
+            private void PreCollision(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
+            {
+                if (myRigidbody != null && otherRigidbody != null)
+                {
+                    if (otherRigidbody.healthHaver != null && otherRigidbody.healthHaver.IsDead)
+                    {
+                        PhysicsEngine.SkipCollision = true;
+                    }
+                }
+            }
+            private Projectile m_projectile;
+        }
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  * 
  * 
  * 

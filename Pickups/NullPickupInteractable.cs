@@ -169,7 +169,7 @@ namespace Planetside
             {
                 if (NullPoints == 0)
                 {
-                    PlanetsideModule.Strings.Enemies.Set("#NULL_TEXT", "NULL");
+                    PlanetsideModule.Strings.Items.Set("#NULL_TEXT", "NULL");
                     GameUIRoot.Instance.InformNeedsReload(interactor, new Vector3(interactor.specRigidbody.UnitCenter.x - interactor.transform.position.x, 1.25f, 0f), 1f, "NULL");
                 }
             }

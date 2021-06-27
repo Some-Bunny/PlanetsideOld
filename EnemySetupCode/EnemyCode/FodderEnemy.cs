@@ -42,7 +42,7 @@ namespace Planetside
 				companion.aiActor.IgnoreForRoomClear = true;
 				companion.aiActor.aiAnimator.HitReactChance = 0f;
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
-				companion.aiActor.specRigidbody.CollideWithTileMap = false;
+				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
 				companion.aiActor.healthHaver.ForceSetCurrentHealth(2f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
@@ -283,6 +283,8 @@ namespace Planetside
 				bs.StartingFacingDirection = behaviorSpeculator.StartingFacingDirection;
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:fodder", companion.aiActor);
+
+
 				SpriteBuilder.AddSpriteToCollection("Planetside/Resources/Fodder/fodder_idle_001.png", SpriteBuilder.ammonomiconCollection);
 				if (companion.GetComponent<EncounterTrackable>() != null)
 				{
@@ -374,21 +376,38 @@ namespace Planetside
 		{
 
 			private RoomHandler m_StartRoom;
-			private void Update()
+
+			public void Update()
 			{
-				if (!base.aiActor.HasBeenEngaged) { CheckPlayerRoom(); }
+				m_StartRoom = aiActor.GetAbsoluteParentRoom();
+				if (!base.aiActor.HasBeenEngaged)
+				{
+					CheckPlayerRoom();
+				}
 			}
 			private void CheckPlayerRoom()
 			{
-
+				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
+				{
+					GameManager.Instance.StartCoroutine(LateEngage());
+				}
+				else
+				{
+					base.aiActor.HasBeenEngaged = false;
+				}
+			}
+			private IEnumerator LateEngage()
+			{
+				yield return new WaitForSeconds(0.5f);
 				if (GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() != null && GameManager.Instance.PrimaryPlayer.GetAbsoluteParentRoom() == m_StartRoom)
 				{
 					base.aiActor.HasBeenEngaged = true;
 				}
-
+				yield break;
 			}
 			private void Start()
 			{
+				this.aiActor.knockbackDoer.SetImmobile(true, "IM A BELL.");
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.bulletBank.GetBullet("default"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").bulletBank.GetBullet("sweep"));
 
@@ -396,7 +415,7 @@ namespace Planetside
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
 				{ 
 				  AkSoundEngine.PostEvent("Play_WPN_Life_Orb_Fade_01", base.aiActor.gameObject);
-					AkSoundEngine.PostEvent("Play_BOSS_mineflayer_belldrop_01", null);
+					AkSoundEngine.PostEvent("Play_BOSS_mineflayer_belldrop_01", base.aiActor.gameObject);
 
 				};
 			}

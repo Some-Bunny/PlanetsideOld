@@ -18,8 +18,8 @@ namespace Planetside
         private IEnumerator PlaySound()
         {   
             yield return StartCoroutine(WaitForSecondsInvariant(3.6f));
-            AkSoundEngine.PostEvent("Play_ENV_time_shatter_01", base.aiActor.gameObject);
-            AkSoundEngine.PostEvent("Play_ENM_bombshee_scream_01", base.aiActor.gameObject);
+            //AkSoundEngine.PostEvent("Play_ENV_time_shatter_01", base.aiActor.gameObject);
+            //AkSoundEngine.PostEvent("Play_ENM_bombshee_scream_01", base.aiActor.gameObject);
             
             yield break;
         }

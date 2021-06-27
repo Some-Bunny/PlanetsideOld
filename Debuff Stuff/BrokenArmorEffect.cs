@@ -39,8 +39,10 @@ namespace Planetside
             {
 				GameObject original;
 				original = BrokenArmorEffect.BrokenArmorVFXObject;
-				tk2dSprite component = UnityEngine.Object.Instantiate<GameObject>(original, actor.transform).GetComponent<tk2dSprite>();
-				
+				tk2dSprite component = GameObject.Instantiate(original, actor.specRigidbody.UnitTopCenter, Quaternion.identity, actor.transform).GetComponent<tk2dSprite>();
+				component.transform.position.WithZ(component.transform.position.z + 99999);
+				component.GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(actor.CenterPosition, tk2dBaseSprite.Anchor.MiddleCenter);
+				actor.sprite.AttachRenderer(component.GetComponent<tk2dBaseSprite>());
 				component.name = BrokenArmorEffect.VFXNameBrokenAArmor;
 
 				component.PlaceAtPositionByAnchor(actor.sprite.WorldTopCenter, tk2dBaseSprite.Anchor.LowerCenter);
