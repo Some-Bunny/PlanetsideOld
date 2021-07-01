@@ -49,18 +49,26 @@ namespace Planetside
 			int armorInt = Convert.ToInt32(player.healthHaver.Armor);
 			float num = 0f;
 			num = (player.stats.GetStatValue(PlayerStats.StatType.Health));
-			if (player.characterIdentity == PlayableCharacters.Robot)
+			if (player.name == "PlayerShade(Clone)")
 			{
-				return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 2;
-			}
-			else if(player.characterIdentity != PlayableCharacters.Robot)
-			{
-				return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 1;
+				return true;
 			}
 			else
             {
-				return false;
-            }
+				if (player.characterIdentity == PlayableCharacters.Robot)
+				{
+					return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 2;
+				}
+				else if (player.characterIdentity != PlayableCharacters.Robot)
+				{
+					return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 1;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
 		}
 
 		public static void Accept(PlayerController player, GameObject shrine)
@@ -78,9 +86,23 @@ namespace Planetside
 				amount = 0.8f,
 				modifyType = StatModifier.ModifyMethod.MULTIPLICATIVE
 			};
-			if (player.characterIdentity == PlayableCharacters.Robot)
+			if (player.name != "PlayerShade(Clone)")
+            {
+				if (player.characterIdentity == PlayableCharacters.Robot)
+				{
+					player.healthHaver.Armor -= 2;
+				}
+			}
+			if (player.name == "PlayerShade(Clone)")
 			{
-				player.healthHaver.Armor -= 2;
+				StatModifier money = new StatModifier
+				{
+					statToBoost = PlayerStats.StatType.MoneyMultiplierFromEnemies,
+					amount = 0.8f,
+					modifyType = StatModifier.ModifyMethod.MULTIPLICATIVE
+				};
+				player.ownerlessStatModifiers.Add(money);
+
 			}
 			player.ownerlessStatModifiers.Add(item2);
 			player.ownerlessStatModifiers.Add(item);

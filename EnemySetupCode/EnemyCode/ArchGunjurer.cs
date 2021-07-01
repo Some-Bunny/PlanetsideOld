@@ -44,11 +44,11 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(90f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(70f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = true;
 				companion.aiActor.CanTargetPlayers = true;
-				companion.aiActor.healthHaver.SetHealthMaximum(90f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(70f, null, false);
 				companion.aiActor.HasShadow = true;
 				companion.aiActor.SetIsFlying(true, "Gamemode: Creative", true, true);
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("4db03291a12144d69fe940d5a01de376").ShadowObject;

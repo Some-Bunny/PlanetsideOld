@@ -25,12 +25,27 @@ using MonoMod.RuntimeDetour;
 
 namespace Planetside
 {
+    static class ReflectionHelper
+    {
+        public static T GetTypedValue<T>(this FieldInfo This, object instance) { return (T)This.GetValue(instance); }
+        public static T ReflectGetField<T>(Type classType, string fieldName, object o = null)
+        {
+            FieldInfo field = classType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | ((o != null) ? BindingFlags.Instance : BindingFlags.Static));
+            return (T)field.GetValue(o);
+        }
+    }
+}
+
+namespace Planetside
+{
 
     public static class OtherTools
     {
         public static bool verbose = true;
         private static string defaultLog = Path.Combine(ETGMod.ResourcesDirectory, "PSOG.txt");
         public static string modID = "PSOG";
+
+
 
 
         public static List<string> BossBlackList = new List<string>

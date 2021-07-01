@@ -26,21 +26,30 @@ namespace Planetside
 		}
         public void Start()
         {
-            {
-                this.beamcont = base.GetComponent<BasicBeamController>();
-                BasicBeamController beam = this.beamcont;
-                beam.sprite.usesOverrideMaterial = true;
-                BasicBeamController component = beam.gameObject.GetComponent<BasicBeamController>();
-                bool flag = component != null;
-                bool flag2 = flag;
-                if (flag2)
-                {
-                    component.projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(component.projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHit));
-                    component.projectile.OnWillKillEnemy = (Action<Projectile, SpeculativeRigidbody>)Delegate.Combine(component.projectile.OnWillKillEnemy, new Action<Projectile, SpeculativeRigidbody>(this.OnKill));
-                }
-            }
-        }
-		private void HandleHit(Projectile arg1, SpeculativeRigidbody arg2, bool arg3)
+			this.beamcont = base.GetComponent<BasicBeamController>();
+			BasicBeamController beam = this.beamcont;
+			beam.sprite.usesOverrideMaterial = true;
+			BasicBeamController component = beam.gameObject.GetComponent<BasicBeamController>();
+			bool flag = component != null;
+			bool flag2 = flag;
+			if (flag2)
+			{
+				component.projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(component.projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHit));
+				component.projectile.OnWillKillEnemy = (Action<Projectile, SpeculativeRigidbody>)Delegate.Combine(component.projectile.OnWillKillEnemy, new Action<Projectile, SpeculativeRigidbody>(this.OnKill));
+			}
+		}
+		private void Update()
+        {
+			
+		}
+
+        private void Player_PostProcessBeamTick(BeamController arg1, SpeculativeRigidbody arg2, float arg3)
+        {
+			arg1.ChanceBasedHomingRadius += 1000000000;
+			arg1.ChanceBasedHomingAngularVelocity += 10000;
+		}
+
+        private void HandleHit(Projectile arg1, SpeculativeRigidbody arg2, bool arg3)
 		{
 			bool flag = arg2.aiActor != null && !arg2.healthHaver.IsBoss && !arg2.healthHaver.IsDead && arg2.aiActor.behaviorSpeculator && !arg2.aiActor.IsHarmlessEnemy && arg2.aiActor != null && UnityEngine.Random.value <= 0.11f;
 			if (flag)

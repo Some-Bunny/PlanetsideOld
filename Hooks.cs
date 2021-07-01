@@ -41,14 +41,15 @@ namespace Planetside
                 //Hook customEnemyChangesHook = new Hook(typeof(AIActor).GetMethod("Update", BindingFlags.Instance | BindingFlags.Public),typeof(Hooks).GetMethod("HandleCustomEnemyChanges"));
                 //Hook customEnemyChangesHook = new Hook(typeof(AIActor).GetMethod("Awake", BindingFlags.Instance | BindingFlags.Public),typeof(Hooks).GetMethod("HandleCustomEnemyChanges"));
                 Hook Reard = new Hook(typeof(RoomHandler).GetMethod("HandleRoomClearReward", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("OuroborousRoomDrop"));
-
-
+                
+                Hook TabelFlip = new Hook(typeof(FlippableCover).GetMethod("Interact", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("TableFlipOuroborous"));
             }
             catch (Exception e)
             {
                 ItemAPI.Tools.PrintException(e, "FF0000");
             }
         }
+
 
 
         public static void OuroborousRoomDrop(Action<RoomHandler> orig, RoomHandler self)
@@ -61,7 +62,6 @@ namespace Planetside
             else
             {
                 float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
-                //PlayerController player = GameManager.Instance.BestActivePlayer;
                 if (GameManager.Instance.IsFoyer || GameManager.Instance.InTutorial)
                 {
                     return;
@@ -98,8 +98,8 @@ namespace Planetside
                 string path = (ammoDropType != LootEngine.AmmoDropType.SPREAD_AMMO) ? "Ammo_Pickup" : "Ammo_Pickup_Spread";
                 float value = UnityEngine.Random.value;
                 float num = currentRewardData.ChestSystem_ChestChanceLowerBound;
-                float num2 = GameManager.Instance.PrimaryPlayer.stats.GetStatValue(PlayerStats.StatType.Coolness) / 100f - Loop;
-                float num3 = -(GameManager.Instance.PrimaryPlayer.stats.GetStatValue(PlayerStats.StatType.Curse) / 100f - Loop);
+                float num2 = GameManager.Instance.PrimaryPlayer.stats.GetStatValue(PlayerStats.StatType.Coolness) / 100f + (Loop)*5;
+                float num3 = -(GameManager.Instance.PrimaryPlayer.stats.GetStatValue(PlayerStats.StatType.Curse) / 100f + (Loop) * 5);
                 if (GameManager.Instance.CurrentGameType == GameManager.GameType.COOP_2_PLAYER)
                 {
                     num2 += GameManager.Instance.SecondaryPlayer.stats.GetStatValue(PlayerStats.StatType.Coolness) / 100f - Loop;
@@ -200,7 +200,6 @@ namespace Planetside
                 
             }
         }
-
         public static void HandleBossClearReward(RoomHandler room)
         {
             if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.SHORTCUT)
@@ -374,6 +373,35 @@ namespace Planetside
                 }
             }
         }
+
+        public static void TableFlipOuroborous(Action<FlippableCover,PlayerController> orig, FlippableCover self, PlayerController player)
+        {
+            orig(self, player);
+            float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
+            bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+            if (LoopOn == true)
+            {
+                int num3 = UnityEngine.Random.Range(0, 15 - (int)Loop);
+                bool ItsATrap = num3 == 1;
+                if (ItsATrap)
+                {
+                    GameObject gameObject = new GameObject();
+                    gameObject.transform.position = self.transform.position + new Vector3(0, -1f, 0f);
+                    BulletScriptSource source = gameObject.GetOrAddComponent<BulletScriptSource>();
+                    gameObject.AddComponent<BulletSourceKiller>();
+                    var bulletScriptSelected = new CustomBulletScriptSelector(typeof(GrenadeYahyeet));
+                    AIActor aIActor = EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5");
+                    AIBulletBank bulletBank = aIActor.GetComponent<AIBulletBank>();
+                    bulletBank.CollidesWithEnemies = true;
+                    source.BulletManager = bulletBank;
+                    source.BulletScript = bulletScriptSelected;
+                    source.Initialize();//to fire the script once
+                }
+            }
+        }
+
+
+
 
 
         public static void DamageHook(Action<PlayerController, float, bool, HealthHaver> orig, PlayerController self, float damagedone, bool fatal, HealthHaver target)

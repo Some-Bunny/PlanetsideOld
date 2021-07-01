@@ -99,7 +99,7 @@ namespace Planetside
                 base.OnReloadPressed(player, gun, bSOMETHING);
 
             }
-            if (gun.ClipShotsRemaining == 0)
+            if (gun.ClipShotsRemaining == 0 && gun.CurrentAmmo != 0)
             {
                 var list = new List<string> 
                 {

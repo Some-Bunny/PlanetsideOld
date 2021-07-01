@@ -667,6 +667,7 @@ namespace ItemAPI
             gun10.OnBurstContinued = (Action<PlayerController, Gun>)Delegate.Combine(gun10.OnBurstContinued, new Action<PlayerController, Gun>(this.OnBurstContinued));
             Gun gun11 = this.gun;
             gun11.OnPreFireProjectileModifier = (Func<Gun, Projectile, ProjectileModule, Projectile>)Delegate.Combine(gun11.OnPreFireProjectileModifier, new Func<Gun, Projectile, ProjectileModule, Projectile>(this.OnPreFireProjectileModifier));
+
         }
 
         // Token: 0x060000B6 RID: 182 RVA: 0x000085AE File Offset: 0x000067AE
@@ -678,7 +679,6 @@ namespace ItemAPI
         public virtual void PostProcessProjectile(Projectile projectile)
         {
         }
-
         // Token: 0x060000B8 RID: 184 RVA: 0x000085B4 File Offset: 0x000067B4
         public virtual void PostProcessVolley(ProjectileVolleyData volley)
         {

@@ -33,7 +33,43 @@ namespace Planetside
 			BuildBlankguon();
 
 			BuildMedal();
+
+			BuildTargetReticle();
+			BuildSpeakerObject();
 		}
+
+		public static void BuildTargetReticle()
+		{
+			KineticStrikeTargetReticle = SpriteBuilder.SpriteFromResource("Planetside/Resources/VFX/KineticStrike/redmarksthespot", new GameObject("Kinetic Strike Target Reticle"));
+			KineticStrikeTargetReticle.SetActive(false);
+			tk2dBaseSprite vfxSprite = KineticStrikeTargetReticle.GetComponent<tk2dBaseSprite>();
+			vfxSprite.GetCurrentSpriteDef().ConstructOffsetsFromAnchor(tk2dBaseSprite.Anchor.LowerCenter, vfxSprite.GetCurrentSpriteDef().position3);
+			FakePrefab.MarkAsFakePrefab(KineticStrikeTargetReticle);
+
+			vfxSprite.sprite.usesOverrideMaterial = true;
+			vfxSprite.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitCutoutUber");
+			Material mat = vfxSprite.sprite.GetCurrentSpriteDef().material = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
+			mat.mainTexture = vfxSprite.sprite.renderer.material.mainTexture;
+			mat.SetColor("_EmissiveColor", new Color32(255, 0, 0, 255));
+			mat.SetFloat("_EmissiveColorPower", 1.55f);
+			mat.SetFloat("_EmissivePower", 100);
+			vfxSprite.sprite.renderer.material = mat;
+
+
+			UnityEngine.Object.DontDestroyOnLoad(KineticStrikeTargetReticle);
+
+		}
+		public static GameObject KineticStrikeTargetReticle;
+
+
+		public static void BuildSpeakerObject()
+		{
+			SpeakerObject = new GameObject();
+			SpeakerObject.AddComponent<TextMaker>();
+			UnityEngine.Object.DontDestroyOnLoad(SpeakerObject);
+		}
+		public static GameObject SpeakerObject;
+
 		public static void BuildSoulGuon()
         {
 			GameObject gameObject = SpriteBuilder.SpriteFromResource("Planetside/Resources/Guons/SoulGuon/guoner.png");

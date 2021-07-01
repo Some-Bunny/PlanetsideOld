@@ -435,11 +435,16 @@ namespace Planetside
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("796a7ed4ad804984859088fc91672c7f").bulletBank.bulletBank.GetBullet("default"));
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
-				{ 
+				{
+					float RAD = 4.5f;
+					if (base.aiActor.IsBlackPhantom)
+                    {
+						RAD += 1.5f;
+                    }
 					PlayerController player = (GameManager.Instance.PrimaryPlayer);
 					AkSoundEngine.PostEvent("Play_OBJ_trashbag_burst_01", base.aiActor.gameObject);
 					AkSoundEngine.PostEvent("Play_CHR_shadow_curse_01", null);
-					player.CurrentRoom.ApplyActionToNearbyEnemies(base.aiActor.CenterPosition, 4.5f, new Action<AIActor, float>(this.ProcessEnemy));
+					player.CurrentRoom.ApplyActionToNearbyEnemies(base.aiActor.CenterPosition, RAD, new Action<AIActor, float>(this.ProcessEnemy));
 					base.aiActor.PlayEffectOnActor(ResourceCache.Acquire("Global VFX/VFX_Curse") as GameObject, Vector3.zero, true, false, false);
 
 				};

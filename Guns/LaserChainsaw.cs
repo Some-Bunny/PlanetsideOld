@@ -312,12 +312,31 @@ namespace Planetside
 			EmmisiveBeams emiss = beamComp.gameObject.AddComponent<EmmisiveBeams>();
 			emiss.EmissiveColorPower = 1.7f;
 			emiss.EmissivePower = 70;
+
+			beamComp.SkipPostProcessing = false;
 			gun.DefaultModule.projectiles[0] = projectile;
 
 			gun.quality = PickupObject.ItemQuality.S; //D
 			gun.encounterTrackable.EncounterGuid = "https://enterthegungeon.gamepedia.com/Modding/Some_Bunny%27s_Content_Pack";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.SetupUnlockOnCustomFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND, true);
+			
+			/*
+			List<string> mandatoryConsoleIDs1 = new List<string>
+			{
+				"psog:laser_chainsaw"
+			};
+			List<string> optionalConsoleIDs = new List<string>
+			{
+				"psog:revenant"
+			};
+			CustomSynergies.Add("test chainsaw syn", mandatoryConsoleIDs1, optionalConsoleIDs, true);
+			*/
+		}
+
+		public override void PostProcessProjectile(Projectile proj)
+		{
+			ETGModConsole.Log("AAAAAAAA");
 		}
 		public LaserChainsaw()
 		{

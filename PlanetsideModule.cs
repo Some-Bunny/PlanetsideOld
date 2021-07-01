@@ -72,6 +72,8 @@ namespace Planetside
                 ETGModConsole.Log($"Planetside flow {status}", false);
             });
 
+            RandomPiecesOfStuffToInitialise.BuildPrefab();
+
             BulletBuilder.Init();
             CustomEnemyBulletsInitialiser.Init();
             ShrineFakePrefabHooks.Init();
@@ -261,7 +263,6 @@ namespace Planetside
             ShrineOfSomething.Add();
             ShrineOfPurity.Add();
 
-            RandomPiecesOfStuffToInitialise.BuildPrefab();
 
             RoomReader.Init();
             QuestWanderer.Add();
@@ -376,11 +377,33 @@ namespace Planetside
             {
                 if (Loop == 69)
                 {
-                    UIToolbox.TextBox(Color.red, "Ouroborous Level: " + Loop.ToString() +"? Nice.", self.gameObject, dfPivotPoint.TopCenter, new Vector3(0.625f, 1.5f), 3, 0.5f, 0.75f, 1.25f, 1);
+                    TextMaker text = self.gameObject.AddComponent<TextMaker>();
+                    text.TextSize = 5;
+                    text.Color = Color.red;
+                    text.ExistTime = 3;
+                    text.FadeInTime = 0.75f;
+                    text.FadeOutTime = 1.25f;
+                    text.Text = "Ouroborous Level: " + Loop.ToString() +"? Nice";
+                    text.Opacity = 1;
+                    text.anchor = dfPivotPoint.TopCenter;
+                    text.offset = new Vector3(-3, 2f);
+                    text.GameObjectToAttachTo = self.gameObject;
                 }
                 else
                 {
-                    UIToolbox.TextBox(Color.red, "Ouroborous Level: " + Loop.ToString(), self.gameObject, dfPivotPoint.TopCenter, new Vector3(0.625f, 1.5f), 3, 0.5f, 0.75f, 1.25f, 1);
+                    //UIToolbox.TextBox(Color.red, "Ouroborous Level: " + Loop.ToString(), self.gameObject, dfPivotPoint.TopCenter, new Vector3(0.625f, 1.5f), 3, 0.5f, 0.75f, 1.25f, 1);
+
+                    TextMaker text = self.gameObject.AddComponent<TextMaker>();
+                    text.TextSize = 5;
+                    text.Color = Color.red;
+                    text.ExistTime = 3;
+                    text.FadeInTime = 0.75f;
+                    text.FadeOutTime = 1.25f;
+                    text.Text = "Ouroborous Level: " + Loop.ToString();
+                    text.Opacity = 1;
+                    text.anchor = dfPivotPoint.TopCenter;
+                    text.offset = new Vector3(-2, 2f);
+                    text.GameObjectToAttachTo = self.gameObject;
                 }
             }
         }

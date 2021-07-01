@@ -292,12 +292,12 @@ namespace Planetside
 			if (!Ouroborous.BannedEnemies.Contains(target.EnemyGuid))
             {
 				float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
-				float DownScaler = Loop / 30f;
+				float DownScaler = Loop / 50f;
 				float InitialScale = 0.4f;
 
 				if (LoopingOn == true)
                 {
-					Projectile.BaseEnemyBulletSpeedMultiplier = 1 + ((Loop / 30f));
+					Projectile.BaseEnemyBulletSpeedMultiplier = 1.1f + ((Loop / 10f));
 				}
 				else
                 {
@@ -305,18 +305,18 @@ namespace Planetside
 				}
 				if (Loop == 50 || Loop >= 50)
                 {
-					target.MovementSpeed *= 3f + ((Loop / 50f)+InitialScale) - DownScaler;
+					target.MovementSpeed *= 3f + ((Loop / 33f)+InitialScale) - DownScaler;
 				}
 				else
                 {
-					target.MovementSpeed *= 1 + ((Loop / 25f)+InitialScale)-DownScaler;
+					target.MovementSpeed *= 1 + ((Loop / 15f)+InitialScale)-DownScaler;
 				}
-				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/50f)+InitialScale)- DownScaler);
+				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/20f)+InitialScale)- DownScaler);
 				target.knockbackDoer.weight *= 1 + ((Loop / 1.5f)+InitialScale)- -DownScaler;
-				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/4f)) + InitialScale)-DownScaler;
+				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/2.5f)) + InitialScale)-DownScaler;
 				//target.behaviorSpeculator.CooldownScale *= 0;
 				float random = UnityEngine.Random.Range(0.0f, 1.0f);
-				if (random <= Loop/25)
+				if (random <= Loop/15)
 				{
 					target.healthHaver.spawnBulletScript = true;
 					target.healthHaver.chanceToSpawnBulletScript = 1f;
@@ -352,7 +352,7 @@ namespace Planetside
 					float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 					if (Loop == 10 || Loop >= 10)
                     {
-						int num3 = UnityEngine.Random.Range(0, 15);
+						int num3 = UnityEngine.Random.Range(0, 5);
 						bool ItsATrap = num3 == 1;
 						if (ItsATrap)
 						{
@@ -371,7 +371,7 @@ namespace Planetside
 					}
 					else
                     {
-						int num3 = (int)UnityEngine.Random.Range(0, 25 - (Loop));
+						int num3 = (int)UnityEngine.Random.Range(0, 15 - (Loop));
 						bool ItsATrap = num3 == 1;
 						if (ItsATrap)
 						{
@@ -402,7 +402,7 @@ namespace Planetside
             {
 				float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 				spawnedGun.gameObject.SetActive(true);
-				if (GameStatsManager.Instance.GetFlag(GungeonFlags.ITEMSPECIFIC_HAS_BEEN_PEDESTAL_MIMICKED) && GameManager.Instance.CurrentLevelOverrideState == GameManager.LevelOverrideState.NONE && UnityEngine.Random.value < 0.001f+(Loop/750))
+				if (GameStatsManager.Instance.GetFlag(GungeonFlags.ITEMSPECIFIC_HAS_BEEN_PEDESTAL_MIMICKED) && GameManager.Instance.CurrentLevelOverrideState == GameManager.LevelOverrideState.NONE && UnityEngine.Random.value < 0.001f+(Loop/250))
 				{
 					spawnedGun.gameObject.AddComponent<MimicGunMimicModifier>();
 				}
@@ -425,7 +425,7 @@ namespace Planetside
             {
 				float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 				int GoopScaler;
-				GoopScaler = (int)UnityEngine.Random.Range(0, 75 - Loop);
+				GoopScaler = (int)UnityEngine.Random.Range(0, 25 - Loop);
 				if (GoopScaler == 1)
                 {
 					Ouroborous yes = new Ouroborous();
@@ -445,7 +445,7 @@ namespace Planetside
 					if (Loop == 75 | Loop >= 75)
 					{
 						int FairyScaler;
-						FairyScaler = UnityEngine.Random.Range(0, 150);
+						FairyScaler = UnityEngine.Random.Range(0, 50);
 						if (FairyScaler == 1)
 						{
 							PotFairyEngageDoer.InstantSpawn = true;
@@ -457,7 +457,7 @@ namespace Planetside
 					else
 					{
 						int FairyScaler;
-						FairyScaler = (int)UnityEngine.Random.Range(0, 200 - (Loop / 5));
+						FairyScaler = (int)UnityEngine.Random.Range(0, 100 - (Loop / 5));
 						if (FairyScaler == 1)
 						{
 							PotFairyEngageDoer.InstantSpawn = true;
@@ -475,7 +475,7 @@ namespace Planetside
 			AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");
 			GoopDefinition goopDef = assetBundle.LoadAsset<GoopDefinition>("assets/data/goops/poison goop.asset");
 			DeadlyDeadlyGoopManager goopManagerForGoopType = DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(goopDef);
-			goopManagerForGoopType.TimedAddGoopCircle(v, 1f + (Loop / 25)+InitialScaling, 0.35f, false);
+			goopManagerForGoopType.TimedAddGoopCircle(v, 2f + (Loop / 10)+InitialScaling, 0.35f, false);
 			goopDef.damagesEnemies = false;
 		}
 
@@ -485,7 +485,7 @@ namespace Planetside
 			AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");
 			GoopDefinition goopDef = assetBundle.LoadAsset<GoopDefinition>("assets/data/goops/napalmgoopquickignite.asset");
 			DeadlyDeadlyGoopManager goopManagerForGoopType = DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(goopDef);
-			goopManagerForGoopType.TimedAddGoopCircle(v, 1f+(Loop/25) + InitialScaling, 0.35f, false);
+			goopManagerForGoopType.TimedAddGoopCircle(v, 2f+(Loop/10) + InitialScaling, 0.35f, false);
 			goopDef.damagesEnemies = false;
 		}
 		public static string[] BannedEnemies = new string[]
@@ -498,7 +498,7 @@ namespace Planetside
 			 "4d37ce3d666b4ddda8039929225b7ede",
 			 "3cadf10c489b461f9fb8814abc1a09c1",
 		};
-		public static float InitialScaling = 0.2f;
+		public static float InitialScaling = 0.4f;
 	}
 }
 

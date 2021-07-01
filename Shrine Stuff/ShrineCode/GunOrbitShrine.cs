@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using static GungeonAPI.OldShrineFactory;
+using Dungeonator;
+using System.Collections;
 
 namespace Planetside
 {
@@ -47,30 +49,52 @@ namespace Planetside
 			num = (player.stats.GetStatValue(PlayerStats.StatType.Health));
 			if (currentGun.InfiniteAmmo == false)
             {
-				bool DorC = currentGun.quality == PickupObject.ItemQuality.D | currentGun.quality == PickupObject.ItemQuality.C | currentGun.quality == PickupObject.ItemQuality.B;
-				if (DorC)
+				if (player.name == "PlayerShade(Clone)")
 				{
-					if (player.characterIdentity == PlayableCharacters.Robot)
+					bool DorC = currentGun.quality == PickupObject.ItemQuality.D | currentGun.quality == PickupObject.ItemQuality.C | currentGun.quality == PickupObject.ItemQuality.B;
+					if (DorC)
 					{
-						return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 2;
+						return shrine.GetComponent<CustomShrineController>().numUses == 0;
 					}
-					else
+					bool Sonly = currentGun.quality == PickupObject.ItemQuality.A | currentGun.quality == PickupObject.ItemQuality.S;
+					if (Sonly)
 					{
-						return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 1;
+						return shrine.GetComponent<CustomShrineController>().numUses == 0;
+
 					}
 				}
-				bool Sonly = currentGun.quality == PickupObject.ItemQuality.A | currentGun.quality == PickupObject.ItemQuality.S;
-				if (Sonly)
+				else
 				{
-					if (player.characterIdentity == PlayableCharacters.Robot)
+					bool DorC = currentGun.quality == PickupObject.ItemQuality.D | currentGun.quality == PickupObject.ItemQuality.C | currentGun.quality == PickupObject.ItemQuality.B;
+					if (DorC)
 					{
-						return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 4;
+						if (player.characterIdentity == PlayableCharacters.Robot)
+						{
+							return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 2;
+						}
+						else if (player.characterIdentity == PlayableCharacters.Robot)
+						{
+
+						}
+						else
+						{
+							return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 1;
+						}
 					}
-					else
+					bool Sonly = currentGun.quality == PickupObject.ItemQuality.A | currentGun.quality == PickupObject.ItemQuality.S;
+					if (Sonly)
 					{
-						return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 2;
+						if (player.characterIdentity == PlayableCharacters.Robot)
+						{
+							return shrine.GetComponent<CustomShrineController>().numUses == 0 && armorInt > 4;
+						}
+						else
+						{
+							return shrine.GetComponent<CustomShrineController>().numUses == 0 && player.stats.GetStatValue(PlayerStats.StatType.Health) > 2;
+						}
 					}
 				}
+				
 			}
 			return false;
 		}
@@ -90,21 +114,29 @@ namespace Planetside
 			{
 				affectstats = 2;
 			}
-			StatModifier item = new StatModifier
+			if (player.name != "PlayerShade(Clone)")
 			{
-				statToBoost = PlayerStats.StatType.Health,
-				amount = -affectstats,
-				modifyType = StatModifier.ModifyMethod.ADDITIVE
-			};
+				StatModifier item = new StatModifier
+				{
+					statToBoost = PlayerStats.StatType.Health,
+					amount = -affectstats,
+					modifyType = StatModifier.ModifyMethod.ADDITIVE
+				};
+				player.ownerlessStatModifiers.Add(item);
+			}
 			StatModifier item2 = new StatModifier
 			{
 				statToBoost = PlayerStats.StatType.Curse,
 				amount = affectstats,
 				modifyType = StatModifier.ModifyMethod.ADDITIVE
 			};
-			if (player.characterIdentity == PlayableCharacters.Robot)
-			{
-				player.healthHaver.Armor -= affectstats * 2;
+			if (player.name != "PlayerShade(Clone)")
+            {
+				if (player.characterIdentity == PlayableCharacters.Robot)
+				{
+					player.healthHaver.Armor -= affectstats * 2;
+				}
+
 			}
 			Gun gun = player.CurrentGun;
 			GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(ResourceCache.Acquire("Global Prefabs/HoveringGun") as GameObject, player.CenterPosition.ToVector3ZisY(0f), Quaternion.identity);
@@ -120,15 +152,29 @@ namespace Planetside
 			hover.OnlyOnEmptyReload = false;
 			hover.Initialize(gun, player);
 			player.ownerlessStatModifiers.Add(item2);
-			player.ownerlessStatModifiers.Add(item);
 			player.stats.RecalculateStats(player, false, false);
 			shrine.GetComponent<CustomShrineController>().numUses++;
 			shrine.GetComponent<CustomShrineController>().GetRidOfMinimapIcon();
 			player.inventory.DestroyCurrentGun();
 			AkSoundEngine.PostEvent("Play_OBJ_shrine_accept_01", shrine);
+			if (player.name == "PlayerShade(Clone)")
+            {
+				ImprovedAfterImage yes = player.gameObject.AddComponent<ImprovedAfterImage>();
+				yes.spawnShadows = true;
+				yes.shadowLifetime = 0.66f;
+				yes.shadowTimeDelay = 0.02f;
+				yes.dashColor = Color.clear;
+				StatModifier money = new StatModifier
+				{
+					statToBoost = PlayerStats.StatType.AmmoCapacityMultiplier,
+					amount = 0.7f,
+					modifyType = StatModifier.ModifyMethod.MULTIPLICATIVE
+				};
+				player.ownerlessStatModifiers.Add(money);
+
+			}
 		}
 	}
 }
-
 
 

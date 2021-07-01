@@ -28,7 +28,6 @@ namespace Planetside
 			}
 		}
 
-		// Token: 0x060072F7 RID: 29431 RVA: 0x002DAE5C File Offset: 0x002D905C
 		public override void UpdateDataOnBounce(float angleDiff)
 		{
 			if (!float.IsNaN(angleDiff))
@@ -38,7 +37,6 @@ namespace Planetside
 			}
 		}
 
-		// Token: 0x060072F8 RID: 29432 RVA: 0x002DAECC File Offset: 0x002D90CC
 		public override void AdjustRightVector(float angleDiff)
 		{
 			if (!float.IsNaN(angleDiff))
@@ -48,7 +46,6 @@ namespace Planetside
 			}
 		}
 
-		// Token: 0x060072F9 RID: 29433 RVA: 0x002DAF3C File Offset: 0x002D913C
 		private List<TinyPlanetMotionModule> RegisterSelfWithDictionary()
 		{
 			if (!TinyPlanetMotionModule.m_currentOrbiters.ContainsKey(this.OrbitGroup))
@@ -63,7 +60,6 @@ namespace Planetside
 			return list;
 		}
 
-		// Token: 0x060072FA RID: 29434 RVA: 0x002DAF98 File Offset: 0x002D9198
 		private void DeregisterSelfWithDictionary()
 		{
 			if (TinyPlanetMotionModule.m_currentOrbiters.ContainsKey(this.OrbitGroup))
@@ -73,7 +69,6 @@ namespace Planetside
 			}
 		}
 
-		// Token: 0x060072FB RID: 29435 RVA: 0x002DAFD4 File Offset: 0x002D91D4
 		public override void Move(Projectile source, Transform projectileTransform, tk2dBaseSprite projectileSprite, SpeculativeRigidbody specRigidbody, ref float m_timeElapsed, ref Vector2 m_currentDirection, bool Inverted, bool shouldRotate)
 		{
 
@@ -101,6 +96,12 @@ namespace Planetside
 			float num2 = num / (6.28318548f * radius) * 360f;
 			this.m_currentAngle += num2;
 			Vector2 vector2 = Vector2.zero;
+
+			//if (radius > 3)
+            //{
+				//source.projectile.OverrideMotionModule = null;
+            //}
+
 			if (this.usesAlternateOrbitTarget)
 			{
 				vector2 = vector;
@@ -132,7 +133,6 @@ namespace Planetside
 			specRigidbody.Velocity = velocity/(60*(1+BraveTime.DeltaTime));
 		}
 
-		// Token: 0x060072FC RID: 29436 RVA: 0x002DB414 File Offset: 0x002D9614
 		public void BeamDestroyed()
 		{
 			this.OnDestroyed(null);

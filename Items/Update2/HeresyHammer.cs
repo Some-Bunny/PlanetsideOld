@@ -79,7 +79,7 @@ namespace Planetside
             base.Pickup(player);
         }
 
-
+            
         List<string> Names = new List<string>();
         public override bool CanBeUsed(PlayerController user)
         {

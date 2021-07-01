@@ -67,35 +67,26 @@ namespace Planetside
 
         public override bool CanBeUsed(PlayerController user)
         {
-            RoomHandler currentRoom = user.CurrentRoom;
-            bool flag = BraveInput.GetInstanceForPlayer(user.PlayerIDX).IsKeyboardAndMouse(false);
-            if (flag)
+            if (HasTriggeredCrossHair != true)
             {
-                this.aimpointCanBeUsed = user.unadjustedAimPoint.XY();
+                return true;
             }
-            else
+            else if (HasTriggeredCrossHair == true)
             {
-                BraveInput instanceForPlayer = BraveInput.GetInstanceForPlayer(user.PlayerIDX);
-                Vector2 a2 = user.CenterPosition + (Quaternion.Euler(0f, 0f, this.m_currentAngle) * Vector2.right).XY() * this.m_currentDistance;
-                a2 += instanceForPlayer.ActiveActions.Aim.Vector * 8f * BraveTime.DeltaTime;
-                this.m_currentAngle = BraveMathCollege.Atan2Degrees(a2 - user.CenterPosition);
-                this.m_currentDistance = Vector2.Distance(a2, user.CenterPosition);
-                this.m_currentDistance = Mathf.Min(this.m_currentDistance, 15);
-                a2 = user.CenterPosition + (Quaternion.Euler(0f, 0f, this.m_currentAngle) * Vector2.right).XY() * this.m_currentDistance;
-                Vector2 v2 = a2; //- this.m_extantReticleQuad.GetBounds().extents.XY();
-                this.aimpointCanBeUsed = v2;
-            }
-            IntVector2? vector = (user as PlayerController).CurrentRoom.GetRandomAvailableCell(new IntVector2?(IntVector2.One * 2), CellTypes.FLOOR | CellTypes.PIT, false, null);
-            if (vector != null)
-            {
-                CellData cellAim = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed);
-                CellData cellAimLeft = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed + Vector2.left);
-                CellData cellAimRight = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed + Vector2.right);
-                CellData cellAimUp = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed + Vector2.up);
-                CellData cellAimDown = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed + Vector2.down);
-                if (!cellAim.isNextToWall && !cellAimLeft.isNextToWall && !cellAimRight.isNextToWall && !cellAimUp.isNextToWall && !cellAimDown.isNextToWall)
+                RoomHandler currentRoom = user.CurrentRoom;
+                aimpointCanBeUsed = aimpoint;
+                IntVector2? vector = (user as PlayerController).CurrentRoom.GetRandomAvailableCell(new IntVector2?(IntVector2.One * 2), CellTypes.FLOOR | CellTypes.PIT, false, null);
+                if (vector != null)
                 {
-                    return true;
+                    CellData cellAim = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed);
+                    CellData cellAimLeft = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed + Vector2.left);
+                    CellData cellAimRight = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed + Vector2.right);
+                    CellData cellAimUp = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed + Vector2.up);
+                    CellData cellAimDown = currentRoom.GetNearestCellToPosition(aimpointCanBeUsed + Vector2.down);
+                    if (!cellAim.isNextToWall && !cellAimLeft.isNextToWall && !cellAimRight.isNextToWall && !cellAimUp.isNextToWall && !cellAimDown.isNextToWall)
+                    {
+                        return true;
+                    }
                 }
             }
             else
@@ -107,33 +98,77 @@ namespace Planetside
 
         protected override void DoEffect(PlayerController user)
         {
-            base.StartCoroutine(this.DoStrike(user.CurrentRoom, user));
-        }
-        private IEnumerator DoStrike(RoomHandler room, PlayerController player)
-        {
-            base.CanBeDropped = false;
-            bool flag = BraveInput.GetInstanceForPlayer(player.PlayerIDX).IsKeyboardAndMouse(false);
-            if (flag)
+            if (HasTriggeredCrossHair != true)
             {
-                this.aimpoint = player.unadjustedAimPoint.XY();
+                GameManager.Instance.StartCoroutine(ClearCooldown());
+                //base.ClearCooldowns();
+                CrossHair = UnityEngine.Object.Instantiate<GameObject>(RandomPiecesOfStuffToInitialise.KineticStrikeTargetReticle, user.sprite.WorldCenter, Quaternion.identity);
+                CrossHair.GetComponent<tk2dBaseSprite>().PlaceAtLocalPositionByAnchor(user.sprite.WorldCenter, tk2dBaseSprite.Anchor.LowerCenter);
+                AkSoundEngine.PostEvent("Play_OBJ_supplydrop_activate_01", gameObject);
+                this.m_currentAngle = BraveMathCollege.Atan2Degrees(user.unadjustedAimPoint.XY() - user.CenterPosition);
+                this.m_currentDistance = 5f;
+                this.UpdateReticlePosition();
+            }
+            else if(HasTriggeredCrossHair == true)
+            {
+                HasTriggeredCrossHair = false;
+                GameManager.Instance.StartCoroutine(this.DoStrike(user.CurrentRoom, user));
+                Destroy(CrossHair.gameObject);
+            }
+        }
+
+        private IEnumerator ClearCooldown()
+        {
+            yield return new WaitForSeconds(0.1f);
+            HasTriggeredCrossHair = true;
+            base.ClearCooldowns();
+            yield break;
+        }
+        public override void Update()
+        {
+            base.Update();
+            if (CrossHair != null)
+            {
+                this.UpdateReticlePosition();
+            }
+        }
+        private void UpdateReticlePosition()
+        {
+            tk2dBaseSprite sprite = CrossHair.GetComponent<tk2dBaseSprite>();
+            if (BraveInput.GetInstanceForPlayer(base.LastOwner.PlayerIDX).IsKeyboardAndMouse(false))
+            {
+                Vector2 vector = base.LastOwner.unadjustedAimPoint.XY();
+                Vector2 vector2 = vector - sprite.GetBounds().extents.XY();
+                sprite.transform.position = vector2 + new Vector2(0.625f, -0.0625f);
+                aimpoint = vector2 + new Vector2(0.6875f, 0);
             }
             else
             {
-                BraveInput instanceForPlayer = BraveInput.GetInstanceForPlayer(player.PlayerIDX);
-                Vector2 a = player.CenterPosition + (Quaternion.Euler(0f, 0f, this.m_currentAngle) * Vector2.right).XY() * this.m_currentDistance;
-                a += instanceForPlayer.ActiveActions.Aim.Vector * 8f * BraveTime.DeltaTime;
-                this.m_currentAngle = BraveMathCollege.Atan2Degrees(a - player.CenterPosition);
-                this.m_currentDistance = Vector2.Distance(a, player.CenterPosition);
-                this.m_currentDistance = Mathf.Min(this.m_currentDistance, 15f);
-                this.aimpoint = player.CenterPosition + (Quaternion.Euler(0f, 0f, this.m_currentAngle) * Vector2.right).XY() * this.m_currentDistance;
+                BraveInput instanceForPlayer = BraveInput.GetInstanceForPlayer(base.LastOwner.PlayerIDX);
+                Vector2 vector3 = base.LastOwner.CenterPosition + (Quaternion.Euler(0f, 0f, this.m_currentAngle) * Vector2.right).XY() * this.m_currentDistance;
+                vector3 += instanceForPlayer.ActiveActions.Aim.Vector * 8f * BraveTime.DeltaTime;
+                this.m_currentAngle = BraveMathCollege.Atan2Degrees(vector3 - base.LastOwner.CenterPosition);
+                this.m_currentDistance = Vector2.Distance(vector3, base.LastOwner.CenterPosition);
+                this.m_currentDistance = Mathf.Min(this.m_currentDistance, this.maxDistance);
+                vector3 = base.LastOwner.CenterPosition + (Quaternion.Euler(0f, 0f, this.m_currentAngle) * Vector2.right).XY() * this.m_currentDistance;
+                Vector2 vector4 = vector3 - sprite.GetBounds().extents.XY() + new Vector2(0.625f, -0.0625f);
+                sprite.transform.position = vector4;
+                aimpoint = vector4;
             }
-            AkSoundEngine.PostEvent("Play_WPN_dawnhammer_charge_01", base.gameObject);
+        }
+
+        private bool HasTriggeredCrossHair;
+        private GameObject CrossHair;
+        private IEnumerator DoStrike(RoomHandler room, PlayerController player)
+        {
+            HasTriggeredCrossHair = false;
             GameObject fuck;
-            Vector2 LOL = aimpoint;
+            Vector2 LOL = aimpoint+ new Vector2(-0.125f ,1.25f);
             fuck = UnityEngine.Object.Instantiate<GameObject>(KineticStrike.StrikePrefab, LOL, Quaternion.identity);
             fuck.GetComponent<tk2dBaseSprite>().PlaceAtLocalPositionByAnchor(LOL, tk2dBaseSprite.Anchor.LowerCenter);
             tk2dSprite ahfuck = fuck.GetComponent<tk2dSprite>();
             fuck.GetComponent<tk2dBaseSprite>().SetSprite(KineticStrike.spriteIds[0]);
+            AkSoundEngine.PostEvent("Play_WPN_dawnhammer_charge_01", fuck);
 
 
             Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
@@ -146,47 +181,59 @@ namespace Planetside
 
             ahfuck.renderer.material = mat;
 
+            TextMaker text = player.gameObject.AddComponent<TextMaker>();
+            text.TextSize = 4;
+            text.Color = Color.red;
+            text.ExistTime = 11;
+            text.FadeInTime = 0f;
+            text.FadeOutTime = 3f;
+            text.Opacity = 1;
+            text.anchor = dfPivotPoint.TopCenter;
+            text.offset = new Vector3(-1.25f, 3f);
+            text.GameObjectToAttachTo = player.gameObject;
+
             Transform copySprite = ahfuck.transform;
             bool Playsound = false;
             float ela = 0f;
-            float dura = 10f;            
+            float dura = 10f;
             while (ela < dura)
             {
                 float Timer = dura - ela;
-                UIToolbox.TextBox(Color.red, "Kinetic Impact In:\n\n" + Timer.ToString() + " Seconds", base.LastOwner.gameObject, dfPivotPoint.TopCenter, new Vector3(0.625f, 1.5f), 0.01f, 0.5f, 0f, 0f, 0f);
+                text.ChangeText("Kinetic Impact In:\n\n" + Timer.ToString() + " Seconds");
+                //UIToolbox.TextBox(Color.red, "Kinetic Impact In:\n\n" + Timer.ToString() + " Seconds", base.LastOwner.gameObject, dfPivotPoint.TopCenter, new Vector3(0.625f, 1.5f), 0.01f, 0.5f, 0f, 0f, 0f);
                 if (ela > 9 && Playsound == false)
                 {
                     Playsound = true;
-                    AkSoundEngine.PostEvent("Play_BOSS_RatMech_Whistle_01", base.gameObject);
+                    AkSoundEngine.PostEvent("Play_BOSS_RatMech_Whistle_01", fuck);
                 }
                 ela += BraveTime.DeltaTime;
                 float t = ela / dura * (ela / dura);
                 copySprite.localScale = Vector3.Lerp(Vector3.one, new Vector3(0f, 0f, 0f), t);
-                copySprite.GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(LOL + new Vector2((ela/12.08f), -1.3125f + (ela / 16)), tk2dBaseSprite.Anchor.LowerCenter);
+                copySprite.GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(LOL + new Vector2((ela / 12.08f), -1.3125f + (ela / 16)), tk2dBaseSprite.Anchor.LowerCenter);
                 yield return null;
             }
 
             Destroy(fuck);
             GameObject fuck1;
             fuck1 = UnityEngine.Object.Instantiate<GameObject>(KineticStrike.StrikePrefab, LOL, Quaternion.identity);
-            fuck1.GetComponent<tk2dBaseSprite>().PlaceAtLocalPositionByAnchor(LOL + new Vector2(0f, 0f), tk2dBaseSprite.Anchor.LowerCenter);
+            fuck1.GetComponent<tk2dBaseSprite>().PlaceAtLocalPositionByAnchor(LOL, tk2dBaseSprite.Anchor.LowerCenter);
             tk2dSprite troll = fuck1.GetComponent<tk2dSprite>();
             fuck1.GetComponent<tk2dBaseSprite>().SetSprite(KineticStrike.spriteIds[0]);
-            // EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").GetComponent<BossFinalRogueDeathController>()
-            KineticStrike gameObject2 = base.gameObject.GetComponent<KineticStrike>();
-
-            gameObject2.Nuke = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").GetComponent<BossFinalRogueDeathController>().DeathStarExplosionVFX;
-            GameObject epicwin = UnityEngine.Object.Instantiate<GameObject>(gameObject2.Nuke);
+            
+            //KineticStrike gameObject2 = base.gameObject.GetComponent<KineticStrike>();
+            StarNuke = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").GetComponent<BossFinalRogueDeathController>().DeathStarExplosionVFX;
+            GameObject epicwin = UnityEngine.Object.Instantiate<GameObject>(StarNuke);
 
             epicwin.GetComponent<tk2dBaseSprite>().PlaceAtLocalPositionByAnchor(LOL, tk2dBaseSprite.Anchor.LowerCenter);
             epicwin.transform.position = LOL.Quantize(0.0625f);
             epicwin.GetComponent<tk2dBaseSprite>().UpdateZDepth();
             fuck1.GetComponent<tk2dBaseSprite>().SetSprite(KineticStrike.spriteIds[1]);
             this.Boom(LOL);
-            AkSoundEngine.PostEvent("Play_OBJ_nuke_blast_01", base.gameObject);
-            UIToolbox.TextBox(Color.red, "Kinetic Impact Made Contact.\n\n     Reloading Payload.", base.LastOwner.gameObject, dfPivotPoint.TopCenter, new Vector3(0.625f, 1.5f), 1f, 0.5f, 0f, 2f, 0f);
-            yield return new WaitForSeconds(5f);
+            AkSoundEngine.PostEvent("Play_OBJ_nuke_blast_01", fuck);
+            text.ChangeText("Kinetic Impact Made Contact.\n\n     Reloading Payload.");
+            text.ChangeOffset(new Vector3(-2, 3f));
 
+            yield return new WaitForSeconds(5f);
             troll.usesOverrideMaterial = true;
             troll.OverrideMaterialMode = tk2dBaseSprite.SpriteMaterialOverrideMode.OVERRIDE_MATERIAL_COMPLEX;
 
@@ -205,7 +252,6 @@ namespace Planetside
                 targetMaterial.SetFloat("_BurnAmount", t);
                 yield return null;
             }
-            base.CanBeDropped = true;
             Destroy(fuck1);
             yield break;
         }
@@ -219,7 +265,7 @@ namespace Planetside
         }
         private ExplosionData smallPlayerSafeExplosion = new ExplosionData
         {
-            damageRadius = 3.75f,  
+            damageRadius = 3.75f,
             damageToPlayer = 2f,
             doDamage = true,
             damage = 5000f,
@@ -233,15 +279,35 @@ namespace Planetside
             doScreenShake = true,
             playDefaultSFX = false
         };
-        public GameObject Nuke;
 
-        private float m_currentAngle;
-        private float m_currentDistance;
+        protected override void OnPreDrop(PlayerController user)
+        {
+            HasTriggeredCrossHair = false;
+            base.OnPreDrop(user);
+            if (CrossHair != null)
+            {
+                Destroy(CrossHair.gameObject);
+            }
+        }
+        protected override void OnDestroy()
+        {
+            if (CrossHair != null)
+            {
+                Destroy(CrossHair.gameObject);
+            }
+            OnDestroy();
+        }
+        public static GameObject StarNuke;
+
+        
         private Vector2 aimpoint;
         private Vector2 aimpointCanBeUsed;
+        private float maxDistance = 15;
+        private float m_currentAngle;
+        private float m_currentDistance;
+
 
     }
 }
-
 
 
