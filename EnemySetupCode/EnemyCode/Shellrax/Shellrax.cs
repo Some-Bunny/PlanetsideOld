@@ -623,7 +623,10 @@ namespace Planetside
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				Game.Enemies.Add("psog:shellrax", companion.aiActor);
 
-
+				//==================
+				//Important for not breaking basegame stuff!
+				StaticReferenceManager.AllHealthHavers.Remove(companion.aiActor.healthHaver);
+				//==================
 
 				SpriteBuilder.AddSpriteToCollection("Planetside/Resources/Shellrax/shellrax_idle_001", SpriteBuilder.ammonomiconCollection);
 				if (companion.GetComponent<EncounterTrackable>() != null)
@@ -835,7 +838,7 @@ namespace Planetside
 	{
 		protected override IEnumerator Top()
 		{
-							base.PostWwiseEvent("Play_BOSS_lichC_morph_01", null);
+			base.PostWwiseEvent("Play_BOSS_lichC_morph_01", null);
 			base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("4d164ba3f62648809a4a82c90fc22cae").bulletBank.GetBullet("big_one"));
 			int DropDowns = UnityEngine.Random.Range(3, 7);
 			base.PostWwiseEvent("Play_BOSS_RatMech_Stomp_01", null);
@@ -1241,6 +1244,8 @@ namespace Planetside
 		}
 		private void Start()
 		{
+			//Important for not breaking basegame stuff!
+			StaticReferenceManager.AllHealthHavers.Remove(base.aiActor.healthHaver);
 			base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("4d164ba3f62648809a4a82c90fc22cae").bulletBank.GetBullet("big_one"));
 			base.aiActor.healthHaver.OnPreDeath += (obj) =>
 			{

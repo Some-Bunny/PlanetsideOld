@@ -848,14 +848,14 @@ namespace Planetside
 				PlanetsideModule.Strings.Enemies.Set("#FUNGANNON_NAME", "FUNGANNON");
 				PlanetsideModule.Strings.Enemies.Set("#FUNGANNON_NAME_SMALL", "Fungannon");
 
-				PlanetsideModule.Strings.Enemies.Set("SaaaaaaA", "SPORANGIO-WAR");
+				PlanetsideModule.Strings.Enemies.Set("SPORANGIO_WAR", "SPORANGIO-WAR");
 				PlanetsideModule.Strings.Enemies.Set("#QUOTE", "");
 				enemy.aiActor.OverrideDisplayName = "#FUNGANNON_NAME_SMALL";
 
 				miniBossIntroDoer.portraitSlideSettings = new PortraitSlideSettings()
 				{
 					bossNameString = "#FUNGANNON_NAME",
-					bossSubtitleString = "SaaaaaaA",
+					bossSubtitleString = "SPORANGIO_WAR",
 					bossQuoteString = "#QUOTE",
 					bossSpritePxOffset = IntVector2.Zero,
 					topLeftTextPxOffset = IntVector2.Zero,
@@ -903,7 +903,10 @@ namespace Planetside
 				miniBossIntroDoer.SkipFinalizeAnimation = true;
 				miniBossIntroDoer.RegenerateCache();
 
-				
+				//==================
+				//Important for not breaking basegame stuff!
+				StaticReferenceManager.AllHealthHavers.Remove(enemy.aiActor.healthHaver);
+				//==================
 
 			}
 		}
@@ -1041,6 +1044,9 @@ namespace Planetside
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("383175a55879441d90933b5c4e60cf6f").bulletBank.GetBullet("bigBullet"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("41ee1c8538e8474a82a74c4aff99c712").bulletBank.GetBullet("big"));
 				base.aiActor.HasBeenEngaged = false;
+				//Important for not breaking basegame stuff!
+				StaticReferenceManager.AllHealthHavers.Remove(base.aiActor.healthHaver);
+
 
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
 				{

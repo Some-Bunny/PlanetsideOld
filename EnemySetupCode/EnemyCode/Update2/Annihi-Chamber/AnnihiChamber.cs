@@ -1413,9 +1413,14 @@ namespace Planetside
 				}
 				miniBossIntroDoer.SkipFinalizeAnimation = true;
 				miniBossIntroDoer.RegenerateCache();
+
+				//==================
+				//Important for not breaking basegame stuff!
+				StaticReferenceManager.AllHealthHavers.Remove(companion.aiActor.healthHaver);
+				//==================
 			}
 
-		
+
 		}
 		private static GameObject ConfusedPrefab;
 
@@ -1536,6 +1541,9 @@ namespace Planetside
 			public Material PitCausticsMaterial;
 			private void Start()
 			{
+				//Important for not breaking basegame stuff!
+				StaticReferenceManager.AllHealthHavers.Remove(base.aiActor.healthHaver);
+
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("044a9f39712f456597b9762893fbc19c").bulletBank.bulletBank.GetBullet("gross"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1b5810fafbec445d89921a4efb4e42b7").bulletBank.bulletBank.GetBullet("firehose"));
 				base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").bulletBank.GetBullet("teeth_football"));

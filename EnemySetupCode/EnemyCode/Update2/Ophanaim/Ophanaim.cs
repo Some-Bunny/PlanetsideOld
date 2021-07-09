@@ -67,10 +67,10 @@ namespace Planetside
 				enemy.aiActor.specRigidbody.CollideWithOthers = true;
 				enemy.aiActor.specRigidbody.CollideWithTileMap = true;
 				enemy.aiActor.PreventFallingInPitsEver = false;
-				enemy.aiActor.healthHaver.ForceSetCurrentHealth(950f);
+				enemy.aiActor.healthHaver.ForceSetCurrentHealth(1300f);
 				enemy.aiActor.CollisionKnockbackStrength = 10f;
 				enemy.aiActor.CanTargetPlayers = true;
-				enemy.aiActor.healthHaver.SetHealthMaximum(950f, null, false);
+				enemy.aiActor.healthHaver.SetHealthMaximum(1300f, null, false);
 
 				aiAnimator.IdleAnimation = new DirectionalAnimation
 				{
@@ -1106,7 +1106,7 @@ namespace Planetside
 				enemy.encounterTrackable.journalData.NotificationPanelDescription = "#OPHANAIMAMMONOMICONSHORT";
 				enemy.encounterTrackable.journalData.AmmonomiconFullEntry = "#OPHANAIMAMMONOMICONLONG";
 				EnemyBuilder.AddEnemyToDatabase(enemy.gameObject, "psog:ophanaim");
-				EnemyDatabase.GetEntry("psog:ophanaim").ForcedPositionInAmmonomicon = 14;
+				EnemyDatabase.GetEntry("psog:ophanaim").ForcedPositionInAmmonomicon = 8;
 				EnemyDatabase.GetEntry("psog:ophanaim").isInBossTab = true;
 				EnemyDatabase.GetEntry("psog:ophanaim").isNormalEnemy = true;
 				
@@ -1121,7 +1121,8 @@ namespace Planetside
 
 
 				//==================
-
+				//Important for not breaking basegame stuff!
+				StaticReferenceManager.AllHealthHavers.Remove(enemy.aiActor.healthHaver);
 				//==================
 				GameObject gameObject = SpriteBuilder.SpriteFromResource("Planetside/Resources/ophanaim_ring", null, true);
 				gameObject.SetActive(false);
@@ -1351,6 +1352,8 @@ namespace Planetside
 
 			public void Start()
 			{
+				//Important for not breaking basegame stuff!
+				StaticReferenceManager.AllHealthHavers.Remove(base.aiActor.healthHaver);
 				Phase2Check = false;
 				if (!base.aiActor.IsBlackPhantom)
 				{

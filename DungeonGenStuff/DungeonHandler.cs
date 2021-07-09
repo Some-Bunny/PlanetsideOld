@@ -98,9 +98,24 @@ namespace GungeonAPI
 
                                 if (p.requiredTileset == GlobalDungeonData.ValidTilesets.CASTLEGEON)
                                 {
-                                    StaticReferences.RoomTables["boss1"].includedRooms.Add(wRoom);
-                                    StaticReferences.RoomTables["boss2"].includedRooms.Add(wRoom);
-                                    StaticReferences.RoomTables["boss3"].includedRooms.Add(wRoom);
+                                    if (room.name.ToLower().Contains("bulletking"))
+                                    {
+                                        StaticReferences.RoomTables["bulletking"].includedRooms.Add(wRoom);
+                                    }
+                                    else if (room.name.ToLower().Contains("triggertwins"))
+                                    {
+                                        StaticReferences.RoomTables["triggertwins"].includedRooms.Add(wRoom);
+                                    }
+                                    else if (room.name.ToLower().Contains("gatlinggull"))
+                                    {
+                                        StaticReferences.RoomTables["gull"].includedRooms.Add(wRoom);
+                                    }
+                                    else
+                                    {
+                                        StaticReferences.RoomTables["gull"].includedRooms.Add(wRoom);
+                                        StaticReferences.RoomTables["triggertwins"].includedRooms.Add(wRoom);
+                                        StaticReferences.RoomTables["bulletking"].includedRooms.Add(wRoom);
+                                    }
                                 }
                                 else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.SEWERGEON)
                                 {
@@ -108,9 +123,24 @@ namespace GungeonAPI
                                 }
                                 else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.GUNGEON)
                                 {
-                                    StaticReferences.RoomTables["gorgun"].includedRooms.Add(wRoom);
-                                    StaticReferences.RoomTables["beholster"].includedRooms.Add(wRoom);
-                                    StaticReferences.RoomTables["ammoconda"].includedRooms.Add(wRoom);
+                                    if (room.name.ToLower().Contains("beholster"))
+                                    {
+                                        StaticReferences.RoomTables["beholster"].includedRooms.Add(wRoom);
+                                    }
+                                    else if (room.name.ToLower().Contains("ammoconda"))
+                                    {
+                                        StaticReferences.RoomTables["ammoconda"].includedRooms.Add(wRoom);
+                                    }
+                                    else if (room.name.ToLower().Contains("gorgun"))
+                                    {
+                                        StaticReferences.RoomTables["gorgun"].includedRooms.Add(wRoom);
+                                    }
+                                    else
+                                    {
+                                        StaticReferences.RoomTables["gorgun"].includedRooms.Add(wRoom);
+                                        StaticReferences.RoomTables["beholster"].includedRooms.Add(wRoom);
+                                        StaticReferences.RoomTables["ammoconda"].includedRooms.Add(wRoom);
+                                    }
                                 }
                                 else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.CATHEDRALGEON)
                                 {
@@ -118,15 +148,45 @@ namespace GungeonAPI
                                 }
                                 else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.MINEGEON)
                                 {
-                                    StaticReferences.RoomTables["tank"].includedRooms.Add(wRoom);
-                                    StaticReferences.RoomTables["cannonballrog"].includedRooms.Add(wRoom);
-                                    StaticReferences.RoomTables["flayer"].includedRooms.Add(wRoom);
+                                    if (room.name.ToLower().Contains("tank"))
+                                    {
+                                        StaticReferences.RoomTables["tank"].includedRooms.Add(wRoom);
+                                    }
+                                    else if (room.name.ToLower().Contains("cannonballrog"))
+                                    {
+                                        StaticReferences.RoomTables["cannonballrog"].includedRooms.Add(wRoom);
+                                    }
+                                    else if (room.name.ToLower().Contains("mineflayer"))
+                                    {
+                                        StaticReferences.RoomTables["flayer"].includedRooms.Add(wRoom);
+                                    }
+                                    else
+                                    {
+                                        StaticReferences.RoomTables["tank"].includedRooms.Add(wRoom);
+                                        StaticReferences.RoomTables["cannonballrog"].includedRooms.Add(wRoom);
+                                        StaticReferences.RoomTables["flayer"].includedRooms.Add(wRoom);
+                                    }
                                 }
                                 else if (p.requiredTileset == GlobalDungeonData.ValidTilesets.CATHEDRALGEON)
                                 {
-                                    StaticReferences.RoomTables["pillars"].includedRooms.Add(wRoom);
-                                    StaticReferences.RoomTables["priest"].includedRooms.Add(wRoom);
-                                    StaticReferences.RoomTables["monger"].includedRooms.Add(wRoom);
+                                    if (room.name.ToLower().Contains("killpillars"))
+                                    {
+                                        StaticReferences.RoomTables["pillars"].includedRooms.Add(wRoom);
+                                    }
+                                    else if (room.name.ToLower().Contains("highpriest"))
+                                    {
+                                        StaticReferences.RoomTables["priest"].includedRooms.Add(wRoom);
+                                    }
+                                    else if (room.name.ToLower().Contains("wallmonger"))
+                                    {
+                                        StaticReferences.RoomTables["monger"].includedRooms.Add(wRoom);
+                                    }
+                                    else
+                                    {
+                                        StaticReferences.RoomTables["pillars"].includedRooms.Add(wRoom);
+                                        StaticReferences.RoomTables["priest"].includedRooms.Add(wRoom);
+                                        StaticReferences.RoomTables["monger"].includedRooms.Add(wRoom);
+                                    }
                                 }
                                 else
                                 {
@@ -136,8 +196,20 @@ namespace GungeonAPI
 
                             break;
                         case RoomBossSubCategory.MINI_BOSS:
-                            StaticReferences.RoomTables["blockner"].includedRooms.Add(wRoom);
-                            StaticReferences.RoomTables["shadeagunim"].includedRooms.Add(wRoom);
+                            if (room.name.ToLower().Contains("blockner"))
+                            {
+                                StaticReferences.RoomTables["blockner"].includedRooms.Add(wRoom);
+
+                            }
+                            else if (room.name.ToLower().Contains("agunim"))
+                            {
+                                StaticReferences.RoomTables["shadeagunim"].includedRooms.Add(wRoom);
+                            }
+                            else
+                            {
+                                StaticReferences.RoomTables["blockner"].includedRooms.Add(wRoom);
+                                StaticReferences.RoomTables["shadeagunim"].includedRooms.Add(wRoom);
+                            }
                             //StaticReferences.RoomTables["fuselier"].includedRooms.Add(wRoom);
                             room.associatedMinimapIcon = iconPrefab;
                             break;

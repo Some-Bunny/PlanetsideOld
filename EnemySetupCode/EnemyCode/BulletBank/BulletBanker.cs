@@ -689,6 +689,11 @@ namespace Planetside
 				}
 				miniBossIntroDoer.SkipFinalizeAnimation = true;
 				miniBossIntroDoer.RegenerateCache();
+
+				//==================
+				//Important for not breaking basegame stuff!
+				StaticReferenceManager.AllHealthHavers.Remove(companion.aiActor.healthHaver);
+				//==================
 			}
 
 		}
@@ -1081,7 +1086,8 @@ namespace Planetside
 			}
 			private void Start()
 			{
-
+				//Important for not breaking basegame stuff!
+				StaticReferenceManager.AllHealthHavers.Remove(base.aiActor.healthHaver);
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
 				{
 					AkSoundEngine.PostEvent("Play_ENM_screamer_scream_01", base.gameObject);

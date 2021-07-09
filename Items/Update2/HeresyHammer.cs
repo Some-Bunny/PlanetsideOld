@@ -23,6 +23,8 @@ using SaveAPI;
 using System.IO;
 using Planetside;
 using FullInspector.Internal;
+using UnityEngine.SceneManagement;
+
 
 namespace Planetside
 {
@@ -889,7 +891,18 @@ namespace Planetside
         }
         public void Update()
         {
-
+            Dungeon dung = GameManager.Instance.Dungeon;
+            if (this.playeroue != null)// && PastNames.Contains(SceneManager.GetActiveScene().name)) //SceneManager.GetActiveScene().name.Contains())// && validTilesets == GlobalDungeonData.ValidTilesets.A)
+            {
+                if (dung.LevelOverrideType == GameManager.LevelOverrideState.CHARACTER_PAST)
+                {
+                    if (playeroue.GetComponent<GoldPlatedGun>() != null)
+                    {
+                        GoldPlatedGun cham = playeroue.GetComponent<GoldPlatedGun>();
+                        Destroy(cham);
+                    }
+                }
+            }
         }
 
         protected override void OnDestroy()
@@ -947,6 +960,18 @@ namespace Planetside
         }
         public void Update()
         {
+            Dungeon dung = GameManager.Instance.Dungeon;
+            if (this.playeroue != null)// && PastNames.Contains(SceneManager.GetActiveScene().name)) //SceneManager.GetActiveScene().name.Contains())// && validTilesets == GlobalDungeonData.ValidTilesets.A)
+            {
+                if (dung.LevelOverrideType == GameManager.LevelOverrideState.CHARACTER_PAST)
+                {
+                    if (playeroue.GetComponent<HERETIC>() != null)
+                    {
+                        HERETIC cham = playeroue.GetComponent<HERETIC>();
+                        Destroy(cham);
+                    }
+                }
+            }
             if (CanHeresy == true)
             {
                 this.elapsed += BraveTime.DeltaTime;

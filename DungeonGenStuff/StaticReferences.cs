@@ -38,9 +38,9 @@ namespace GungeonAPI
         public static Dictionary<string, string> BossRoomGrabage = new Dictionary<string, string>()
         {
             //Floor 1
-            { "boss1", "bosstable_01_gatlinggull"},
-            { "boss2", "bosstable_01_bulletbros"},
-            { "boss3", "bosstable_01_bulletking"},
+            { "gull", "bosstable_01_gatlinggull"},
+            { "triggertwins", "bosstable_01_bulletbros"},
+            { "bulletking", "bosstable_01_bulletking"},
             //Sewer
             { "blobby", "bosstable_01a_blobulord"},
             //Floor 2

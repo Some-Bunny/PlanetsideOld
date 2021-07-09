@@ -85,11 +85,36 @@ namespace Planetside
                 "red_guon_stone"
             };
             CustomSynergies.Add("Chapter Of Speed", RedGuon, null, true);
+            BulletGuonMaker.BuildBasePrefab(); 
         }
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);
         }
+
+        public static void BuildBasePrefab()
+        {
+            GameObject gameObject = SpriteBuilder.SpriteFromResource("Planetside/Resources/Guons/EnergyPlatedGuon/energyshiledguon.png");
+            //gameObject.AddComponent<tk2dSprite>(sprite);
+            gameObject.name = $"Bullet orbital";
+            SpeculativeRigidbody speculativeRigidbody = gameObject.GetComponent<tk2dSprite>().SetUpSpeculativeRigidbody(IntVector2.Zero, new IntVector2(12, 12));
+            PlayerOrbital orbitalPrefab = gameObject.AddComponent<PlayerOrbital>();
+            speculativeRigidbody.CollideWithTileMap = false;
+            speculativeRigidbody.CollideWithOthers = true;
+            speculativeRigidbody.PrimaryPixelCollider.CollisionLayer = CollisionLayer.EnemyBulletBlocker;
+            orbitalPrefab.shouldRotate = false;
+            orbitalPrefab.orbitRadius = 2f;
+
+            orbitalPrefab.orbitDegreesPerSecond = 60;
+            orbitalPrefab.SetOrbitalTier(0);
+            UnityEngine.Object.DontDestroyOnLoad(gameObject);
+            FakePrefab.MarkAsFakePrefab(gameObject);
+            gameObject.SetActive(false);
+            BaseBulletGuon = gameObject;
+            //GameObject gameobject2 = PlayerOrbitalItem.CreateOrbital(User, gameObject, false);
+        }
+
+        public static GameObject BaseBulletGuon;
         public override bool CanBeUsed(PlayerController user)
         {
 
@@ -101,7 +126,7 @@ namespace Planetside
                 {
                     foreach (Projectile proj in allProjectiles)
                     {
-                        bool ae = Vector2.Distance(proj.sprite.WorldCenter, user.sprite.WorldCenter) < 2.5f && proj != null && proj.specRigidbody != null && user != null && proj.Owner != user;
+                        bool ae = Vector2.Distance(proj.sprite.WorldCenter, user.sprite.WorldCenter) < 3.25f && proj != null && proj.specRigidbody != null && user != null && proj.Owner != user;
                         if (ae)
                         {
                             return true;
@@ -158,7 +183,7 @@ namespace Planetside
                             LootEngine.GivePrefabToPlayer(PickupObjectDatabase.GetById(565).gameObject, user);
                         }
                     }
-                    GameManager.Instance.Dungeon.StartCoroutine(this.HandleBulletDeletionFrames(user.sprite.WorldCenter, 2.5f, 0.5f));
+                    GameManager.Instance.Dungeon.StartCoroutine(this.HandleBulletDeletionFrames(user.sprite.WorldCenter, 3.25f, 0.5f));
                     
                 }
                 
@@ -183,7 +208,6 @@ namespace Planetside
                             if (projectile.CanBeKilledByExplosions && vector.sqrMagnitude < bulletDeletionSqrRadius)
                             {
                                 GameManager.Instance.Dungeon.StartCoroutine(this.HandleBulletSuck(projectile));
-                                projectile.DieInAir(false, true, true, false);
                             }
                         }
                     }
@@ -205,6 +229,7 @@ namespace Planetside
             tk2dSprite.SetSprite(target.sprite.Collection, target.sprite.spriteId);
             this.BuildPrefab(tk2dSprite, base.LastOwner);
 
+            target.DieInAir(false, true, true, false);
             yield break;
         }
         public GameObject BuildPrefab(tk2dSprite sprite, PlayerController User)
@@ -214,24 +239,13 @@ namespace Planetside
             {
                 speed *= 2;
             }
+            GameObject gameobject2 = PlayerOrbitalItem.CreateOrbital(User, BaseBulletGuon, false);
+            PlayerOrbital orb = gameobject2.GetComponent<PlayerOrbital>();
+            orb.orbitDegreesPerSecond = speed;
 
-            GameObject gameObject = new GameObject();
-            gameObject.AddComponent<tk2dSprite>(sprite);
-            gameObject.name = $"Echo {sprite.name} orbital";
-            SpeculativeRigidbody speculativeRigidbody = gameObject.GetComponent<tk2dSprite>().SetUpSpeculativeRigidbody(IntVector2.Zero, new IntVector2(12, 12));
-            PlayerOrbital orbitalPrefab = gameObject.AddComponent<PlayerOrbital>();
-            speculativeRigidbody.CollideWithTileMap = false;
-            speculativeRigidbody.CollideWithOthers = true;
-            speculativeRigidbody.PrimaryPixelCollider.CollisionLayer = CollisionLayer.EnemyBulletBlocker;
-            orbitalPrefab.shouldRotate = false;
-            orbitalPrefab.orbitRadius = 2f;
+            tk2dSprite tk2dSprite = gameobject2.GetOrAddComponent<tk2dSprite>();
+            tk2dSprite.SetSprite(sprite.sprite.Collection, sprite.sprite.spriteId);
 
-            orbitalPrefab.orbitDegreesPerSecond = speed;
-            orbitalPrefab.SetOrbitalTier(0);
-            UnityEngine.Object.DontDestroyOnLoad(gameObject);
-            FakePrefab.MarkAsFakePrefab(gameObject);
-            gameObject.SetActive(false);
-            GameObject gameobject2 = PlayerOrbitalItem.CreateOrbital(User, gameObject, false);
             CreatedGuonBulletsController yes = gameobject2.AddComponent<CreatedGuonBulletsController>();
             yes.maxDuration = 10f;
             

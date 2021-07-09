@@ -25,7 +25,7 @@ namespace Planetside
             GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(35) as Gun, true, false);
             gun.SetBaseMaxAmmo(120);
 
-            Riftaker.RiftTakerGun = gun;
+            //Riftaker.RiftTakerGun = gun;
 
             gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).frames[0].eventAudio = "Play_WPN_energy_accent_01";
             gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).frames[0].triggerEvent = true;
@@ -111,17 +111,7 @@ namespace Planetside
             };
             CustomSynergies.Add("Event Horizon", mandatoryConsoleIDs, optionalConsoleIDs, true);
         }
-        public static void AddRift()
-        {
-
-            //var texture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\nebula_reducednoise.png");
-            //Material material = RiftTakerGun.sprite.renderer.material;
-            //material.shader = Shader.Find("Brave/PlayerShaderEevee");
-            //material.SetTexture("_EeveeTex", texture);
-            //material.DisableKeyword("BRIGHTNESS_CLAMP_ON");
-            //material.EnableKeyword("BRIGHTNESS_CLAMP_OFF");
-        }
-        private static Gun RiftTakerGun;
+        //private static Gun RiftTakerGun;
 
 
         private bool HasReloaded;

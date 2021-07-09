@@ -281,6 +281,7 @@ namespace Planetside
 							LootEngine.DoDefaultItemPoof(component5.transform.position, false, false);
 							GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.HalfheartGuon, false);
 							PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
+							pick.IsHalfHeart = true;
 							if (user.PlayerHasActiveSynergy("More To Hearts"))
 							{
 								pick.HitsBeforeDeath = 18;
@@ -299,6 +300,7 @@ namespace Planetside
 								LootEngine.DoDefaultItemPoof(component5.transform.position, false, false);
 								GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.HeartGuon, false);
 								PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
+								pick.IsHeart = true;
 								if (user.PlayerHasActiveSynergy("More To Hearts"))
 								{
 									pick.HitsBeforeDeath = 36;
@@ -317,6 +319,7 @@ namespace Planetside
 									LootEngine.DoDefaultItemPoof(component5.transform.position, false, false);
 									GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.ArmorGuon, false);
 									PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
+									pick.IsArmor = true;
 									if (user.PlayerHasActiveSynergy("More To Armor"))
 									{
 										pick.HitsBeforeDeath = 60;
@@ -340,6 +343,8 @@ namespace Planetside
 								LootEngine.DoDefaultItemPoof(component6.transform.position, false, false);
 								GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.AmmoGuon, false);
 								PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
+								pick.IsAmmo = true;
+
 								if (user.PlayerHasActiveSynergy("More To Ammo"))
 								{
 									pick.HitsBeforeDeath = 30;
@@ -356,6 +361,7 @@ namespace Planetside
 								LootEngine.DoDefaultItemPoof(component6.transform.position, false, false);
 								GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.HalfAmmoGuon, false);
 								PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
+								pick.IsHalfAmmo = true;
 								if (user.PlayerHasActiveSynergy("More To Ammo"))
 								{
 									pick.HitsBeforeDeath = 30;
@@ -394,6 +400,7 @@ namespace Planetside
 									LootEngine.DoDefaultItemPoof(component8.transform.position, false, false);
 									GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.BlankGuon, false);
 									PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
+									pick.IsBlank = true;
 									if (user.PlayerHasActiveSynergy("More To Blanks"))
 									{
 										pick.HitsBeforeDeath = 36;

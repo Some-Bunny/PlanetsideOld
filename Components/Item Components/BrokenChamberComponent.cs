@@ -16,6 +16,16 @@ using System.Collections.ObjectModel;
 
 using UnityEngine.Serialization;
 
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using Brave;
+using HutongGames.PlayMaker.Actions;
+using InControl;
+using Pathfinding;
+using tk2dRuntime.TileMap;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 namespace Planetside
 {
 	public class BrokenChamberComponent : MonoBehaviour
@@ -33,6 +43,19 @@ namespace Planetside
 
 		private void Update()
 		{
+
+			Dungeon dung = GameManager.Instance.Dungeon;
+			if (this.m_player != null)// && PastNames.Contains(SceneManager.GetActiveScene().name)) //SceneManager.GetActiveScene().name.Contains())// && validTilesets == GlobalDungeonData.ValidTilesets.A)
+			{
+				if (dung.LevelOverrideType == GameManager.LevelOverrideState.CHARACTER_PAST)
+                {
+					if (m_player.GetComponent<BrokenChamberComponent>() != null)
+                    {
+						BrokenChamberComponent cham = m_player.GetComponent<BrokenChamberComponent>();
+						Destroy(cham);
+					}
+				}
+			}
 			bool flag2 = this.speculativeRigidBoy == null;
 			if (flag2)
 			{
@@ -43,11 +66,14 @@ namespace Planetside
 			{
 				this.m_player = base.GetComponent<PlayerController>();
 			}
-			this.elapsed += BraveTime.DeltaTime;
+			if (!GameManager.Instance.IsPaused || GameManager.Instance.IsLoadingLevel == false)
+            {
+				this.elapsed += BraveTime.DeltaTime;
+			}
 			bool flag3 = this.elapsed > TimeBetweenRockFalls;
 			if (flag3)
 			{
-				if (this.m_player != null && GameManager.Instance.IsLoadingLevel == false)
+				if (this.m_player != null && GameManager.Instance.IsLoadingLevel == false)// && GameManager.Instance.Lev)
                 {
 					AkSoundEngine.PostEvent("Play_BOSS_wall_slam_01", base.gameObject);
 					GameObject dragunBoulder = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec").GetComponent<DraGunController>().skyBoulder;
@@ -78,5 +104,7 @@ namespace Planetside
 
 		public float TimeBetweenRockFalls;
 		private float elapsed;
+
+		
 	}
 }

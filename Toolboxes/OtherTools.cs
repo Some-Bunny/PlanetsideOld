@@ -46,7 +46,15 @@ namespace Planetside
         public static string modID = "PSOG";
 
 
-
+        public static List<string> PastNames = new List<string>
+        {
+            "fs_convict",
+            "fs_pilot",
+            "fs_bullet",
+            "fs_soldier",
+            "fs_guide",
+            "fs_robot"
+        };
 
         public static List<string> BossBlackList = new List<string>
         {
@@ -430,6 +438,8 @@ namespace Planetside
                     //======
                     tr.startWidth = StartWidth;
                     tr.endWidth = EndWidth;
+                    tr.autodestruct = false;
+                    //tr.
                 }
                 
             }

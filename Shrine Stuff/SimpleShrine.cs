@@ -15,7 +15,6 @@ namespace GungeonAPI
 			this.m_isToggled = false;
 		}
 
-		// Token: 0x06000071 RID: 113 RVA: 0x000065F0 File Offset: 0x000047F0
 		public void Interact(PlayerController interactor)
 		{
 			bool flag = TextBoxManager.HasTextBox(this.talkPoint);
@@ -113,27 +112,23 @@ namespace GungeonAPI
 			yield break;
 		}
 
-		// Token: 0x06000073 RID: 115 RVA: 0x00006687 File Offset: 0x00004887
 		public void OnEnteredRange(PlayerController interactor)
 		{
 			SpriteOutlineManager.AddOutlineToSprite(base.sprite, Color.white, 1f, 0f, SpriteOutlineManager.OutlineType.NORMAL);
 			base.sprite.UpdateZDepth();
 		}
 
-		// Token: 0x06000074 RID: 116 RVA: 0x000066B2 File Offset: 0x000048B2
 		public void OnExitRange(PlayerController interactor)
 		{
 			SpriteOutlineManager.AddOutlineToSprite(base.sprite, Color.black, 1f, 0f, SpriteOutlineManager.OutlineType.NORMAL);
 		}
 
-		// Token: 0x06000075 RID: 117 RVA: 0x000066C4 File Offset: 0x000048C4
 		public string GetAnimationState(PlayerController interactor, out bool shouldBeFlipped)
 		{
 			shouldBeFlipped = false;
 			return string.Empty;
 		}
 
-		// Token: 0x06000076 RID: 118 RVA: 0x000066E0 File Offset: 0x000048E0
 		public float GetDistanceToPoint(Vector2 point)
 		{
 			bool flag = base.sprite == null;
@@ -151,7 +146,6 @@ namespace GungeonAPI
 			return result;
 		}
 
-		// Token: 0x06000077 RID: 119 RVA: 0x00006748 File Offset: 0x00004948
 		public float GetOverrideMaxDistance()
 		{
 			return -1f;

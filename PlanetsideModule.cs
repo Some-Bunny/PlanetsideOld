@@ -25,7 +25,7 @@ namespace Planetside
     public class PlanetsideModule : ETGModule
     {
         public static readonly string MOD_NAME = "Planetside Of Gunymede";
-        public static readonly string VERSION = "1.1";
+        public static readonly string VERSION = "1.1.3";
         public static readonly string TEXT_COLOR = "#9006FF";
 
         public static string ZipFilePath;
@@ -47,13 +47,14 @@ namespace Planetside
 
             ZipFilePath = this.Metadata.Archive;
             FilePath = this.Metadata.Directory + "/rooms";
+            
             FilePathAudio = this.Metadata.Directory;
 
             metadata = this.Metadata;
             ZipFilePath1 = this.Metadata.Archive;
 
             StaticReferences.Init();
-            DungeonHandler.Init(); 
+            DungeonHandler.Init();
             EnemyHooks.Init();
             ToolsEnemy.Init();
             Hooks.Init();

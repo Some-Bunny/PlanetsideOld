@@ -31,8 +31,8 @@ public class UmbraController : BraveBehaviour
 		base.aiActor.sprite.renderer.material.SetFloat("_StencilVal", 0);
 		base.aiActor.sprite.renderer.material.SetFloat("_FlatColor", 0f);
 		base.aiActor.sprite.renderer.material.SetFloat("_Perpendicular", 0);
-		base.aiActor.behaviorSpeculator.CooldownScale *= 0.75f;
-		base.aiActor.MovementSpeed *= 1.25f; 
+		base.aiActor.behaviorSpeculator.CooldownScale *= 0.5f;
+		base.aiActor.MovementSpeed *= 1.3f; 
 		ImprovedAfterImage yeah = base.aiActor.gameObject.AddComponent<ImprovedAfterImage>();
 		yeah.dashColor = Color.black;
 		yeah.spawnShadows = true;
@@ -171,7 +171,19 @@ public class UmbraController : BraveBehaviour
 		base.healthHaver.OnPreDeath += this.OnPreDeath;
 	}
 
-
+	public void Update()
+    {
+		if (!base.aiActor.IsBlackPhantom && base.aiActor != null)
+        {
+			var texture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\plating.png");
+			base.aiActor.sprite.renderer.material.shader = Shader.Find("Brave/PlayerShaderEevee");
+			base.aiActor.sprite.renderer.material.SetTexture("_EeveeTex", texture);
+			base.aiActor.sprite.renderer.material.SetFloat("_StencilVal", 0);
+			base.aiActor.sprite.renderer.material.SetFloat("_FlatColor", 0f);
+			base.aiActor.sprite.renderer.material.SetFloat("_Perpendicular", 0);
+			base.aiActor.BecomeBlackPhantom();
+		}
+    }
 	protected override void OnDestroy()
 	{
 		if (base.healthHaver)
@@ -239,10 +251,6 @@ public class UmbraController : BraveBehaviour
 						base.Fire(new Direction(num + Angle * (float)i + 10, DirectionType.Absolute, -1f), new Speed(4f, SpeedType.Absolute), new BurstBullet());
 					}
 					num = base.RandomAngle();
-					for (int i = 0; i < Amount; i++)
-					{
-						base.Fire(new Direction(num + Angle * (float)i + 10, DirectionType.Absolute, -1f), new Speed(2f, SpeedType.Absolute), new BurstBullet());
-					}
 					base.PostWwiseEvent("Play_ENM_bulletking_slam_01", null);
 					return;
 				}

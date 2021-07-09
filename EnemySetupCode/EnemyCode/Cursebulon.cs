@@ -436,7 +436,7 @@ namespace Planetside
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
 				{
-					float RAD = 4.5f;
+					float RAD = 4f;
 					if (base.aiActor.IsBlackPhantom)
                     {
 						RAD += 1.5f;
@@ -457,8 +457,11 @@ namespace Planetside
 					target.PlayEffectOnActor(ResourceCache.Acquire("Global VFX/VFX_Curse") as GameObject, Vector3.zero, true, false, false);
 					target.BecomeBlackPhantom();
 				}
+				else if (target.IsBlackPhantom)
+                {
+					target.gameObject.AddComponent<UmbraController>();
+				}
 			}
-
 		}
 	}
 }

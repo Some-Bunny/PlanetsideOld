@@ -30,6 +30,7 @@ namespace Planetside
 			this.HitsBeforeDeath = 10;
 			this.player = GameManager.Instance.PrimaryPlayer;
 			this.Hits = 0;
+
 			this.IsAmmo = false;
 			this.IsHalfAmmo = false;
 			this.IsHeart = false;
@@ -72,14 +73,109 @@ namespace Planetside
 		}
 		private void OnPreCollision(SpeculativeRigidbody myRigidbody, PixelCollider myCollider, SpeculativeRigidbody other, PixelCollider otherCollider)
 		{
+
+			GameObject silencerVFX = (GameObject)ResourceCache.Acquire("Global VFX/BlankVFX_Ghost");
+			PlayerController player = this.player;
+
 			Hits++;
 			if (Hits == HitsBeforeDeath)
             {
 				LootEngine.DoDefaultItemPoof(actor.sprite.WorldCenter, false, true);
 				UnityEngine.Object.Destroy(base.gameObject);
+				if (IsBlank == true)
+				{
+					AkSoundEngine.PostEvent("Play_OBJ_silenceblank_small_01", base.gameObject);
+					GameObject gameObject = new GameObject("silencer");
+					SilencerInstance silencerInstance = gameObject.AddComponent<SilencerInstance>();
+					float additionalTimeAtMaxRadius = 0.25f;
+					silencerInstance.TriggerSilencer(myRigidbody.sprite.WorldCenter, 25f, 3f, silencerVFX, 0f, 3f, 3f, 3f, 250f, 5f, additionalTimeAtMaxRadius, player, false, false);
+				}
+			}
+			if (IsBlank == true)
+			{
+				this.random = UnityEngine.Random.Range(0.0f, 1.0f);
+				if (random <= 0.05f)
+                {
+					AkSoundEngine.PostEvent("Play_OBJ_silenceblank_small_01", base.gameObject);
+					GameObject gameObject = new GameObject("silencer");
+					SilencerInstance silencerInstance = gameObject.AddComponent<SilencerInstance>();
+					float additionalTimeAtMaxRadius = 0.25f;
+					silencerInstance.TriggerSilencer(myRigidbody.sprite.WorldCenter, 25f, 3f, silencerVFX, 0f, 3f, 3f, 3f, 250f, 5f, additionalTimeAtMaxRadius, player, false, false);
+				}
+			}
+			if (IsAmmo == true | IsHalfAmmo == true)
+			{
+				Projectile proj = other.GetComponent<Projectile>();
+				if (proj != null)
+                {
+					AIActor actor = proj.Owner as AIActor;
+					if (actor != null)
+                    {
+						float CooldownIncrease = 0.02f;
+						if (IsHalfAmmo == true)
+                        {
+							CooldownIncrease = 0.01f;
+                        }
+						if (!actor.healthHaver.IsBoss)
+                        {
+							actor.behaviorSpeculator.CooldownScale += CooldownIncrease;
+						}
+					}
+                }
+			}
+			if (IsHeart == true | IsHalfHeart == true)
+            {
+				Projectile proj = other.GetComponent<Projectile>();
+				if (proj != null)
+				{
+					AIActor actor = proj.Owner as AIActor;
+					if (actor != null)
+					{
+						if (!actor.healthHaver.IsBoss)
+                        {
+							this.random = UnityEngine.Random.Range(0.0f, 1.0f);
+							float rng = 0.05f;
+							if (IsHalfHeart == true)
+							{
+								rng = 0.035F;
+							}
+							if (random <= rng)
+							{
+								actor.ApplyEffect(GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultPermanentCharmEffect, 1f, null);
+								actor.gameObject.AddComponent<KillOnRoomClear>();
+								actor.IsHarmlessEnemy = true;
+								actor.IgnoreForRoomClear = true;
+								bool flag4 = actor.gameObject.GetComponent<SpawnEnemyOnDeath>();
+								if (flag4)
+								{
+									Destroy(actor.gameObject.GetComponent<SpawnEnemyOnDeath>());
+								}
+							}
+						}
+					}
+				}
+			}
+			if (IsArmor == true)
+			{
+				Projectile proj = other.GetComponent<Projectile>();
+				if (proj != null)
+				{
+					AIActor actor = proj.Owner as AIActor;
+					if (actor != null)
+					{
+						this.random = UnityEngine.Random.Range(0.0f, 1.0f);
+						if (random <= 0.08f)
+						{
+							if (!actor.healthHaver.IsBoss)
+							{
+								actor.behaviorSpeculator.Stun(4 , true);
+							}
+						}
+					}
+				}
 			}
 		}
-
+		public float random;
 
 		public void Update()
 		{
