@@ -23,7 +23,13 @@ namespace GungeonAPI
             { "forge", "Forge_RoomTable" },
             { "sewer", "Sewer_RoomTable" },
             { "cathedral", "Cathedral_RoomTable" },
-            { "bullethell", "BulletHell_RoomTable" }, 
+            { "bullethell", "BulletHell_RoomTable" },
+
+            //{ "unknown", "SecretHelpers_RoomTable" },
+
+            { "resourcefulrat", "Resourceful Rat Maze Rooms" }
+
+
         };
 
         public static Dictionary<string, string> specialRoomTableMap = new Dictionary<string, string>()
@@ -74,7 +80,7 @@ namespace GungeonAPI
         {
             "shared_auto_001",
             "shared_auto_002",
-            "brave_resources_001"
+            "brave_resources_001",
         };
 
         public static string[] dungeonPrefabNames = new string[]
@@ -87,6 +93,8 @@ namespace GungeonAPI
             "base_sewer",
             "base_cathedral",
             "base_bullethell",
+
+            "base_resourcefulrat",
         };
 
         public static void Init()
@@ -196,6 +204,8 @@ namespace GungeonAPI
                     return RoomTables["sewer"];
                 case GlobalDungeonData.ValidTilesets.CATHEDRALGEON:
                     return RoomTables["cathedral"];
+                case GlobalDungeonData.ValidTilesets.RATGEON:
+                    return RoomTables["resourcefulrat"];
                 case GlobalDungeonData.ValidTilesets.HELLGEON:
                     return RoomTables["bullethell"];
                 default:

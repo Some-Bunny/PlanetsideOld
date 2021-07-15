@@ -25,7 +25,7 @@ namespace Planetside
     public class PlanetsideModule : ETGModule
     {
         public static readonly string MOD_NAME = "Planetside Of Gunymede";
-        public static readonly string VERSION = "1.1.3";
+        public static readonly string VERSION = "1.1.4";
         public static readonly string TEXT_COLOR = "#9006FF";
 
         public static string ZipFilePath;
@@ -241,6 +241,7 @@ namespace Planetside
             BunnyBullet.Init();
             BotBullet.Init();
             WowBullet.Init();
+            TurboBullet.Init();
             SpcreatBullet.Init();
             BulletBankMan.Init();
 

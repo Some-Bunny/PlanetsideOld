@@ -15,7 +15,8 @@ namespace GungeonAPI
             MINES,
             HOLLOW,
             FORGE,
-            HELL
+            HELL,
+            RAT
         }
 
         public static string[] dungeonPrefabNames =
@@ -40,6 +41,7 @@ namespace GungeonAPI
             "Base_Gungeon",
             "Base_Cathedral",
             "Base_Mines",
+            "Base_ResourcefulRat",
             "Base_Catacombs",
             "Base_Forge",
             "Base_BulletHell",
@@ -53,6 +55,7 @@ namespace GungeonAPI
             "tt5",
             "tt_cathedral",
             "tt_mines",
+            "ss_resourcefulrat",
             "tt_catacombs",
             "tt_forge",
             "tt_bullethell",

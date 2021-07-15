@@ -219,13 +219,23 @@ namespace GungeonAPI
                             break;
                     }
                     break;
-                   
-                    //===============================================
+
+
+                //===============================================
                 default:
                     foreach (var p in room.prerequisites)
                         if (p.requireTileset)
-                            StaticReferences.GetRoomTable(p.requiredTileset).includedRooms.Add(wRoom);
-                 //   success = true;
+                            try
+                            {
+                                //ETGModConsole.Log("Attempting To Add This Room" + room.name);
+                                StaticReferences.GetRoomTable(p.requiredTileset).includedRooms.Add(wRoom);
+                            }
+                            catch (Exception e)
+                            {
+                                ETGModConsole.Log(e.ToString());
+                                ETGModConsole.Log("This Room fucks it up:" + room.name);
+                            }
+                    //   success = true;
                     break;
             }
 

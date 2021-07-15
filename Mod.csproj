@@ -90,6 +90,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnemySetupCode\EnemyCode\ModderBullets\TurboBullet.cs" />
+    <Compile Include="EnemySetupCode\ProjectileStuff\UndodgeableBulletsCode.cs" />
     <Compile Include="Guns\LaserChainsawProjectile.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedLogging.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedStrings1.cs" />
@@ -2129,6 +2131,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Enemies\ProperCube\toddy_dash_002.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_die_001.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_die_002.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_die_003.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_die_004.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_die_005.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_die_006.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_idle_001.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_idle_002.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_idle_003.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_idle_004.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

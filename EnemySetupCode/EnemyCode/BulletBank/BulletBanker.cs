@@ -762,6 +762,7 @@ namespace Planetside
 						"an3s_bullet",
 						"blazey_bullet",
 					   "bleak_bullet",
+					   "turbo_bullet",
 					   "bot_bullet",
 					   "bunny_bullet",
 					   "cel_bullet",
@@ -778,6 +779,7 @@ namespace Planetside
 							string guid = BraveUtility.RandomElement<string>(basic);
 							var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
 							Enemy.healthHaver.SetHealthMaximum(20f);
+							
 							AIActor.Spawn(Enemy.aiActor, this.Projectile.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
 
 						}
@@ -876,6 +878,7 @@ namespace Planetside
 						var basic = new List<string> { 
 						
 				        "an3s_bullet",
+						"turbo_bullet",
 				        "blazey_bullet",
 					   "bleak_bullet",
 					   "bot_bullet",
@@ -1084,8 +1087,63 @@ namespace Planetside
 				}
 				yield break;
 			}
+			public void LerpMaterialGlow(Material targetMaterial, float startGlow, float targetGlow, float duration)
+			{
+				base.StartCoroutine(this.LerpMaterialGlowCR(targetMaterial, startGlow, targetGlow, duration));
+			}
+			private IEnumerator LerpMaterialGlowCR(Material targetMaterial, float startGlow, float targetGlow, float duration)
+			{
+				float elapsed = 0f;
+				while (elapsed < duration)
+				{
+					elapsed += BraveTime.DeltaTime; ;
+					float t = elapsed / duration;
+					if (targetMaterial != null)
+					{
+						targetMaterial.SetFloat("_EmissivePower", Mathf.Lerp(startGlow, targetGlow, t));
+					}
+					yield return null;
+				}
+				yield break;
+			}
 			private void Start()
 			{
+				if (!base.aiActor.IsBlackPhantom)
+                {
+					/*
+					if (base.aiActor.sprite && base.aiActor.sprite.renderer)
+					{
+						Material sharedMaterial = base.aiActor.sprite.renderer.sharedMaterial;
+						base.aiActor.sprite.usesOverrideMaterial = true;
+						Material material = new Material(ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive"));
+						material.SetTexture("_MainTex", sharedMaterial.GetTexture("_MainTex"));
+						//material.SetColor("_OverrideColor", new Color(1f, 1f, 1f, 1f));
+						this.LerpMaterialGlow(material, 0f, 22f, 0.4f);
+						material.SetFloat("_EmissiveColorPower", 80f);
+						material.SetColor("_EmissiveColor", Color.white);
+						base.aiActor.sprite.renderer.material = material;
+					}
+					*/
+				}
+				else
+				{
+					TrailRenderer tr = base.aiActor.GetComponent<TrailRenderer>();
+					if (tr != null)
+					{
+						tr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+						tr.receiveShadows = false;
+						var mat = new Material(Shader.Find("Sprites/Default"));
+						mat.mainTexture = _gradTexture;
+						mat.SetColor("_Color", new Color(3f, 0f, 0f, 0.9f));
+						tr.material = mat;
+						tr.time = 1f;
+						tr.minVertexDistance = 0.1f;
+						tr.startWidth = 1.2f;
+						tr.endWidth = 0f;
+						tr.startColor = Color.red;
+						tr.endColor = Color.black;
+					}
+				}
 				//Important for not breaking basegame stuff!
 				StaticReferenceManager.AllHealthHavers.Remove(base.aiActor.healthHaver);
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>

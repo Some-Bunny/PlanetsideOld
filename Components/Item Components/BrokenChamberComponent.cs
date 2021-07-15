@@ -66,7 +66,7 @@ namespace Planetside
 			{
 				this.m_player = base.GetComponent<PlayerController>();
 			}
-			if (!GameManager.Instance.IsPaused || GameManager.Instance.IsLoadingLevel == false)
+			if (!GameManager.Instance.IsPaused || !GameManager.Instance.IsLoadingLevel)
             {
 				this.elapsed += BraveTime.DeltaTime;
 			}
@@ -74,7 +74,7 @@ namespace Planetside
 			if (flag3)
 			{
 				if (this.m_player != null && GameManager.Instance.IsLoadingLevel == false)// && GameManager.Instance.Lev)
-                {
+                {					
 					AkSoundEngine.PostEvent("Play_BOSS_wall_slam_01", base.gameObject);
 					GameObject dragunBoulder = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec").GetComponent<DraGunController>().skyBoulder;
 					GameObject dragunRocket = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec").GetComponent<DraGunController>().skyRocket;
@@ -85,8 +85,8 @@ namespace Planetside
 				}
 				else
                 {
-
-                }
+					this.elapsed = 0f;
+				}
 				this.elapsed = 0f;
 			}
 		}

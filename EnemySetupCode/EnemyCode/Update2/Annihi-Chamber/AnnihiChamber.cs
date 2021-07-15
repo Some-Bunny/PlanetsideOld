@@ -1608,7 +1608,7 @@ namespace Planetside
 					yes.shadowTimeDelay = 0.001f;
 					yes.dashColor = Color.clear;
 					yes.name = "Temp Trail";
-					GameManager.Instance.StartCoroutine(WaitForTrail());
+					GameManager.Instance.StartCoroutine(WaitForTrail(base.aiActor));
 				}
 				if (clip.GetFrame(frameIdx).eventInfo == "tempgaintrail2")
                 {
@@ -1618,7 +1618,7 @@ namespace Planetside
 					yes.shadowTimeDelay = 0f;
 					yes.dashColor = Color.white;
 					yes.name = "Temp Trail2";
-					GameManager.Instance.StartCoroutine(WaitForTrail());
+					GameManager.Instance.StartCoroutine(WaitForTrail(base.aiActor));
 				}
 				if (clip.GetFrame(frameIdx).eventInfo == "deathboom")
                 {
@@ -1635,18 +1635,21 @@ namespace Planetside
 					base.aiActor.sprite.renderer.enabled = false;
 				}
 			}
-			private IEnumerator WaitForTrail()
+			private IEnumerator WaitForTrail(AIActor actor)
 			{
 				yield return new WaitForSeconds(2.5f);
-				foreach (ImprovedAfterImage c in base.aiActor.gameObject.GetComponents(typeof(ImprovedAfterImage)))
-				{
-					if (c.name == "Temp Trail" && c != null)
+				if (actor != null)
+                {
+					foreach (ImprovedAfterImage c in actor.gameObject.GetComponents<ImprovedAfterImage>())
 					{
-						Destroy(c);
-					}
-					if (c.name == "Temp Trail2" && c != null)
-					{
-						Destroy(c);
+						if (c.name == "Temp Trail" && c != null)
+						{
+							Destroy(c);
+						}
+						if (c.name == "Temp Trail2" && c != null)
+						{
+							Destroy(c);
+						}
 					}
 				}
 				yield break;

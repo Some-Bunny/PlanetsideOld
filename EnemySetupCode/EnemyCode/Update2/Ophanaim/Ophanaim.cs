@@ -67,10 +67,10 @@ namespace Planetside
 				enemy.aiActor.specRigidbody.CollideWithOthers = true;
 				enemy.aiActor.specRigidbody.CollideWithTileMap = true;
 				enemy.aiActor.PreventFallingInPitsEver = false;
-				enemy.aiActor.healthHaver.ForceSetCurrentHealth(1300f);
+				enemy.aiActor.healthHaver.ForceSetCurrentHealth(1800f);
 				enemy.aiActor.CollisionKnockbackStrength = 10f;
 				enemy.aiActor.CanTargetPlayers = true;
-				enemy.aiActor.healthHaver.SetHealthMaximum(1300f, null, false);
+				enemy.aiActor.healthHaver.SetHealthMaximum(1800f, null, false);
 
 				aiAnimator.IdleAnimation = new DirectionalAnimation
 				{
@@ -858,6 +858,8 @@ namespace Planetside
 						},
 						NickName = "firefsss"
 					},
+					//=============
+
 					new AttackBehaviorGroup.AttackGroupItem()
 						{
 						Probability = 1f,
@@ -892,8 +894,46 @@ namespace Planetside
 							MaxUsages = 0,
 
 						},
+						NickName = "Why"
+					},
+					/*
+				new AttackBehaviorGroup.AttackGroupItem()
+						{
+						Probability = 1f,
+						Behavior = new ShootBehavior()
+						{
+							TellAnimation = "charge1",
+							FireAnimation = "fire1",
+							BulletScript = new CustomBulletScriptSelector(typeof(Ophanaim.SummonSmallSuns)),
+							LeadAmount = 0,
+							//StopDuring = ShootBehavior.StopType.Attack,
+							AttackCooldown = 1f,
+							Cooldown = 3f,
+
+							RequiresLineOfSight = true,
+							ShootPoint = TheMainEye,
+							CooldownVariance = 0f,
+							GlobalCooldown = 0,
+							InitialCooldown = 0,
+							InitialCooldownVariance = 0,
+							GroupName = null,
+							MinRange = 0,
+							Range = 1000,
+							MinWallDistance = 0,
+							MaxEnemiesInRoom = -1,
+							MinHealthThreshold = 0,
+							MaxHealthThreshold = 1,
+							HealthThresholds = new float[0],
+							AccumulateHealthThresholds = true,
+							targetAreaStyle = null,
+							IsBlackPhantom = false,
+							resetCooldownOnDamage = null,
+							MaxUsages = 0,
+
+						},
 						NickName = "LiteralFireWall"
 					},
+				*/
 					new AttackBehaviorGroup.AttackGroupItem()
 						{
 						Probability = 1f,
@@ -2081,31 +2121,28 @@ namespace Planetside
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("383175a55879441d90933b5c4e60cf6f").bulletBank.GetBullet("bigBullet"));
 				string BulletType = "frogger";
 				float radius = 0.5f;
-				float Amount = 4;
-				float delta = 30f;
+				float Amount = 1;
+				float delta = 45f;
 
 				if (Ophanaim.EnemyBehavior.Phase2Check == true)
 				{
-					Amount = 6;
+					Amount = 1;
 				}
 				for (int j = 0; j < Amount; j++)
 				{
 					float shhotdir = UnityEngine.Random.Range(-180, 180);
 					float Speed = UnityEngine.Random.Range(9, 13.5f);
 					float startDirection = shhotdir;
-					for (int e = 0; e < 12; e++)
+					for (int e = 0; e < 8; e++)
 					{
 						BulletType = "frogger";
 						base.PostWwiseEvent("Play_BOSS_lichB_charge_01", null);
-						base.Fire(new Direction(shhotdir, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)e * delta, radius, Speed, 40));
-						base.Fire(new Direction(shhotdir, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)e * delta, radius-0.1f, Speed, - 40));
-						base.Fire(new Direction(shhotdir, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)e * delta, radius - 0.2f, Speed, 40));
-						base.Fire(new Direction(shhotdir, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)e * delta, radius - 0.3f, Speed, -40));
-						base.Fire(new Direction(shhotdir, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)e * delta, radius - 0.4f, Speed, -40));
+						base.Fire(new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)e * delta, radius - 0.2f, Speed, 40));
+						base.Fire(new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)e * delta, radius - 0.2f, Speed, -40));
 
 					}
 					BulletType = "bigBullet";
-					base.Fire(new Direction(shhotdir, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)0 * delta, radius - 0.08f, Speed));
+					//base.Fire(new Direction(shhotdir, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)0 * delta, radius - 0.5f, Speed));
 				}
 				yield break;
 			}
@@ -2127,17 +2164,19 @@ namespace Planetside
 					base.ManualControl = true;
 					Vector2 centerPosition = base.Position;
 					float radius = m_radius;
-					float Burst = UnityEngine.Random.Range(240, 299);
-					for (int i = 0; i < 400; i++)
+					float Burst = 400;
+					int Counter = 0;
+					for (int i = 0; i < 500; i++)
 					{
-						radius += 0.025f;
-						if (i == 40)
+						Counter++;
+						if (Counter == 40)
 						{
+							radius += 0.1f;
 							base.ChangeSpeed(new Speed(speeeeeed, SpeedType.Absolute), 0);
-							base.ChangeDirection(new Direction(this.m_parent.GetAimDirection(1f, 10f), Brave.BulletScript.DirectionType.Absolute, -1f), 20);
-							base.StartTask(this.ChangeSpinSpeedTask(180f, 240));
+							//base.ChangeDirection(new Direction(this.m_parent.GetAimDirection(1f, 10f), Brave.BulletScript.DirectionType.Absolute, -1f), 20);
+							//base.StartTask(this.ChangeSpinSpeedTask(180f, 240));
 						}
-						if (i == 42)
+						if (Counter == 42)
 						{
 							base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 180);
 							//base.ChangeDirection(new Direction(this.m_parent.GetAimDirection(1f, 10f), Brave.BulletScript.DirectionType.Absolute, -1f), 20);
@@ -2145,23 +2184,21 @@ namespace Planetside
 						}
 						base.UpdateVelocity();
 						centerPosition += this.Velocity / 60f;
-						if (i == Burst && m_bulletype == "bigBullet")
+						if (Counter == Burst)
 						{
-							float aaaaaa= UnityEngine.Random.Range(-180, 180);
-							for (int A = 0; A < 20; A++)
-							{
-								for (int E = 0; E < 4; E++)
-                                {
-									Vector2 RNG = new Vector2(UnityEngine.Random.Range(1, 1), UnityEngine.Random.Range(-1, 1));
-									base.Fire(new Offset(RNG), new Direction(90*E + aaaaaa, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(11, SpeedType.Absolute), new Flames1());
-								}
-								yield return base.Wait(2);
-							}
-							base.Vanish(false);
+							base.ChangeSpeed(new Speed(11, SpeedType.Absolute), 0);
+							//base.ChangeDirection(new Direction(this.m_parent.GetAimDirection(1f, 10f), Brave.BulletScript.DirectionType.Absolute, -1f), 20);
+							//base.StartTask(this.ChangeSpinSpeedTask(180f, 240));
 						}
-						this.m_angle += this.m_spinSpeed / 60f;
+						if (Counter <= Burst)
+                        {
+							radius += 0.1f;
+							Vector2 RNG = new Vector2(UnityEngine.Random.Range(1, 1), UnityEngine.Random.Range(-1, 1));
+							base.Fire(new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0, SpeedType.Absolute), new Flames1());
+						}
+							this.m_angle += this.m_spinSpeed / 60f;
 						base.Position = centerPosition + BraveMathCollege.DegreesToVector(this.m_angle, radius);
-						yield return base.Wait(1);
+						yield return base.Wait(1f);
 					}
 					base.Vanish(false);
 					yield break;
@@ -2195,7 +2232,8 @@ namespace Planetside
 
 				protected override IEnumerator Top()
 				{
-					yield return base.Wait(900);
+					yield return base.Wait(30);
+					base.Vanish(false);
 					yield break;
 				}
 			}
