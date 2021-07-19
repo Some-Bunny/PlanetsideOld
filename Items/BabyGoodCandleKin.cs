@@ -51,6 +51,7 @@ namespace Planetside
 				companion.aiActor.CollisionKnockbackStrength = 5f;
 				companion.aiActor.CanTargetPlayers = false;
 				companion.aiActor.CanTargetEnemies = true;
+				companion.aiActor.IgnoreForRoomClear = true;
 				AIAnimator aiAnimator = companion.aiAnimator;
 				aiAnimator.IdleAnimation = new DirectionalAnimation
 				{

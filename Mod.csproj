@@ -93,6 +93,7 @@
     <Compile Include="EnemySetupCode\EnemyCode\ModderBullets\TurboBullet.cs" />
     <Compile Include="EnemySetupCode\ProjectileStuff\UndodgeableBulletsCode.cs" />
     <Compile Include="Guns\LaserChainsawProjectile.cs" />
+    <Compile Include="Items\Test Items\TestShaderItem.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedLogging.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedStrings1.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedStrings2.cs" />
@@ -2143,6 +2144,12 @@
     <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_idle_002.png" />
     <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_idle_003.png" />
     <EmbeddedResource Include="Resources\Enemies\ModderBullets\turbo\turbo_idle_004.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Static\static1.png" />
+    <EmbeddedResource Include="Resources\Static\static2.png" />
+    <EmbeddedResource Include="Resources\Static\static3.png" />
+    <EmbeddedResource Include="Resources\Static\static4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -541,8 +541,9 @@ namespace Planetside
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
 				bs.GlobalCooldown = behaviorSpeculator.GlobalCooldown;
 
-				var hand = companion.transform.Find("GunAttachPoint").gameObject;
+				GameObject hand = companion.transform.Find("GunAttachPoint").gameObject;
 				Destroy(hand);
+
 				Game.Enemies.Add("psog:wailer", companion.aiActor);
 
 				SpriteBuilder.AddSpriteToCollection("Planetside/Resources/Wailer/warped_scream_001.png", SpriteBuilder.ammonomiconCollection);

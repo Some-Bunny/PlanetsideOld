@@ -98,80 +98,83 @@ namespace Planetside
         protected override void DoEffect(PlayerController user)
         {
             AkSoundEngine.PostEvent("Play_BOSS_lichB_charge_01", base.gameObject);
-            base.StartCoroutine(this.HeatTime(user.CurrentRoom, user));
+            GameManager.Instance.StartCoroutine(this.HeatTime(user.CurrentRoom, user));
         }
         private IEnumerator HeatTime(RoomHandler room, PlayerController player)
         {
-            GameObject original;
-            original = WispInABottle.SunPrefab;
-            tk2dSprite component = GameObject.Instantiate(original, player.specRigidbody.UnitTopCenter, Quaternion.identity, player.transform).GetComponent<tk2dSprite>();
-            component.transform.position.WithZ(transform.position.z + 99999);
-            component.GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(player.CenterPosition, tk2dBaseSprite.Anchor.MiddleCenter);
-            player.sprite.AttachRenderer(component.GetComponent<tk2dBaseSprite>());
+            if (player != null)
+            {
+                GameObject original;
+                original = WispInABottle.SunPrefab;
+                tk2dSprite component = GameObject.Instantiate(original, player.specRigidbody.UnitTopCenter, Quaternion.identity, player.transform).GetComponent<tk2dSprite>();
+                component.transform.position.WithZ(transform.position.z + 99999);
+                component.GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(player.CenterPosition, tk2dBaseSprite.Anchor.MiddleCenter);
+                player.sprite.AttachRenderer(component.GetComponent<tk2dBaseSprite>());
 
 
-            component.PlaceAtPositionByAnchor(base.LastOwner.sprite.WorldTopCenter, tk2dBaseSprite.Anchor.LowerCenter);
-            component.scale = Vector3.one;
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[0]);
-            for (int A = 0; A < 11; A++)
-            {
-                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[A]);
-                yield return new WaitForSeconds(0.1f);
-            }
-            AkSoundEngine.PostEvent("Play_BOSS_doormimic_flame_01", base.gameObject);
-            for (int e = 0; e < 5; e++)
-            {
-                AkSoundEngine.PostEvent("Play_Burn", base.gameObject);
-                for (int w = 0; w < 4; w++)
+                component.PlaceAtPositionByAnchor(base.LastOwner.sprite.WorldTopCenter, tk2dBaseSprite.Anchor.LowerCenter);
+                component.scale = Vector3.one;
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[0]);
+                for (int A = 0; A < 11; A++)
                 {
-                    for (int A = 11; A < 15; A++)
+                    component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[A]);
+                    yield return new WaitForSeconds(0.1f);
+                }
+                AkSoundEngine.PostEvent("Play_BOSS_doormimic_flame_01", player.gameObject);
+                for (int e = 0; e < 5; e++)
+                {
+                    AkSoundEngine.PostEvent("Play_Burn", player.gameObject);
+                    for (int w = 0; w < 4; w++)
                     {
-                        component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[A]);
-                        Exploder.DoDistortionWave(component.sprite.WorldCenter, 0.1f, 0.25f, 6, 0.5f);
-
-                        List<AIActor> activeEnemies = player.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
-                        Vector2 centerPosition = player.sprite.WorldCenter;
-                        if (activeEnemies != null)
+                        for (int A = 11; A < 15; A++)
                         {
-                            foreach (AIActor aiactor in activeEnemies)
+                            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[A]);
+                            Exploder.DoDistortionWave(component.sprite.WorldCenter, 0.1f, 0.25f, 6, 0.5f);
+
+                            List<AIActor> activeEnemies = player.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
+                            Vector2 centerPosition = player.sprite.WorldCenter;
+                            if (activeEnemies != null)
                             {
-                                bool ae = Vector2.Distance(aiactor.CenterPosition, centerPosition) < 20 && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
-                                if (ae)
+                                foreach (AIActor aiactor in activeEnemies)
                                 {
-                                    var Frail = aiactor.transform.Find("heatStrokeVFX");
-                                    bool fra = Frail == null;
-                                    if (fra)
+                                    bool ae = Vector2.Distance(aiactor.CenterPosition, centerPosition) < 20 && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
+                                    if (ae)
                                     {
-                                        this.AffectEnemy(aiactor);
+                                        var Frail = aiactor.transform.Find("heatStrokeVFX");
+                                        bool fra = Frail == null;
+                                        if (fra)
+                                        {
+                                            this.AffectEnemy(aiactor);
+                                        }
                                     }
                                 }
                             }
+                            yield return new WaitForSeconds(0.125f);
                         }
-                        yield return new WaitForSeconds(0.125f);
                     }
                 }
-            }
-            AkSoundEngine.PostEvent("Play_BOSS_lichB_charge_01", base.gameObject);
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[11]);
-            yield return new WaitForSeconds(0.2f);
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[7]);
-            yield return new WaitForSeconds(0.2f);
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[6]);
-            yield return new WaitForSeconds(0.1f);
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[5]);
-            yield return new WaitForSeconds(0.1f);
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[4]);
-            yield return new WaitForSeconds(0.1f);
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[3]);
-            yield return new WaitForSeconds(0.1f);
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[2]);
-            yield return new WaitForSeconds(0.1f);
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[1]);
-            yield return new WaitForSeconds(0.1f);
-            component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[0]);
-            yield return new WaitForSeconds(0.1f);
-            Destroy(component);
-            yield break;
+                AkSoundEngine.PostEvent("Play_BOSS_lichB_charge_01", base.gameObject);
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[11]);
+                yield return new WaitForSeconds(0.2f);
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[7]);
+                yield return new WaitForSeconds(0.2f);
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[6]);
+                yield return new WaitForSeconds(0.1f);
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[5]);
+                yield return new WaitForSeconds(0.1f);
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[4]);
+                yield return new WaitForSeconds(0.1f);
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[3]);
+                yield return new WaitForSeconds(0.1f);
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[2]);
+                yield return new WaitForSeconds(0.1f);
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[1]);
+                yield return new WaitForSeconds(0.1f);
+                component.GetComponent<tk2dBaseSprite>().SetSprite(WispInABottle.spriteIds[0]);
+                yield return new WaitForSeconds(0.1f);
+                Destroy(component);
+                yield break;
+            }  
         }
         private void AffectEnemy(AIActor target)
         {

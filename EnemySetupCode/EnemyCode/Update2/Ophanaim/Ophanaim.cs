@@ -54,7 +54,7 @@ namespace Planetside
 			if (!flag2)
 			{
 				prefab = BossBuilder.BuildPrefab("Ophanaim", guid, "Planetside/Resources/OphanaimNew/ophanaimnew_idle_001.png", new IntVector2(0, 0), new IntVector2(0, 0), false, true);
-				var enemy = prefab.AddComponent<EnemyBehavior>();
+				var enemy = prefab.AddComponent<EyeEnemyBehavior>();
 				AIAnimator aiAnimator = enemy.aiAnimator;
 
 				enemy.aiActor.knockbackDoer.weight = 35;
@@ -67,10 +67,10 @@ namespace Planetside
 				enemy.aiActor.specRigidbody.CollideWithOthers = true;
 				enemy.aiActor.specRigidbody.CollideWithTileMap = true;
 				enemy.aiActor.PreventFallingInPitsEver = false;
-				enemy.aiActor.healthHaver.ForceSetCurrentHealth(1800f);
+				enemy.aiActor.healthHaver.ForceSetCurrentHealth(1650f);
 				enemy.aiActor.CollisionKnockbackStrength = 10f;
 				enemy.aiActor.CanTargetPlayers = true;
-				enemy.aiActor.healthHaver.SetHealthMaximum(1800f, null, false);
+				enemy.aiActor.healthHaver.SetHealthMaximum(1650f, null, false);
 
 				aiAnimator.IdleAnimation = new DirectionalAnimation
 				{
@@ -824,7 +824,7 @@ namespace Planetside
 					},
 				new AttackBehaviorGroup.AttackGroupItem()
 						{
-						Probability = 1.1f,
+						Probability = 0.9f,
 						Behavior = new ShootBehavior()
 						{
 							TellAnimation = "charge1",
@@ -854,9 +854,45 @@ namespace Planetside
 							IsBlackPhantom = false,
 							resetCooldownOnDamage = null,
 							MaxUsages = 0,
-							
+
 						},
 						NickName = "firefsss"
+					},
+				new AttackBehaviorGroup.AttackGroupItem()
+						{
+						Probability = 1f,
+						Behavior = new ShootBehavior()
+						{
+							TellAnimation = "charge1",
+							FireAnimation = "fire1",
+							BulletScript = new CustomBulletScriptSelector(typeof(Ophanaim.MithrixSlam)),
+							LeadAmount = 0,
+							//StopDuring = ShootBehavior.StopType.Attack,
+							AttackCooldown = 1f,
+							Cooldown = 5f,
+
+							RequiresLineOfSight = true,
+							ShootPoint = TheMainEye,
+							CooldownVariance = 0f,
+							GlobalCooldown = 0,
+							InitialCooldown = 0,
+							InitialCooldownVariance = 0,
+							GroupName = null,
+							MinRange = 0,
+							Range = 1000,
+							MinWallDistance = 0,
+							MaxEnemiesInRoom = -1,
+							MinHealthThreshold = 0,
+							MaxHealthThreshold = 1,
+							HealthThresholds = new float[0],
+							AccumulateHealthThresholds = true,
+							targetAreaStyle = null,
+							IsBlackPhantom = false,
+							resetCooldownOnDamage = null,
+							MaxUsages = 0,
+							MoveSpeedModifier = 0.6f,
+						},
+						NickName = "mithrix"
 					},
 					//=============
 
@@ -980,8 +1016,8 @@ namespace Planetside
 							BulletScript = new CustomBulletScriptSelector(typeof(Ophanaim.THESUN)),
 							LeadAmount = 0,
 							StopDuring = ShootBehavior.StopType.Charge,
-							AttackCooldown = 3.5f,
-							Cooldown = 20f,
+							AttackCooldown = 4f,
+							Cooldown = 30f,
 
 							RequiresLineOfSight = true,
 							ShootPoint = TheMainEye,
@@ -1031,8 +1067,8 @@ namespace Planetside
 						randomTargets = 2,
 						randomRetargetMax = 2,
 						randomRetargetMin = 1,
-						ShootPoint = Centre.transform,		
-						
+						ShootPoint = Centre.transform,
+
 						},
 						NickName = "Beams nuts"
 					},
@@ -1290,8 +1326,10 @@ namespace Planetside
 			"Planetside/Resources/OphanaimNew/ophanaimnew_death_009.png"
 
 		};
-		public class EnemyBehavior : BraveBehaviour
+		public class EyeEnemyBehavior : BraveBehaviour
 		{
+			public GameObject LaserShit;
+
 			public float distortionMaxRadius = 30f;
 			public float distortionDuration = 2f;
 			public float distortionIntensity = 0.7f;
@@ -1339,6 +1377,12 @@ namespace Planetside
 							StickyFrictionManager.Instance.RegisterCustomStickyFriction(0.15f, 1f, false, false); FlashTime = 1f;
 							base.aiActor.behaviorSpeculator.Interrupt();
 							AkSoundEngine.PostEvent("Play_EyeRoar", base.gameObject);
+							for (int i = 0; i < Ophanaim.reticles.Count; i++)
+							{
+								SpawnManager.Despawn(Ophanaim.reticles[i]);
+								Destroy(Ophanaim.reticles[i]);
+							}
+							Ophanaim.reticles.Clear();
 							base.aiActor.behaviorSpeculator.AttackCooldown *= 0.8f;
 							for (int j = 0; j < base.aiActor.behaviorSpeculator.AttackBehaviors.Count; j++)
 							{
@@ -1364,7 +1408,7 @@ namespace Planetside
 					}
 					else if (attackGroupItem.Behavior is ShootBehavior && attackGroup != null && attackGroupItem.NickName == "TheSun")
 					{
-						attackGroupItem.Probability = 5f;
+						attackGroupItem.Probability = 7f;
 					}
 				}
 			}
@@ -1418,6 +1462,12 @@ namespace Planetside
 				base.aiActor.HasBeenEngaged = false;
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
 				{
+					for (int i = 0; i < Ophanaim.reticles.Count; i++)
+					{
+						SpawnManager.Despawn(Ophanaim.reticles[i]);
+						Destroy(Ophanaim.reticles[i]);
+					}
+					Ophanaim.reticles.Clear();
 				};
 				base.aiActor.healthHaver.OnDeath += (obj) =>
 				{
@@ -1469,7 +1519,7 @@ namespace Planetside
 					//AkSoundEngine.PostEvent("Play_Baboom", base.gameObject);
 					Vector2 b = base.aiActor.specRigidbody.UnitBottomCenter - base.aiActor.transform.position.XY();
 					IntVector2? CentreCell = Center.ToIntVector2();
-					base.aiActor.transform.position = Pathfinder.GetClearanceOffset(CentreCell.Value, base.aiActor.Clearance).WithY((float)CentreCell.Value.y) - b;
+					base.aiActor.transform.position = Pathfinder.GetClearanceOffset(CentreCell.Value - new IntVector2(2 , 0), base.aiActor.Clearance).WithY((float)CentreCell.Value.y) - b;
 					base.aiActor.specRigidbody.Reinitialize();
 					float FlashTime = 0.125f;
 					float FlashFadetime = 0.375f;
@@ -1521,6 +1571,8 @@ namespace Planetside
 		}
 		public static Material Sun = new Material(ShaderCache.Acquire("Brave/LitCutoutUber"));
 
+		private static List<GameObject> reticles = new List<GameObject>();
+
 
 		//Basic Attack
 		public class TheFlameThing : Script
@@ -1531,10 +1583,10 @@ namespace Planetside
 				for (int A = 0; A < 8; A++)
 				{
 					string BulletType = "frogger";
-					float radius = 0.020f;
-					if (Ophanaim.EnemyBehavior.Phase2Check == true)
+					float radius = 0.0166f;
+					if (Ophanaim.EyeEnemyBehavior.Phase2Check == true)
                     {
-						radius = 0.025f;
+						radius = 0.0233f;
                     }
 						float delta = 30f;
 					float startDirection = AimDirection;
@@ -1543,13 +1595,13 @@ namespace Planetside
 						base.PostWwiseEvent("Play_BOSS_lichB_charge_01", null);
 						base.Fire(new Direction(-90f, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new TheFlameThing.TheGear(BulletType, this, startDirection + (float)j * delta, radius));
 					}
-					base.Fire(new Direction(-8, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(11, SpeedType.Absolute), new Flames1());
-					base.Fire(new Direction(8, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(11, SpeedType.Absolute), new Flames1());
+					base.Fire(new Direction(-8, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(10, SpeedType.Absolute), new Flames1());
+					base.Fire(new Direction(8, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(10, SpeedType.Absolute), new Flames1());
 
-					if (Ophanaim.EnemyBehavior.Phase2Check == true)
+					if (Ophanaim.EyeEnemyBehavior.Phase2Check == true)
 					{
-						base.Fire(new Direction(45, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(9, SpeedType.Absolute), new Flames1());
-						base.Fire(new Direction(-45, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(9, SpeedType.Absolute), new Flames1());
+						base.Fire(new Direction(45, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(8, SpeedType.Absolute), new Flames1());
+						base.Fire(new Direction(-45, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(8, SpeedType.Absolute), new Flames1());
 					}
 					yield return base.Wait(45);
 				}
@@ -1637,23 +1689,23 @@ namespace Planetside
 				base.EndOnBlank = true;
 				float startAngle = base.RandomAngle();
 				float delta = 72f;
-				float RNGSPING = UnityEngine.Random.Range(0.2f, 0.4f);
+				float RNGSPING = UnityEngine.Random.Range(0.15f, 0.35f);
 				base.PostWwiseEvent("Play_BigSlam", null);
 				for (int A = 0; A < 5; A++)
 				{
 					float num = startAngle + (float)A * delta;
-					this.Fire(new Direction(num, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(5f, SpeedType.Relative), new Break(base.Position, false, num, RNGSPING));
+					this.Fire(new Direction(num, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(6f, SpeedType.Relative), new Break(base.Position, false, num, RNGSPING));
 				}
 				for (int A = 0; A < 5; A++)
 				{
 					float num = startAngle + (float)A * delta;
-					this.Fire(new Direction(num + 9, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(5f, SpeedType.Relative), new Break(base.Position, true, num, RNGSPING));
+					this.Fire(new Direction(num + 9, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(6f, SpeedType.Relative), new Break(base.Position, true, num, RNGSPING));
 				}
-				float Amount = 18;
+				float Amount = 14;
 				float Increase = 0;
-				if (Ophanaim.EnemyBehavior.Phase2Check == true)
+				if (Ophanaim.EyeEnemyBehavior.Phase2Check == true)
 				{
-					Amount = 24;
+					Amount = 21;
 					Increase = 1.5f;
 				}
 				for (int j = 0; j < Amount; j++)
@@ -1746,7 +1798,7 @@ namespace Planetside
 				float startAngle = base.RandomAngle();
 				float delta = 60f;
 				float Amount = 6;
-				if (Ophanaim.EnemyBehavior.Phase2Check == true)
+				if (Ophanaim.EyeEnemyBehavior.Phase2Check == true)
 				{
 					delta = 90f;
 					Amount = 4;
@@ -1757,8 +1809,8 @@ namespace Planetside
 					for (int A = 0; A < Amount; A++)
 					{
 						float num = startAngle + (float)A * delta;
-						base.Fire(new Offset(new Vector2(-2.125f, -1.3125f)), new Direction(num, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(5, SpeedType.Absolute), new BouncyFires.WaveBullet());
-						base.Fire(new Offset(new Vector2(2.125f, -1.3125f)), new Direction(num, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(5, SpeedType.Absolute), new BouncyFires.WaveBullet());
+						base.Fire(new Offset(new Vector2(-2.125f, -1.3125f)), new Direction(num, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6, SpeedType.Absolute), new BouncyFires.WaveBullet());
+						base.Fire(new Offset(new Vector2(2.125f, -1.3125f)), new Direction(num, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6, SpeedType.Absolute), new BouncyFires.WaveBullet());
 					}
 					startAngle = base.RandomAngle();
 					yield return base.Wait(20);
@@ -1785,7 +1837,7 @@ namespace Planetside
 							base.Position = truePosition + new Vector2(0f, Mathf.Sin((float)base.Tick / 60f / 0.75f * 3.14159274f) * 1.5f);
 							yield return base.Wait(1);
 						}
-						if (Ophanaim.EnemyBehavior.Phase2Check == true)
+						if (Ophanaim.EyeEnemyBehavior.Phase2Check == true)
 						{
 							DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(EasyGoopDefinitions.FireDef).TimedAddGoopCircle(base.Projectile.sprite.WorldCenter, Amount, 1f, false);
 						}
@@ -1804,7 +1856,7 @@ namespace Planetside
 			protected override IEnumerator Top()
 			{
 				float Amount = 5;
-				if (Ophanaim.EnemyBehavior.Phase2Check == true)
+				if (Ophanaim.EyeEnemyBehavior.Phase2Check == true)
 				{
 					Amount = 6;
 				}
@@ -1812,7 +1864,7 @@ namespace Planetside
 				{
 					base.PostWwiseEvent("Play_BOSS_doormimic_flame_01", null);
 					base.Fire(new Direction((UnityEngine.Random.Range(-180, 180)), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(UnityEngine.Random.Range(7, 12), SpeedType.Absolute), new FireWalls.Superball());
-					yield return base.Wait(180 / Amount);
+					yield return base.Wait(200 / Amount);
 				}
 				yield break;
 			}
@@ -1866,10 +1918,10 @@ namespace Planetside
 							this.Fire(new Direction(72 * j + Fart, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(8f, SpeedType.Relative), new Break());
 
 						}
-						for (int j = 0; j < 7; j++)
+						for (int j = 0; j < 6; j++)
 						{
 							float RNGDir = UnityEngine.Random.Range(-180, 180);
-							base.Fire(new Direction(RNGDir, Brave.BulletScript.DirectionType.Relative, -1f), new Speed(9f, SpeedType.Absolute), new FireWalls.Fard());
+							base.Fire(new Direction(RNGDir, Brave.BulletScript.DirectionType.Relative, -1f), new Speed(8f, SpeedType.Absolute), new FireWalls.Fard());
 
 						}
 						return;
@@ -1888,7 +1940,7 @@ namespace Planetside
 					protected override IEnumerator Top()
 					{
 						float divider = 20;
-						if (Ophanaim.EnemyBehavior.Phase2Check == true)
+						if (Ophanaim.EyeEnemyBehavior.Phase2Check == true)
 						{
 							divider = 12;
 						}
@@ -1936,16 +1988,20 @@ namespace Planetside
 			protected override IEnumerator Top()
 			{
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("68a238ed6a82467ea85474c595c49c6e").bulletBank.GetBullet("frogger"));
-				for (int e = 0; e <75; e++)
+				for (int e = 0; e <70; e++)
                 {
-					for (int i = 0; i < 5; i++)
+					for (int i = 0; i < 6; i++)
 					{
 						base.Fire(new Offset(new Vector2(-2.125f, -1.3125f)),new Direction((20*e) + (e * 5)+(i), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new SomeBigAttackThatGetsReplacedInPhase2.SnakeBullet(i * 3));
 						base.Fire(new Offset(new Vector2(2.125f, -1.3125f)),new Direction((20*e)-(20*e)*2 +(e*5) - (i), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new SomeBigAttackThatGetsReplacedInPhase2.SnakeBullet(i * 3));
 
 					}
 					base.PostWwiseEvent("Play_BOSS_doormimic_flame_01", null);
-					base.Fire(new Direction(UnityEngine.Random.Range(-180, 180), Brave.BulletScript.DirectionType.Aim, -1f), new Speed(8, SpeedType.Absolute), new Flames1());
+					bool spawn = (UnityEngine.Random.value > 0.5f) ? false : true;
+					if (spawn == true)
+                    {
+						base.Fire(new Direction(UnityEngine.Random.Range(-180, 180), Brave.BulletScript.DirectionType.Aim, -1f), new Speed(7, SpeedType.Absolute), new Flames1());
+					}
 
 					yield return base.Wait(4);
 				}
@@ -2004,16 +2060,16 @@ namespace Planetside
 							base.PostWwiseEvent("Play_BOSS_doormimic_flame_01", null);
 							for (int n = 0; n < 3; n++)
 							{
-								base.Fire(new Direction((120 * n) + (12f * E), Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.5f, SpeedType.Absolute), new THESUN.Break(base.Position, false, (120 * n) + (12f * E), 0.0125f));
-								base.Fire(new Direction((120 * n) - (12f * E) + 60, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.5f, SpeedType.Absolute), new THESUN.Break(base.Position, true, (120 * n) + (12f * E) + 60, -0.025f));
+								base.Fire(new Direction((120 * n) + (12f * E), Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.75f, SpeedType.Absolute), new THESUN.Break(base.Position, false, (120 * n) + (12f * E), 0.0125f));
+								base.Fire(new Direction((120 * n) - (12f * E) + 60, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.75f, SpeedType.Absolute), new THESUN.Break(base.Position, true, (120 * n) + (12f * E) + 60, -0.025f));
 								//base.Fire(new Direction((120 * n) - (6f * E) + 40, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.5f, SpeedType.Absolute), new THESUN.Break(base.Position, true, (120 * n) + (12f * E) + 40, 0.005f));
 							}
 						}
 					}
 					base.PostWwiseEvent("Play_BigSlam", null);
-					base.Fire(new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(7, SpeedType.Absolute), new THESUN.FireThatSpawnsFireGoop());
-					base.Fire(new Direction(120, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(7, SpeedType.Absolute), new THESUN.FireThatSpawnsFireGoop());
-					base.Fire(new Direction(240, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(7, SpeedType.Absolute), new THESUN.FireThatSpawnsFireGoop());
+					base.Fire(new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.5f, SpeedType.Absolute), new THESUN.FireThatSpawnsFireGoop());
+					base.Fire(new Direction(120, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.5f, SpeedType.Absolute), new THESUN.FireThatSpawnsFireGoop());
+					base.Fire(new Direction(240, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.5f, SpeedType.Absolute), new THESUN.FireThatSpawnsFireGoop());
 
 				}
 
@@ -2101,6 +2157,7 @@ namespace Planetside
 
 				protected override IEnumerator Top()
 				{
+					base.Projectile.ForceBlackBullet = true;
 					base.Projectile.ImmuneToSustainedBlanks = true;
 					for (int j = 0; j < 300; j++)
 					{
@@ -2112,130 +2169,182 @@ namespace Planetside
 			}
 		}
 
-		public class SummonSmallSuns : Script
+		public class MithrixSlam : Script
 		{
 			private const int SpinTime = 450;
 			protected override IEnumerator Top()
 			{
+				CellArea area = base.BulletBank.aiActor.ParentRoom.area;
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("68a238ed6a82467ea85474c595c49c6e").bulletBank.GetBullet("frogger"));
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("383175a55879441d90933b5c4e60cf6f").bulletBank.GetBullet("bigBullet"));
-				string BulletType = "frogger";
-				float radius = 0.5f;
-				float Amount = 1;
-				float delta = 45f;
-
-				if (Ophanaim.EnemyBehavior.Phase2Check == true)
+				base.PostWwiseEvent("Play_EyeRoar", null);
+				yield return this.Wait(30f);
+				float Amount = 3;
+				float WaitTime = 60;
+				if (Ophanaim.EyeEnemyBehavior.Phase2Check == true)
 				{
-					Amount = 1;
+					Amount = 4;
+					WaitTime = 40f;
 				}
-				for (int j = 0; j < Amount; j++)
-				{
-					float shhotdir = UnityEngine.Random.Range(-180, 180);
-					float Speed = UnityEngine.Random.Range(9, 13.5f);
-					float startDirection = shhotdir;
-					for (int e = 0; e < 8; e++)
+
+				for (int e = 0; e < Amount; e++)
+                {
+					List<float> log = new List<float>()
 					{
-						BulletType = "frogger";
-						base.PostWwiseEvent("Play_BOSS_lichB_charge_01", null);
-						base.Fire(new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)e * delta, radius - 0.2f, Speed, 40));
-						base.Fire(new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)e * delta, radius - 0.2f, Speed, -40));
+
+
+					};
+					EyeEnemyBehavior vfx = base.BulletBank.GetComponent<EyeEnemyBehavior>();
+					vfx.LaserShit = EnemyDatabase.GetOrLoadByGuid("6868795625bd46f3ae3e4377adce288b").GetComponent<ResourcefulRatController>().ReticleQuad;
+					//vfx.name = "LaserTellEye" + j.ToString();
+					float FUCK = (UnityEngine.Random.Range(-180, 180));
+					//base.PostWwiseEvent("Play_BOSS_RatMech_Barrel_01", null);
+					for (int i = 0; i < 12; i++)
+					{
+						float num2 = 20f;
+						float angle = base.AimDirection + FUCK + (30 * i);
+						Vector2 zero = Vector2.zero;
+						if (BraveMathCollege.LineSegmentRectangleIntersection(this.Position, this.Position + BraveMathCollege.DegreesToVector(angle, 60f), new Vector2(-40, -40), new Vector2(40, 40), ref zero))
+						{
+							num2 = (zero - this.Position).magnitude;
+						}
+						if (vfx == null)
+						{
+							vfx.LaserShit = EnemyDatabase.GetOrLoadByGuid("6868795625bd46f3ae3e4377adce288b").GetComponent<ResourcefulRatController>().ReticleQuad;
+							//ETGModConsole.Log("TRIPPED NULLCHECK");
+						}
+						GameObject gameObject = SpawnManager.SpawnVFX(vfx.LaserShit, false);
+						//ETGModConsole.Log("2");
+						tk2dSlicedSprite component2 = gameObject.GetComponent<tk2dSlicedSprite>();
+						component2.transform.position = new Vector3(this.Position.x, this.Position.y, 99999);// + BraveMathCollege.DegreesToVector(angle, 2f).ToVector3ZUp(0);
+						component2.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
+						component2.dimensions = new Vector2((num2) * 30f, 5f);
+						component2.UpdateZDepth();
+
+						//component2.transform.position.WithZ(component2.transform.position.z + 99999);
+						component2.HeightOffGround = 35;
+
+						component2.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+						component2.sprite.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+						component2.sprite.renderer.material.SetFloat("_EmissivePower", 0);
+						component2.sprite.renderer.material.SetFloat("_EmissiveColorPower", 1.55f);
+
+						Ophanaim.reticles.Add(gameObject);
+						log.Add(angle);
 
 					}
-					BulletType = "bigBullet";
-					//base.Fire(new Direction(shhotdir, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0f, SpeedType.Absolute), new SummonSmallSuns.SunMaker(BulletType, this, startDirection + (float)0 * delta, radius - 0.5f, Speed));
+					bool LeftOrRight = (UnityEngine.Random.value > 0.5f) ? false : true;
+					//yield return this.Wait(15f);
+					float AddOnNum = 0;
+					base.PostWwiseEvent("Play_BOSS_lichB_charge_02", null);
+					for (int i = 0; i < 60; i++)
+					{
+						foreach (GameObject obj in Ophanaim.reticles)
+						{
+							tk2dSlicedSprite component2 = obj.GetComponent<tk2dSlicedSprite>();
+							float ix = component2.transform.localRotation.eulerAngles.x;// + base.BulletBank.aiActor.transform.position.x;
+							float wai = component2.transform.localRotation.eulerAngles.y;// + base.BulletBank.aiActor.transform.position.y;
+							if (base.BulletBank.aiActor != null)
+                            {
+								ix = component2.transform.localRotation.eulerAngles.x + base.BulletBank.aiActor.transform.localRotation.x;
+								wai = component2.transform.localRotation.eulerAngles.y + base.BulletBank.aiActor.transform.localRotation.y;
+							}
+							float zee = component2.transform.localRotation.eulerAngles.z;
+							component2.transform.position.WithZ(component2.transform.position.z + 99999);
+							component2.transform.position = this.Position.ToVector3ZisY(0);
+							component2.HeightOffGround = 35;
+							if (i < 20 || i == 20)
+                            {
+								component2.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+								component2.sprite.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+								component2.sprite.renderer.material.SetFloat("_EmissivePower", 10 * i);
+								component2.sprite.renderer.material.SetFloat("_EmissiveColorPower", 1.55f);
+							}
+							if (i > 20)
+                            {
+								component2.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+								component2.sprite.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+								component2.sprite.renderer.material.SetFloat("_EmissivePower", 200 + (i - 20) * 200);
+								component2.sprite.renderer.material.SetFloat("_EmissiveColorPower", 1.55f + 1 / (i-20));
+							}
+							if (LeftOrRight == true)
+							{
+								component2.transform.localRotation = Quaternion.Euler(ix, wai, zee + ((3f - (i / 20) + 3600)));
+								AddOnNum += (3f - (i / 20));// - (i / 16);
+							}
+							else
+							{
+								component2.transform.localRotation = Quaternion.Euler(ix, wai, zee - ((3f - (i / 20) + 3600)));
+								AddOnNum -= (3f - (i / 20));// - (i / 16);
+							}
+							component2.UpdateZDepth();
+						}
+						yield return this.Wait(1f);
+
+					}
+					yield return this.Wait(15f);
+					this.CleanupReticles();
+					base.PostWwiseEvent("Play_BigSlam", null);
+					base.PostWwiseEvent("Play_BOSS_spacebaby_explode_01", null);
+
+					Exploder.DoDistortionWave(base.BulletBank.aiActor.transform.position, this.distortionIntensity, this.distortionThickness, this.distortionMaxRadius, this.distortionDuration);
+					foreach (float h in log)
+					{
+						base.Fire(new Direction(h + AddOnNum, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(50f, SpeedType.Absolute), new MithrixSlam.Flameert());
+
+					}
+					yield return this.Wait(WaitTime);
 				}
+
 				yield break;
 			}
-			public class SunMaker : Bullet
+
+			public float distortionMaxRadius = 30f;
+			public float distortionDuration = 0.5f;
+			public float distortionIntensity = 0.9f;
+			public float distortionThickness = 0.4f;
+			public void CleanupReticles()
 			{
-				public SunMaker(string BulletType, SummonSmallSuns parent, float angle = 0f, float aradius = 0, float Speed = 10, float speeeen = 40) : base(BulletType, false, false, false)
+				for (int i = 0; i < Ophanaim.reticles.Count; i++)
 				{
-					this.m_parent = parent;
-					this.m_angle = angle;
-					this.m_radius = aradius;
-					this.m_bulletype = BulletType;
-					this.SuppressVfx = true;
-					this.speeeeeed = Speed;
-					this.m_spinSpeed = speeeen;
+					SpawnManager.Despawn(Ophanaim.reticles[i]);
+					Destroy(Ophanaim.reticles[i]);
+				}
+				Ophanaim.reticles.Clear();
+			}
+			public class Flameert : Bullet
+			{
+				public Flameert() : base("frogger", false, false, false)
+				{
+
 				}
 
 				protected override IEnumerator Top()
 				{
-					base.ManualControl = true;
-					Vector2 centerPosition = base.Position;
-					float radius = m_radius;
-					float Burst = 400;
-					int Counter = 0;
-					for (int i = 0; i < 500; i++)
+					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("68a238ed6a82467ea85474c595c49c6e").bulletBank.GetBullet("frogger"));
+					for (int i = 0; i < 200; i++)
 					{
-						Counter++;
-						if (Counter == 40)
-						{
-							radius += 0.1f;
-							base.ChangeSpeed(new Speed(speeeeeed, SpeedType.Absolute), 0);
-							//base.ChangeDirection(new Direction(this.m_parent.GetAimDirection(1f, 10f), Brave.BulletScript.DirectionType.Absolute, -1f), 20);
-							//base.StartTask(this.ChangeSpinSpeedTask(180f, 240));
-						}
-						if (Counter == 42)
-						{
-							base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 180);
-							//base.ChangeDirection(new Direction(this.m_parent.GetAimDirection(1f, 10f), Brave.BulletScript.DirectionType.Absolute, -1f), 20);
-							base.StartTask(this.ChangeSpinSpeedTask(180f, 240));
-						}
-						base.UpdateVelocity();
-						centerPosition += this.Velocity / 60f;
-						if (Counter == Burst)
-						{
-							base.ChangeSpeed(new Speed(11, SpeedType.Absolute), 0);
-							//base.ChangeDirection(new Direction(this.m_parent.GetAimDirection(1f, 10f), Brave.BulletScript.DirectionType.Absolute, -1f), 20);
-							//base.StartTask(this.ChangeSpinSpeedTask(180f, 240));
-						}
-						if (Counter <= Burst)
-                        {
-							radius += 0.1f;
-							Vector2 RNG = new Vector2(UnityEngine.Random.Range(1, 1), UnityEngine.Random.Range(-1, 1));
-							base.Fire(new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(0, SpeedType.Absolute), new Flames1());
-						}
-							this.m_angle += this.m_spinSpeed / 60f;
-						base.Position = centerPosition + BraveMathCollege.DegreesToVector(this.m_angle, radius);
-						yield return base.Wait(1f);
-					}
-					base.Vanish(false);
-					yield break;
-				}
+						base.Fire(new Direction(UnityEngine.Random.Range(140, 200), Brave.BulletScript.DirectionType.Relative, -1f), new Speed(0f, SpeedType.Absolute), new MithrixSlam.Flames1(80 - i));
+						yield return this.Wait(1f);
 
-				private IEnumerator ChangeSpinSpeedTask(float newSpinSpeed, int term)
-				{
-					float delta = (newSpinSpeed - this.m_spinSpeed) / (float)term;
-					for (int i = 0; i < term; i++)
-					{
-						this.m_spinSpeed += delta;
-						yield return base.Wait(1);
 					}
 					yield break;
 				}
-				private const float ExpandSpeed = 4.5f;
-				private const float SpinSpeed = 40f;
-				private SummonSmallSuns m_parent;
-				private float m_angle;
-				private float m_spinSpeed;
-				private float m_radius;
-				private string m_bulletype;
-				private float speeeeeed;
 			}
 			public class Flames1 : Bullet
 			{
-				public Flames1() : base("frogger", false, false, false)
+				public Flames1(float timetilldie) : base("frogger", false, false, false)
 				{
-
+					TimeTillDeath = timetilldie;
 				}
 
 				protected override IEnumerator Top()
 				{
-					yield return base.Wait(30);
+					yield return base.Wait(TimeTillDeath);
 					base.Vanish(false);
 					yield break;
 				}
+				private float TimeTillDeath;
 			}
 		}
 

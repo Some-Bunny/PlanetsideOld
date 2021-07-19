@@ -1183,7 +1183,7 @@ namespace Planetside
 				Fungannon.m_reticles.Clear();
 			}
 		}
-		public static List<GameObject> m_reticles = new List<GameObject>();
+		private static List<GameObject> m_reticles = new List<GameObject>();
 		public class BigEverywhereAttack : Script
 		{
 			protected override IEnumerator Top()

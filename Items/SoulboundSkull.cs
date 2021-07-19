@@ -66,16 +66,17 @@ namespace Planetside
             homing.HomingRadius = 250f;
             homing.AngularVelocity = 120f;
 
-            OtherTools.EasyTrailBullet trail = component2.gameObject.AddComponent<OtherTools.EasyTrailBullet>();
+            /*
+            OtherTools.EasyTrailBullet trail = projectile.gameObject.AddComponent<OtherTools.EasyTrailBullet>();
             trail.TrailPos = component2.transform.position;
             trail.StartColor = Color.white;
             trail.StartWidth = 0.1f;
             trail.EndWidth = 0;
             trail.LifeTime = 1f;
-            trail.BaseColor = new Color(0f, 1f, 3f, 0.7f);
+            trail.BaseColor = new Color(0f, 1f, 3f, 1f);
             trail.EndColor = new Color(0f, 1f, 3f, 0f);
-
-            /*
+            */
+            
             TrailRenderer tr;
             var tro = component2.gameObject.AddChild("trail object");
             tro.transform.position = component2.transform.position;
@@ -93,7 +94,7 @@ namespace Planetside
             tr.endWidth = 0f;
             tr.startColor = Color.white;
             tr.endColor = new Color(0f, 1f, 3f, 0f);
-            */
+            
             component2.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(projectile.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandlePreCollision));
             base.StartCoroutine(this.Speed(component2));
 
