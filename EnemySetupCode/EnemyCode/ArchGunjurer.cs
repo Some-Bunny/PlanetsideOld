@@ -648,10 +648,8 @@ namespace Planetside
 			}
 			protected override IEnumerator Top()
 			{
-				if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
-				{
-					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("reversible"));
-				}
+				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("reversible"));
+
 				base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 60);
 				yield return this.Wait(90);
 				float aim = base.AimDirection;
@@ -664,10 +662,7 @@ namespace Planetside
 			{
 				if (!preventSpawningProjectiles)
 				{
-					if (this.BulletBank && this.BulletBank.aiActor && this.BulletBank.aiActor.TargetRigidbody)
-					{
-						base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("reversible"));
-					}
+					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("reversible"));
 					base.PostWwiseEvent("Play_OBJ_nuke_blast_01", null);
 					float num = base.RandomAngle();
 					float Amount = 8;

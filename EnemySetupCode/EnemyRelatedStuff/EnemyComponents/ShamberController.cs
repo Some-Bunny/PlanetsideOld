@@ -169,9 +169,9 @@ public class BLLLARGH : Script
 {
 	protected override IEnumerator Top()
 	{
-		float FUCKYOUYOUPIECEOFFUCKINGSHITIHOPEYOUROTINAFUCKINGFREEZER = UnityEngine.Random.Range(-180, 180);
+		float fuckYOUYOUPIECEOFfuckINGSHITIHOPEYOUROTINAfuckINGFREEZER = UnityEngine.Random.Range(-180, 180);
 		base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("reversible"));
-		base.Fire(new Direction(FUCKYOUYOUPIECEOFFUCKINGSHITIHOPEYOUROTINAFUCKINGFREEZER), new Speed(UnityEngine.Random.Range(4f, 5.5f), SpeedType.Absolute), new BurstBullet());
+		base.Fire(new Direction(fuckYOUYOUPIECEOFfuckINGSHITIHOPEYOUROTINAfuckINGFREEZER), new Speed(UnityEngine.Random.Range(4f, 5.5f), SpeedType.Absolute), new BurstBullet());
 		yield break;
 	}
 	public class BurstBullet : Bullet

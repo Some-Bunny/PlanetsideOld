@@ -735,15 +735,15 @@ namespace Planetside
 
 namespace Planetside
 {
-    public class FUCK
+    public class fuck
     {
 
-        //GameManager.Instance.StartCoroutine(FUCK.DoDistortionWaveLocal(obj.transform.position, 1.8f, 0.2f, 10f, 0.4f));
+        //GameManager.Instance.StartCoroutine(fuck.DoDistortionWaveLocal(obj.transform.position, 1.8f, 0.2f, 10f, 0.4f));
 
         public static IEnumerator DoReverseDistortionWaveLocal(Vector2 center, float distortionIntensity, float distortionRadius, float maxRadius, float duration)
         {
             Material distMaterial = new Material(ShaderCache.Acquire("Brave/Internal/DistortionWave"));
-            Vector4 distortionSettings = FUCK.GetCenterPointInScreenUV(center, distortionIntensity, distortionRadius);
+            Vector4 distortionSettings = fuck.GetCenterPointInScreenUV(center, distortionIntensity, distortionRadius);
             distMaterial.SetVector("_WaveCenter", distortionSettings);
             Pixelator.Instance.RegisterAdditionalRenderPass(distMaterial);
             float elapsed = 0f;
@@ -752,7 +752,7 @@ namespace Planetside
                 elapsed += BraveTime.DeltaTime;
                 float t = elapsed / duration;
                 t = BraveMathCollege.LinearToSmoothStepInterpolate(0f, 1f, t);
-                distortionSettings = FUCK.GetCenterPointInScreenUV(center, distortionIntensity, distortionRadius);
+                distortionSettings = fuck.GetCenterPointInScreenUV(center, distortionIntensity, distortionRadius);
                 distortionSettings.w = Mathf.Lerp(distortionSettings.w, 0f, t);
                 distMaterial.SetVector("_WaveCenter", distortionSettings);
                 float currentRadius = Mathf.Lerp(maxRadius, 0f, t);

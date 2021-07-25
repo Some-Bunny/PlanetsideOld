@@ -68,7 +68,7 @@ namespace Planetside
 				component.scale = Vector3.one;
 				AkSoundEngine.PostEvent("SND_OBJ_chainpot_drop_01", base.gameObject);
 				arg2.aiActor.gameActor.ApplyEffect(this.LockIn, 1f, null);
-				arg2.aiActor.gameObject.AddComponent<TheFuckOffChainToThePlayer>();
+				arg2.aiActor.gameObject.AddComponent<ThefuckOffChainToThePlayer>();
 			}
 		}
 
@@ -138,7 +138,7 @@ namespace Planetside
 		private Projectile projectile;
 		private PlayerController player;
 	}
-	internal class TheFuckOffChainToThePlayer : MonoBehaviour
+	internal class ThefuckOffChainToThePlayer : MonoBehaviour
     {
 		public void Start()
 		{

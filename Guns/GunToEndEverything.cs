@@ -54,10 +54,10 @@ namespace Planetside
 			EndOfEverything fuck = projectile.GetComponent<EndOfEverything>();
 			gun.encounterTrackable.EncounterGuid = "Haha gun go *ends world*";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
-			GTEE.FuckinGhELL = gun.PickupObjectId;
+			GTEE.fuckinGhELL = gun.PickupObjectId;
 
 		}
-		public static int FuckinGhELL;
+		public static int fuckinGhELL;
 
 		private bool HasReloaded;
 

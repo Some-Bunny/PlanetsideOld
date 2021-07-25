@@ -170,7 +170,7 @@ namespace Planetside
             }
             catch
             {
-                ETGModConsole.Log("Fuck.");
+                ETGModConsole.Log("fuck.");
                 return false;
             }
         }

@@ -29,16 +29,26 @@ namespace Planetside
             {
                 LootEngine.DoDefaultPurplePoof(base.gameObject.transform.position, false);
             }
-            base.StartCoroutine(this.HandleTimedDestroy());
+            //base.StartCoroutine(this.HandleTimedDestroy());
         }
+        public void Update()
+        {
+            this.elapsed += BraveTime.DeltaTime;
+            if (elapsed >= maxDuration)
+            {
+                if (PoofVFX == true)
+                {
+                    LootEngine.DoDefaultPurplePoof(base.gameObject.transform.position, false);
+                }
+                UnityEngine.Object.Destroy(base.gameObject);
+            }
+        }
+        private float elapsed;
+
         private IEnumerator HandleTimedDestroy()
         {
             yield return new WaitForSeconds(this.maxDuration);
-            if (PoofVFX == true)
-            {
-                LootEngine.DoDefaultPurplePoof(base.gameObject.transform.position, false);
-            }
-            UnityEngine.Object.Destroy(base.gameObject);
+           
             yield break;
         }
         public bool PoofVFX;

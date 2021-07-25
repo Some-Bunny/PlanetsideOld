@@ -20,7 +20,7 @@ namespace Planetside
             Game.Items.Rename("outdated_gun_mods:colossus", "psog:colossus");
             var behav = gun.gameObject.AddComponent<Colossus>();
             //behav.overrideNormalFireAudio = "Play_ENM_shelleton_beam_01";
-            //behav.preventNormalFireAudio = true;
+            
             gun.SetShortDescription("Titanic");
             gun.SetLongDescription("A collection of rocks powered by the blood of a now-dead demi-god, who used their own blood to create the Titans found on a planet far, far away.");
 
@@ -171,6 +171,7 @@ namespace Planetside
             gun.barrelOffset.transform.localPosition = new Vector3(1.625f, 0.5625f, 0f);
             gun.SetBaseMaxAmmo(90);
             gun.ammo = 90;
+            gun.PreventNormalFireAudio = true;
 
             gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).wrapMode = tk2dSpriteAnimationClip.WrapMode.LoopSection;
             gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).loopStart = 1;

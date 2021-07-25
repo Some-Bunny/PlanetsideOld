@@ -325,7 +325,7 @@ namespace Planetside
 				}
 			}
 		}
-		private void FUCKYOU(Projectile proj)
+		private void fuckYOU(Projectile proj)
         {
 
 			List<string> log = new List<string>()

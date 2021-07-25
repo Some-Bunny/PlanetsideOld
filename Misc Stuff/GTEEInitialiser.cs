@@ -100,7 +100,7 @@ namespace Planetside
 			EndOfEverything aaaa = (PickupObjectDatabase.GetById(StoredGunID) as Gun).gameObject.GetOrAddComponent<EndOfEverything>();
 
 			advancedTransformGunSynergyProcessor.NonSynergyGunId = StoredGunID;
-			advancedTransformGunSynergyProcessor.SynergyGunId = GTEE.FuckinGhELL;
+			advancedTransformGunSynergyProcessor.SynergyGunId = GTEE.fuckinGhELL;
 			advancedTransformGunSynergyProcessor.SynergyToCheck = "End Of Everything";
 			ETGModConsole.Commands.AddUnit("gteecomponents", (args) =>
 			{

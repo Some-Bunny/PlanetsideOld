@@ -2060,8 +2060,8 @@ namespace Planetside
 							base.PostWwiseEvent("Play_BOSS_doormimic_flame_01", null);
 							for (int n = 0; n < 3; n++)
 							{
-								base.Fire(new Direction((120 * n) + (12f * E), Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.75f, SpeedType.Absolute), new THESUN.Break(base.Position, false, (120 * n) + (12f * E), 0.0125f));
-								base.Fire(new Direction((120 * n) - (12f * E) + 60, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.75f, SpeedType.Absolute), new THESUN.Break(base.Position, true, (120 * n) + (12f * E) + 60, -0.025f));
+								base.Fire(new Direction((120 * n) + (12f * E), Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6f, SpeedType.Absolute), new THESUN.Break(base.Position, false, (120 * n) + (12f * E), 0.0125f));
+								base.Fire(new Direction((120 * n) - (12f * E) + 60, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6f, SpeedType.Absolute), new THESUN.Break(base.Position, true, (120 * n) + (12f * E) + 60, -0.025f));
 								//base.Fire(new Direction((120 * n) - (6f * E) + 40, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(6.5f, SpeedType.Absolute), new THESUN.Break(base.Position, true, (120 * n) + (12f * E) + 40, 0.005f));
 							}
 						}
@@ -2157,7 +2157,6 @@ namespace Planetside
 
 				protected override IEnumerator Top()
 				{
-					base.Projectile.ForceBlackBullet = true;
 					base.Projectile.ImmuneToSustainedBlanks = true;
 					for (int j = 0; j < 300; j++)
 					{
@@ -2197,12 +2196,12 @@ namespace Planetside
 					EyeEnemyBehavior vfx = base.BulletBank.GetComponent<EyeEnemyBehavior>();
 					vfx.LaserShit = EnemyDatabase.GetOrLoadByGuid("6868795625bd46f3ae3e4377adce288b").GetComponent<ResourcefulRatController>().ReticleQuad;
 					//vfx.name = "LaserTellEye" + j.ToString();
-					float FUCK = (UnityEngine.Random.Range(-180, 180));
+					float fuck = (UnityEngine.Random.Range(-180, 180));
 					//base.PostWwiseEvent("Play_BOSS_RatMech_Barrel_01", null);
 					for (int i = 0; i < 12; i++)
 					{
 						float num2 = 20f;
-						float angle = base.AimDirection + FUCK + (30 * i);
+						float angle = base.AimDirection + fuck + (30 * i);
 						Vector2 zero = Vector2.zero;
 						if (BraveMathCollege.LineSegmentRectangleIntersection(this.Position, this.Position + BraveMathCollege.DegreesToVector(angle, 60f), new Vector2(-40, -40), new Vector2(40, 40), ref zero))
 						{

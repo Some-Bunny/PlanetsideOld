@@ -74,7 +74,7 @@ namespace Planetside
 			yield return new WaitForSeconds(2f);
 			for (int i = 0; i < Pulses; i++)
 			{
-				GameManager.Instance.StartCoroutine(FUCK.DoReverseDistortionWaveLocal(position.transform.position, 5+(i*0.5f), 0.5f-(i/3), 5f+(i*2), 0.4f+(i/2)));
+				GameManager.Instance.StartCoroutine(fuck.DoReverseDistortionWaveLocal(position.transform.position, 5+(i*0.5f), 0.5f-(i/3), 3f+(i*.5f), 0.4f+(i/10)));
 				AkSoundEngine.PostEvent("Play_BOSS_omegaBeam_charge_01", position.gameObject);
 				List<AIActor> activeEnemies = player.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 				bool flag = activeEnemies != null;
