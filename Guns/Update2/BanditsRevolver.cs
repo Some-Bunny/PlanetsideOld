@@ -179,7 +179,12 @@ namespace Planetside
 					{
 						foreach (AIActor aiactor in activeEnemies)
 						{
-							aiactor.gameObject.GetOrAddComponent<MarkWithColorComponent>();
+							if (aiactor.gameObject.GetComponent<MarkWithColorComponent>() == null)
+                            {
+								MarkWithColorComponent mark = aiactor.gameObject.AddComponent<MarkWithColorComponent>();
+								mark.ai = aiactor;
+								mark.playa = player;
+							}
 						}
 					}
 				}

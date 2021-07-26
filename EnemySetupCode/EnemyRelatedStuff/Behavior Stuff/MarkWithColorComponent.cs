@@ -28,22 +28,51 @@ namespace Planetside
 		}
 		public void Update()
 		{
-			PlayerController player = (GameManager.Instance.PrimaryPlayer);
-			float Scale = Mark * player.stats.GetStatValue(PlayerStats.StatType.Damage);
+			if (ai != null)
+            {
+				Material outlineMaterial1 = SpriteOutlineManager.GetOutlineMaterial(ai.sprite);
+				if (!ai.healthHaver.IsDead && outlineMaterial1 != null)
+                {
+					float Scale = Mark;
+					if (playa != null)
+					{
+						Scale = Mark * playa.stats.GetStatValue(PlayerStats.StatType.Damage);
+					}
+					if (playa == null)
+					{
+						Scale = Mark;
+					}
 
-			if (base.healthHaver.GetCurrentHealth() <= Scale)
-			{
-				Material outlineMaterial1 = SpriteOutlineManager.GetOutlineMaterial(base.aiActor.sprite);
-				outlineMaterial1.SetColor("_OverrideColor", new Color(10f, 10f, 42f));
+					if (ai.healthHaver != null && ai.aiActor != null)
+					{
+						if (ai.healthHaver.GetCurrentHealth() <= Scale)
+						{
+							outlineMaterial1.SetColor("_OverrideColor", new Color(10f, 10f, 42f));
+						}
+					}
+				}
+				else
+				{
+				}
 			}
+			else
+            {
+			}
+
 		}
 		protected override void OnDestroy()
 		{
-			Material outlineMaterial1 = SpriteOutlineManager.GetOutlineMaterial(base.aiActor.sprite);
-			outlineMaterial1.SetColor("_OverrideColor", new Color(0f, 0f, 0f));
+			Material outlineMaterial1 = SpriteOutlineManager.GetOutlineMaterial(ai.sprite);
+			if (ai.aiActor != null && !ai.healthHaver.IsDead && outlineMaterial1 != null)
+            {
+				outlineMaterial1.SetColor("_OverrideColor", new Color(0f, 0f, 0f));
+				//base.OnDestroy();
+			}
 			base.OnDestroy();
 		}
 		public float minimumHealth;
 		public float Mark = 15.001f;
+		public AIActor ai;
+		public PlayerController playa;
 	}
 }
