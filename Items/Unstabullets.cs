@@ -33,6 +33,10 @@ namespace Planetside
 			ItemBuilder.SetupItem(item, shortDesc, longDesc, "psog");
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.Damage, 1.20f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			item.quality = PickupObject.ItemQuality.B;
+			item.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
+			item.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+
+
 		}
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{

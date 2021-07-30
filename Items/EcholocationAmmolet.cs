@@ -32,6 +32,8 @@ namespace Planetside
             item.quality = PickupObject.ItemQuality.A;
             EcholocationAmmolet.EchoAmmoletID = item.PickupObjectId;
 
+            item.AddToSubShop(ItemBuilder.ShopType.OldRed, 1f);
+
         }
         public override void Pickup(PlayerController player)
         {

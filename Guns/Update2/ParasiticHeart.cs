@@ -64,6 +64,7 @@ namespace Planetside
             ParasiticHeart.HeartID = gun.PickupObjectId;
             gun.SetupUnlockOnCustomFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER, true);
 
+            gun.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
         }
         public static int HeartID;

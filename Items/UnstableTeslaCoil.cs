@@ -37,6 +37,7 @@ namespace Planetside
                 "platinum_bullets"
             };
             CustomSynergies.Add("Heavy Metals", mandatoryConsoleIDs, optionalConsoleIDs, true);
+
         }
 
 		public override void Pickup(PlayerController player)

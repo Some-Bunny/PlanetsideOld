@@ -34,6 +34,8 @@ namespace Planetside
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.Damage, 1.5f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.RangeMultiplier, 5f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			item.quality = PickupObject.ItemQuality.D;
+			item.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+
 		}
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{

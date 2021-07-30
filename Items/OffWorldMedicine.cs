@@ -32,6 +32,11 @@ namespace Planetside
             lockpicker.SetCooldownType(ItemBuilder.CooldownType.Timed, 5f);
             lockpicker.consumable = true;
             lockpicker.quality = PickupObject.ItemQuality.A;
+
+            lockpicker.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+            lockpicker.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
+
+
         }
         public override void Pickup(PlayerController player)
         {

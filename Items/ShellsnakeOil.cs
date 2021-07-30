@@ -47,6 +47,8 @@ namespace Planetside
                 "weird_egg"
             };
             CustomSynergies.Add("Gun Snek Good Maybe?", mandatoryConsoleIDs, optionalConsoleIDs, true);
+            item.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+
         }
         private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
         {

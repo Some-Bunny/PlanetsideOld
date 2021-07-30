@@ -37,8 +37,10 @@ namespace Planetside
                 "siren"
             };
             CustomSynergies.Add("Ultra", mandatoryConsoleIDs, null, true);
+            item.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
+
         }
-        
+
         private void Warrant()
         {
             GameManager.Instance.StartCoroutine(this.GunWarrantTime(base.Owner));

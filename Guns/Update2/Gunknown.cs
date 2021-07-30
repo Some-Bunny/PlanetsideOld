@@ -125,6 +125,9 @@ namespace Planetside
 			FakePrefab.MarkAsFakePrefab(gameObject2);
 			UnityEngine.Object.DontDestroyOnLoad(gameObject2);
 			UnknownGun.Soulprefab = gameObject2;
+
+			gun.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
+
 		}
 		public static int GunknownID;
 		public static GameObject GunknownGuon;

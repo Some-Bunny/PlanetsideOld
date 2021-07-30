@@ -45,6 +45,7 @@ namespace Planetside
             testActive.SetCooldownType(ItemBuilder.CooldownType.Damage, 666f);
             testActive.consumable = false;
             testActive.quality = PickupObject.ItemQuality.B;
+            testActive.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
         }
         public static void BuildPrefab()

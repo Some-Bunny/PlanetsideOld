@@ -10,10 +10,76 @@ namespace Planetside
 {
     static class BeamToolbox
     {
-        public static BasicBeamController GenerateBeamPrefab(this Projectile projectile, string spritePath, Vector2 colliderDimensions, Vector2 colliderOffsets, List<string> beamAnimationPaths = null, int beamFPS = -1, List<string> impactVFXAnimationPaths = null, int beamImpactFPS = -1, Vector2? impactVFXColliderDimensions = null, Vector2? impactVFXColliderOffsets = null, List<string> endVFXAnimationPaths = null, int beamEndFPS = -1, Vector2? endVFXColliderDimensions = null, Vector2? endVFXColliderOffsets = null, List<string> muzzleVFXAnimationPaths = null, int beamMuzzleFPS = -1, Vector2? muzzleVFXColliderDimensions = null, Vector2? muzzleVFXColliderOffsets = null)
+        public static int GetBoneCount (this BasicBeamController beam)
+        {
+            if (!beam.UsesBones)
+            {
+                return 1;
+            }
+            else
+            {
+                LinkedList<BasicBeamController.BeamBone> bones;
+                bones = ReflectionHelper.ReflectGetField<LinkedList<BasicBeamController.BeamBone>>(typeof(BasicBeamController), "m_bones", beam);
+                return bones.Count();
+            }
+        }
+        public static float GetFinalBoneDirection(this BasicBeamController beam)
+        {
+            if (!beam.UsesBones)
+            {
+                return beam.Direction.ToAngle();
+            }
+            else
+            {
+                LinkedList<BasicBeamController.BeamBone> bones;
+                bones = ReflectionHelper.ReflectGetField<LinkedList<BasicBeamController.BeamBone>>(typeof(BasicBeamController), "m_bones", beam);
+                LinkedListNode<BasicBeamController.BeamBone> linkedListNode = bones.Last;
+                return linkedListNode.Value.RotationAngle;
+            }
+        }
+
+        public static BasicBeamController.BeamBone GetIndexedBone(this BasicBeamController beam, int boneIndex)
+        {
+            LinkedList<BasicBeamController.BeamBone> bones;
+            bones = ReflectionHelper.ReflectGetField<LinkedList<BasicBeamController.BeamBone>>(typeof(BasicBeamController), "m_bones", beam);
+            if (bones == null) return null;
+            if (bones.ElementAt(boneIndex) == null) { Debug.LogError("Attempted to fetch a beam bone at an invalid index"); return null; }
+            return bones.ElementAt(boneIndex);
+        }
+        public static Vector2 GetIndexedBonePosition(this BasicBeamController beam, int boneIndex)
+        {
+            LinkedList<BasicBeamController.BeamBone> bones;
+            bones = ReflectionHelper.ReflectGetField<LinkedList<BasicBeamController.BeamBone>>(typeof(BasicBeamController), "m_bones", beam);
+
+            if (bones.ElementAt(boneIndex) == null) { Debug.LogError("Attempted to fetch the position of a beam bone at an invalid index"); return Vector2.zero; }
+            if (!beam.UsesBones)
+            {
+                return beam.Origin + BraveMathCollege.DegreesToVector(beam.Direction.ToAngle(), bones.ElementAt(boneIndex).PosX);
+            }
+            if (beam.ProjectileAndBeamMotionModule != null)
+            {
+                return bones.ElementAt(boneIndex).Position + beam.ProjectileAndBeamMotionModule.GetBoneOffset(bones.ElementAt(boneIndex), beam, beam.projectile.Inverted);
+            }
+            return bones.ElementAt(boneIndex).Position;
+        }
+        public static Vector2 GetBonePosition(this BasicBeamController beam, BasicBeamController.BeamBone bone)
+        {
+            if (!beam.UsesBones)
+            {
+                return beam.Origin + BraveMathCollege.DegreesToVector(beam.Direction.ToAngle(), bone.PosX);
+            }
+            if (beam.ProjectileAndBeamMotionModule != null)
+            {
+                return bone.Position + beam.ProjectileAndBeamMotionModule.GetBoneOffset(bone, beam, beam.projectile.Inverted);
+            }
+            return bone.Position;
+        }
+
+        public static BasicBeamController GenerateBeamPrefab(this Projectile projectile, string spritePath, Vector2 colliderDimensions, Vector2 colliderOffsets, List<string> beamAnimationPaths = null, int beamFPS = -1, List<string> impactVFXAnimationPaths = null, int beamImpactFPS = -1, Vector2? impactVFXColliderDimensions = null, Vector2? impactVFXColliderOffsets = null, List<string> endVFXAnimationPaths = null, int beamEndFPS = -1, Vector2? endVFXColliderDimensions = null, Vector2? endVFXColliderOffsets = null, List<string> muzzleVFXAnimationPaths = null, int beamMuzzleFPS = -1, Vector2? muzzleVFXColliderDimensions = null, Vector2? muzzleVFXColliderOffsets = null, bool glows = false)
         {
             try
             {
+                projectile.specRigidbody.CollideWithOthers = false;
                 float convertedColliderX = colliderDimensions.x / 16f;
                 float convertedColliderY = colliderDimensions.y / 16f;
                 float convertedOffsetX = colliderOffsets.x / 16f;
@@ -55,14 +121,13 @@ namespace Planetside
                         tk2dSpriteDefinition frameDef = collection.spriteDefinitions[frameSpriteId];
                         frameDef.ConstructOffsetsFromAnchor(tk2dBaseSprite.Anchor.MiddleLeft);
                         frameDef.colliderVertices = def.colliderVertices;
-                        
                         frames.Add(new tk2dSpriteAnimationFrame { spriteId = frameSpriteId, spriteCollection = collection });
                     }
                     clip.frames = frames.ToArray();
                     animation.clips = animation.clips.Concat(new tk2dSpriteAnimationClip[] { clip }).ToArray();
                     beamController.beamAnimation = "beam_idle";
                 }
-                
+
                 //------------- Sets up the animation for the part of the beam that touches the wall
                 if (endVFXAnimationPaths != null && endVFXColliderDimensions != null && endVFXColliderOffsets != null)
                 {
@@ -82,7 +147,6 @@ namespace Planetside
                     beamController.impactAnimation = "beam_impact";
                 }
 
-
                 //--------------Sets up the animation for the very start of the beam
                 if (muzzleVFXAnimationPaths != null && muzzleVFXColliderDimensions != null && muzzleVFXColliderOffsets != null)
                 {
@@ -94,7 +158,13 @@ namespace Planetside
                     SetupBeamPart(animation, beamAnimationPaths, "beam_start", beamFPS, null, null, def.colliderVertices);
                     beamController.beamStartAnimation = "beam_start";
                 }
-                
+
+                if (glows)
+                {
+                    EmmisiveBeams emission = projectile.gameObject.GetOrAddComponent<EmmisiveBeams>();
+                    //emission
+
+                }
                 return beamController;
             }
             catch (Exception e)
@@ -139,14 +209,20 @@ namespace Planetside
             }
             clip.frames = frames.ToArray();
             beamAnimation.clips = beamAnimation.clips.Concat(new tk2dSpriteAnimationClip[] { clip }).ToArray();
-
         }
         public static BeamController FreeFireBeamFromAnywhere(Projectile projectileToSpawn, PlayerController owner, GameObject otherShooter, Vector2 fixedPosition, bool usesFixedPosition, float targetAngle, float duration, bool skipChargeTime = false)
         {
-            Vector2 sourcePos;
+            Vector2 sourcePos = Vector2.zero;
+            SpeculativeRigidbody rigidBod = null;
             if (usesFixedPosition) sourcePos = fixedPosition;
-            else sourcePos = otherShooter.GetComponent<SpeculativeRigidbody>().UnitCenter;
-            if (sourcePos != null)
+            else
+            {
+                if (otherShooter.GetComponent<SpeculativeRigidbody>()) rigidBod = otherShooter.GetComponent<SpeculativeRigidbody>();
+                else if (otherShooter.GetComponentInChildren<SpeculativeRigidbody>()) rigidBod = otherShooter.GetComponentInChildren<SpeculativeRigidbody>();
+
+                if (rigidBod) sourcePos = rigidBod.UnitCenter;
+            }
+            if (sourcePos != Vector2.zero)
             {
 
                 GameObject gameObject = SpawnManager.SpawnProjectile(projectileToSpawn.gameObject, sourcePos, Quaternion.identity, true);
@@ -164,7 +240,7 @@ namespace Planetside
                 Vector3 vector = BraveMathCollege.DegreesToVector(targetAngle, 1f);
                 component2.Direction = vector;
                 component2.Origin = sourcePos;
-                GameManager.Instance.Dungeon.StartCoroutine(BeamToolbox.HandleFreeFiringBeam(component2, otherShooter, fixedPosition, usesFixedPosition, targetAngle, duration));
+                GameManager.Instance.Dungeon.StartCoroutine(BeamToolbox.HandleFreeFiringBeam(component2, rigidBod, fixedPosition, usesFixedPosition, targetAngle, duration));
                 return component2;
             }
             else
@@ -173,22 +249,24 @@ namespace Planetside
                 return null;
             }
         }
-        private static IEnumerator HandleFreeFiringBeam(BeamController beam, GameObject otherShooter, Vector2 fixedPosition, bool usesFixedPosition, float targetAngle, float duration)
+        private static IEnumerator HandleFreeFiringBeam(BeamController beam, SpeculativeRigidbody otherShooter, Vector2 fixedPosition, bool usesFixedPosition, float targetAngle, float duration)
         {
             float elapsed = 0f;
             yield return null;
             while (elapsed < duration)
             {
                 Vector2 sourcePos;
-                if (otherShooter == null || otherShooter.GetComponent<SpeculativeRigidbody>() == null) { break; }
+                if (otherShooter == null) { break; }
                 if (usesFixedPosition) sourcePos = fixedPosition;
-                else sourcePos = otherShooter.GetComponent<SpeculativeRigidbody>().UnitCenter;
+                else sourcePos = otherShooter.UnitCenter;
 
                 elapsed += BraveTime.DeltaTime;
                 if (sourcePos != null)
                 {
+
                     beam.Origin = sourcePos;
                     beam.LateUpdatePosition(sourcePos);
+
 
                 }
                 else { ETGModConsole.Log("SOURCEPOS WAS NULL IN BEAM FIRING HANDLER"); }

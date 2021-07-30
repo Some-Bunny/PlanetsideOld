@@ -48,9 +48,9 @@ namespace Planetside
                 };
                 ImprovedAfterImage yes = component.gameObject.AddComponent<ImprovedAfterImage>();
                 yes.spawnShadows = true;
-                yes.shadowLifetime = (UnityEngine.Random.Range(0.15f, 0.7f));
+                yes.shadowLifetime = (UnityEngine.Random.Range(0.15f, 0.5f));
                 yes.shadowTimeDelay = 0.001f;
-                yes.dashColor = new Color(10,0,0 , 0.4f);
+                yes.dashColor = new Color(1,0,0 , 0.3f);
                 yes.name = "Gun Trail";
             }
         }

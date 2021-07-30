@@ -35,6 +35,7 @@ namespace Planetside
 		private static string vfxName = "LockInVFX";
 		public void Start()
 		{
+
 			this.projectile = base.GetComponent<Projectile>();
 			this.player = (this.projectile.Owner as PlayerController);
 
@@ -45,6 +46,7 @@ namespace Planetside
 			bool flag2 = flag;
 			if (flag2)
 			{
+				AkSoundEngine.PostEvent("Play_WPN_woodbow_shot_02", base.gameObject);
 				Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
 				mat.mainTexture = component.sprite.renderer.material.mainTexture;
 				mat.SetColor("_EmissiveColor", new Color32(208, 255, 223, 255));
@@ -63,10 +65,10 @@ namespace Planetside
 				GameObject original;
 				original = ExecutionersCrossbowSpecial.LockInVFXPrefab;
 				tk2dSprite component = UnityEngine.Object.Instantiate<GameObject>(original, arg2.transform).GetComponent<tk2dSprite>();
-				component.name = FrailtyHealthEffect.vfxNamefrailty;
+				component.name = ExecutionersCrossbowSpecial.vfxName;
 				component.PlaceAtPositionByAnchor(arg2.sprite.WorldTopCenter, tk2dBaseSprite.Anchor.LowerCenter);
 				component.scale = Vector3.one;
-				AkSoundEngine.PostEvent("SND_OBJ_chainpot_drop_01", base.gameObject);
+				AkSoundEngine.PostEvent("Play_SND_OBJ_chainpot_drop_01", arg2.gameObject);
 				arg2.aiActor.gameActor.ApplyEffect(this.LockIn, 1f, null);
 				arg2.aiActor.gameObject.AddComponent<ThefuckOffChainToThePlayer>();
 			}
@@ -132,7 +134,7 @@ namespace Planetside
 			SpeedMultiplier = 0.01f,
 			KeepHealthPercentage = true,
 			AppliesTint = true,
-			TintColor = Color.gray,
+			TintColor = new Color(0.8f, 1, 0.9f),
 			duration = 600f
 		};
 		private Projectile projectile;

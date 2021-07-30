@@ -56,6 +56,8 @@ namespace Planetside
                 "gungeon_blueprint"
             };
             CustomSynergies.Add("Sentry Goin' Up!", mandatoryConsoleIDs, optionalConsoleID1s, true);
+            testActive.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
+
         }
         public override void Pickup(PlayerController player)
         {

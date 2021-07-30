@@ -44,6 +44,11 @@ namespace Planetside
 			gun.SetBaseMaxAmmo(500);
 			gun.quality = PickupObject.ItemQuality.B;
 			gun.DefaultModule.angleVariance = 30f;
+
+			Gun gun4 = PickupObjectDatabase.GetById(125) as Gun;
+			GameUIAmmoType.AmmoType GunAmmo = gun4.DefaultModule.ammoType;
+			gun.DefaultModule.ammoType = GunAmmo;
+
 			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
 			projectile.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
@@ -79,7 +84,7 @@ namespace Planetside
 			trail.EndWidth = 0;
 			//The Ending Width of your Trail. Not sure why youd want it to be something other than 0, but the options there.
 
-			trail.LifeTime = 0.3f;
+			trail.LifeTime = 0.4f;
 			//How much time your trail lives for
 
 			trail.BaseColor = new Color(3f, 2f, 0f, 0.7f);
@@ -88,7 +93,7 @@ namespace Planetside
 			trail.StartColor = Color.white;
 			//The Starting Color of your trail. Ive not really found much use of this if you have a Base Color set, but maybe it has a use 
 
-			trail.EndColor = new Color(3f, 2f, 0f, 0f);
+			trail.EndColor = new Color(3f, 0.75f, 0f, 0f);
 			//The End color of your trail. Having it different to the StartColor/BaseColor will make it transition from the Starting/Base Color to its End Color during its lifetime.
 
 			gun.encounterTrackable.EncounterGuid = "The Jar";
@@ -96,6 +101,8 @@ namespace Planetside
 			gun.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 			gun.PreventNormalFireAudio = true;
 			gun.SetupUnlockOnCustomFlag(CustomDungeonFlags.BULLETBANK_DEFEATED, true);
+			gun.barrelOffset.transform.localPosition -= new Vector3(0.25f, 0, 0f);
+
 
 		}
 

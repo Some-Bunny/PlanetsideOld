@@ -33,6 +33,8 @@ namespace Planetside
             EnergyShield.BuildPrefab();
             item.OrbitalPrefab = EnergyShield.orbitalPrefab;
             item.Identifier = IounStoneOrbitalItem.IounStoneIdentifier.GENERIC;
+            item.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
+
         }
 
         public static void BuildPrefab()

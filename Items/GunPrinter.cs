@@ -27,7 +27,7 @@ namespace Planetside
             GunPrinter lockpicker = obj.AddComponent<GunPrinter>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
             string shortDesc = "Infinite Ammo?";
-            string longDesc = "A small machine that prints out and fires a bullet from the currently held gun, free of charge!\n\nA failed attempt at the creation of limitless ammunition, the energy required to power one of these exceeds just manufacturing more bullets.";
+            string longDesc = "A small machine that prints out and fires a shot from the currently held gun, free of charge!\n\nA failed attempt at the creation of limitless ammunition, the energy required to power one of these exceeds just manufacturing more bullets.";
             lockpicker.SetupItem(shortDesc, longDesc, "psog");
             lockpicker.SetCooldownType(ItemBuilder.CooldownType.Damage, 300f);
             lockpicker.consumable = false;

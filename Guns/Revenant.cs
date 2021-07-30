@@ -47,13 +47,15 @@ namespace Planetside
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile);
 			gun.DefaultModule.projectiles[0] = projectile;
-			projectile.baseData.damage = 30f;
+			projectile.baseData.damage = 35f;
 			projectile.baseData.speed *= 3f;
 			projectile.AdditionalScaleMultiplier *= 0.75f;
 			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
 			projectile.PenetratesInternalWalls = true;
 			projectile.gameObject.AddComponent<RevenantProjectile>();
+			projectile.gameObject.AddComponent<MaintainDamageOnPierce>();
+
 			PierceProjModifier spook = projectile.gameObject.AddComponent<PierceProjModifier>();
 			spook.penetration = 3;
 			spook.penetratesBreakables = true;

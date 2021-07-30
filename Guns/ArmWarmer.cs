@@ -67,6 +67,9 @@ namespace Planetside
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.barrelOffset.transform.localPosition = new Vector3(1f, 0.5f, 0f);
 			gun.SetupUnlockOnCustomFlag(CustomDungeonFlags.BEAT_LOOP_1, true);
+
+			gun.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+
 		}
 
 

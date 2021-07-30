@@ -42,6 +42,9 @@ namespace Planetside
 				material.shader = Shader.Find("Brave/PlayerShaderEevee");
 
 				material.SetTexture("_EeveeTex", texture);
+				material.SetFloat("_StencilVal", 10000);
+				material.SetFloat("_FlatColor", 100000f);
+				material.SetFloat("_Perpendicular", 0);
 
 				material.DisableKeyword("BRIGHTNESS_CLAMP_ON");
 				material.EnableKeyword("BRIGHTNESS_CLAMP_OFF");
@@ -116,12 +119,8 @@ namespace Planetside
 				{
 					aiactor.healthHaver.ApplyDamage(DamageScalar, Vector2.zero, "fuck you", CoreDamageTypes.Electric, DamageCategory.Normal, false, null, false);
 				}
-				position.DieInAir();
 			}
-			else
-            {
-				position.DieInAir();
-			}
+			position.ForceDestruction();
 			yield break;
 		}
 		public float distortionMaxRadius = 30f;

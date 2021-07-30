@@ -56,6 +56,7 @@ namespace Planetside
             FakePrefab.MarkAsFakePrefab(gameObject2);
             UnityEngine.Object.DontDestroyOnLoad(gameObject2);
             KineticStrike.StrikePrefab = gameObject2;
+            lockpicker.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
 
         }
         public static GameObject StrikePrefab;

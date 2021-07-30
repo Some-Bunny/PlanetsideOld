@@ -39,7 +39,36 @@ namespace Planetside
                     sproot.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
                 }
             }
-            
+            Transform trna1 = base.transform.Find("beam impact vfx 2");
+            if (trna1 != null)
+            {
+                tk2dSprite sproot1 = trna.GetComponent<tk2dSprite>();
+                if (sproot1 != null)
+                {
+                    sproot1.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+                    sproot1.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+                    sproot1.renderer.material.SetFloat("_EmissivePower", EmissivePower);
+                    sproot1.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
+                }
+            }
+
+            for (int i = 0; i < base.transform.childCount; i++)
+            {
+                Transform child = base.transform.Find("Sprite");
+                if (child != null)
+                {
+                    tk2dSprite sproot2 = child.GetComponent<tk2dSprite>();
+                    if (sproot2 != null)
+                    {
+                        sproot2.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+                        sproot2.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+                        sproot2.renderer.material.SetFloat("_EmissivePower", EmissivePower);
+                        sproot2.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
+                    }
+                }
+            }
+
+
             this.beamcont = base.GetComponent<BasicBeamController>();
             BasicBeamController beam = this.beamcont;
             beam.sprite.usesOverrideMaterial = true;
@@ -52,9 +81,10 @@ namespace Planetside
                 component.sprite.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
                 component.sprite.renderer.material.SetFloat("_EmissivePower", EmissivePower);
                 component.sprite.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
-                
             }   
         }
+
+
         private BasicBeamController beamcont;
         public float EmissivePower;
         public float EmissiveColorPower;

@@ -23,7 +23,7 @@ namespace Planetside
 			Game.Items.Rename("outdated_gun_mods:mop", "psog:mop");
 			gun.gameObject.AddComponent<Mop>();
 			gun.SetShortDescription("Honest Work");
-			gun.SetLongDescription("A mop thats been left inside of a chest. Surely the chemicals used to clean the floors of the Gungeon are harmful to the denizens of the Gungeon?");
+			gun.SetLongDescription("A mop thats been left inside of a chest. Surely the goops found around the Gungeon could be mopped up to some benefit?");
 			gun.SetupSprite(null, "mopgun_idle_001", 11);
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 15);
 			GunExt.SetAnimationFPS(gun, gun.reloadAnimation, 7);
@@ -120,6 +120,9 @@ namespace Planetside
 			gun.encounterTrackable.EncounterGuid = "mop";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			Mop.MopID = gun.PickupObjectId;
+
+			gun.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+
 
 		}
 		public static int MopID;

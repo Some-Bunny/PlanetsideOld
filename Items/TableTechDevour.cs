@@ -47,6 +47,8 @@ namespace Planetside
             };
             CustomSynergies.Add("KILL KILL KILL", mandatoryConsoleIDs, optionalConsoleIDs, true);
             TableTechDevour.DevourID = minigunrounds.PickupObjectId;
+            minigunrounds.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+
         }
         public static int DevourID;
         public override void Pickup(PlayerController player)

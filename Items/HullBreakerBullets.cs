@@ -44,6 +44,8 @@ namespace Planetside
 				"h4mmer"
 			};
 			CustomSynergies.Add("Shattering Justice", mandatoryConsoleIDs, optionalConsoleIDs, true);
+			item.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
+
 		}
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{

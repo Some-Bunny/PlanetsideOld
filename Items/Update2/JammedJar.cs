@@ -39,6 +39,8 @@ namespace Planetside
             JammedJar.spriteIDs[1] = SpriteBuilder.AddSpriteToCollection(JammedJar.spritePaths[2], lockpicker.sprite.Collection);
             JammedJar.spriteIDs[0] = SpriteBuilder.AddSpriteToCollection(JammedJar.spritePaths[3], lockpicker.sprite.Collection);
             Uses = 3;
+            lockpicker.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
+
         }
         public override void Pickup(PlayerController player)
         {

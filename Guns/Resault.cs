@@ -121,8 +121,11 @@ namespace Planetside
 				"utility_belt"
 			};
 			CustomSynergies.Add("Recycling", aaa, aw, true);
+
+			ResaultSelf = gun;
 		}
 		public static int ResaultID;
+		public static Gun ResaultSelf; 
 
 		private bool HasReloaded;
 		Hook ammoPickupHook = new Hook(typeof(AmmoPickup).GetMethod("Pickup", BindingFlags.Instance | BindingFlags.Public),typeof(Resault).GetMethod("ammoPickupHookMethod"));
@@ -132,6 +135,7 @@ namespace Planetside
 			orig(self, player);
 			if (player.HasPickupID(ResaultID))
 			{
+				Gun res = PickupObjectDatabase.GetById(ResaultID) as Gun;
 				if (canAmmo)
 				{
 					if (self.mode == AmmoPickup.AmmoPickupMode.FULL_AMMO && (player.CurrentGun != null))
@@ -152,7 +156,7 @@ namespace Planetside
 								original = Resault.Plus20AMMOVFXPrefab;
 							}
 							tk2dSprite ahfuck = original.GetComponent<tk2dSprite>();
-							player.CurrentGun.SetBaseMaxAmmo(Ammo + AmmoRegained);
+							res.SetBaseMaxAmmo(Ammo + AmmoRegained);
 							Ammo += AmmoRegained;
 							player.BloopItemAboveHead(ahfuck, "");
 						}
@@ -175,7 +179,7 @@ namespace Planetside
 								original = Resault.Plus10AMMOVFXPrefab;
 							}
 							tk2dSprite ahfuck = original.GetComponent<tk2dSprite>();
-							player.CurrentGun.SetBaseMaxAmmo(Ammo + AmmoRegained);
+							res.SetBaseMaxAmmo(Ammo + AmmoRegained);
 							Ammo += AmmoRegained;
 							player.BloopItemAboveHead(ahfuck, "");
 						}
@@ -198,7 +202,7 @@ namespace Planetside
 										original = Resault.Plus4AMMOVFXPrefab;
 									}
 									tk2dSprite ahfuck = original.GetComponent<tk2dSprite>();
-									player.CurrentGun.SetBaseMaxAmmo(Ammo + AmmoRegained);
+									res.SetBaseMaxAmmo(Ammo + AmmoRegained);
 									Ammo += AmmoRegained;
 									player.BloopItemAboveHead(ahfuck, "");
 								}
@@ -225,7 +229,7 @@ namespace Planetside
 		{
 			if (Ammo > 21)
             {
-				bruhgun.SetBaseMaxAmmo(Ammo - 1);
+				this.gun.SetBaseMaxAmmo(Ammo - 1);
 				Ammo -= 1;
 			}
 		}

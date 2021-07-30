@@ -53,6 +53,7 @@ namespace Planetside
             SpriteBuilder.AddSpriteToCollection(CleanseIcon, SpriteBuilder.ammonomiconCollection);
             SpriteBuilder.AddSpriteToCollection(ShelltanIcon, SpriteBuilder.ammonomiconCollection);
 
+            testActive.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
         }
         public static string ChallnegeIcon = "Planetside/Resources/ShrineIcons/HeresyIcons/shrineChallengeIcon";

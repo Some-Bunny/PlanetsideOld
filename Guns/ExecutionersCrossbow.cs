@@ -96,13 +96,13 @@ namespace Planetside
 			ProjectileModule.ChargeProjectile item2 = new ProjectileModule.ChargeProjectile
 			{
 				Projectile = projectile2,
-				ChargeTime = 0.2f,
+				ChargeTime = 0f,
 				AmmoCost = 1
 			};
 			ProjectileModule.ChargeProjectile item3 = new ProjectileModule.ChargeProjectile
 			{
 				Projectile = projectile3,
-				ChargeTime = 1.5f,
+				ChargeTime = 1f,
 				AmmoCost = 2,
 				
 			};
@@ -113,6 +113,8 @@ namespace Planetside
 			};
 			gun.quality = PickupObject.ItemQuality.B;
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
+			gun.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
+
 		}
 
 		private bool HasReloaded;
@@ -120,6 +122,7 @@ namespace Planetside
 		public Vector3 projectilePos;
 		public override void OnPostFired(PlayerController player, Gun flakcannon)
 		{
+			AkSoundEngine.PostEvent("Play_SND_WPN_crossbow_shot_01", base.gameObject);
 
 		}
 		public override void OnReloadPressed(PlayerController player, Gun gun, bool bSOMETHING)
@@ -128,6 +131,7 @@ namespace Planetside
 			{
 				HasReloaded = false;
 				AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
+				AkSoundEngine.PostEvent("Play_WPN_duelingpistol_reload_01", gameObject);
 				base.OnReloadPressed(player, gun, bSOMETHING);
 			}
 		}

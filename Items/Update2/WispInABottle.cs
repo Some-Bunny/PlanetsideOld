@@ -87,6 +87,9 @@ namespace Planetside
             FakePrefab.MarkAsFakePrefab(gameObject2);
             UnityEngine.Object.DontDestroyOnLoad(gameObject2);
             WispInABottle.SunPrefab = gameObject2;
+
+            testActive.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+
         }
         public static GameObject SunPrefab;
         public static List<int> spriteIds = new List<int>();

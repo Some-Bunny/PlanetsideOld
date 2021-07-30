@@ -66,6 +66,8 @@ namespace Planetside
 			gun.encounterTrackable.EncounterGuid = "Big Fungus";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.SetupUnlockOnCustomFlag(CustomDungeonFlags.DEFEAT_FUNGANNON, true);
+			gun.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+
 
 		}
 		public override void PostProcessProjectile(Projectile projectile)

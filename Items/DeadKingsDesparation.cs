@@ -35,7 +35,7 @@ namespace Planetside
             string shortDesc = "Strengths Falsified";
             string longDesc = "Steals the strengths of all foes in the room. A simple battle-helmet worn by an old King, who in his final act of desparation stole the empowering trinkets the Challenger brought with him.";
             testActive.SetupItem(shortDesc, longDesc, "psog");
-            testActive.SetCooldownType(ItemBuilder.CooldownType.Damage, 1250f);
+            testActive.SetCooldownType(ItemBuilder.CooldownType.Damage, 900f);
             testActive.consumable = false;
             testActive.quality = PickupObject.ItemQuality.A;
 
@@ -245,6 +245,11 @@ namespace Planetside
             this.TrinketingAndBaubling = false;
             player.healthHaver.damageTypeModifiers.Remove(this.m_FireImmunity);
             player.healthHaver.damageTypeModifiers.Remove(this.m_PoisonImmunity);
+            foreach(StatModifier stat in StatExtra)
+            {
+                player.ownerlessStatModifiers.Remove(stat);
+                player.stats.RecalculateStats(player, true, true);
+            }
 
         }
         public void AIActorMods(AIActor target)
@@ -262,7 +267,6 @@ namespace Planetside
 
         protected void AffectEnemy(AIActor target, PlayerController user)
         {
-
             bool flag = target.IsNormalEnemy || !target.IsHarmlessEnemy;
             bool flag2 = flag;
             if (flag2)
@@ -270,6 +274,22 @@ namespace Planetside
                 if (target != null && base.LastOwner != null)
                 {
                     target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * 0.8f);
+
+                    if (base.LastOwner != null)
+                    {
+                        float StatBooster = target.healthHaver.GetMaxHealth() * 0.002f;
+                        StatModifier item = new StatModifier
+                        {
+                            statToBoost = PlayerStats.StatType.Damage,
+                            amount = StatBooster,
+                            modifyType = StatModifier.ModifyMethod.ADDITIVE
+                        };
+                        StatExtra.Add(item);
+
+                        base.LastOwner.ownerlessStatModifiers.Add(item);
+                        base.LastOwner.stats.RecalculateStats(user, true, true);
+                    }
+
                     GameActor gameActor = target.gameActor;
                     gameActor.EffectResistances = new ActorEffectResistance[]
                     {
@@ -353,6 +373,9 @@ namespace Planetside
         private DamageTypeModifier m_FireImmunity;
 
         public bool TrinketingAndBaubling;
+
+        private List<StatModifier> StatExtra = new List<StatModifier>();
+
     }
 }
 

@@ -73,7 +73,7 @@ namespace Planetside
 						original = DiasukesPolymorphine.PolyFailVFXPrefab;
 						tk2dSprite ahfuck = original.GetComponent<tk2dSprite>();
 						user.BloopItemAboveHead(ahfuck, "");
-						ETGModConsole.Log("Daisukes Polymorph couldn't choose an appropriate enemy from you current room, oops!", false);
+						//ETGModConsole.Log("Daisukes Polymorph couldn't choose an appropriate enemy from you current room, oops!", false);
 						if (randomActiveEnemy != null)
                         {
 							randomActiveEnemy.healthHaver.ApplyDamage(25f, Vector2.zero, "Epic Polymorph Fail", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
@@ -110,6 +110,7 @@ namespace Planetside
 							else if (aiactor != randomActiveEnemy && aiactor.encounterTrackable.EncounterGuid == randomActiveEnemy.encounterTrackable.EncounterGuid && !aiactor.healthHaver.IsBoss)
 							{
 								LootEngine.DoDefaultItemPoof(aiactor.sprite.WorldCenter, false, true);
+								aiactor.behaviorSpeculator.Stun(3, true);
 
 							}
 
@@ -150,7 +151,7 @@ namespace Planetside
 		{
 			List<AIActor> activeEnemies = user.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 			float count = activeEnemies.Count;
-			return count >= 1;
+			return count >= 2;
 		}
 		public List<string> enemyBlacklist = new List<string>
 		{
@@ -194,7 +195,6 @@ namespace Planetside
 			"Ophanaim",
 			"annihichamber",
 			"shamber_psog"
-
 		};
 
 		public static List<AIActor> enemiesToReRoll = new List<AIActor>();

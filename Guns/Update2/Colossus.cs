@@ -47,7 +47,7 @@ namespace Planetside
                 mod.shootStyle = ProjectileModule.ShootStyle.Beam;
                 mod.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
                 mod.cooldownTime = 0.001f;
-                mod.numberOfShotsInClip = 30;
+                mod.numberOfShotsInClip = 50;
                 mod.ammoType = GameUIAmmoType.AmmoType.BEAM;
 
                 List<string> BeamAnimPaths = new List<string>()
@@ -124,7 +124,7 @@ namespace Planetside
                 beamComp.boneType = BasicBeamController.BeamBoneType.Projectile;
 
                 beamComp.startAudioEvent = "Play_ENM_deathray_shot_01";
-                beamComp.projectile.baseData.damage = 120;
+                beamComp.projectile.baseData.damage = 70;
                 beamComp.endAudioEvent = "Stop_ENM_deathray_loop_01";
                 beamComp.penetration = 1;
                 beamComp.reflections = 0;
@@ -166,11 +166,11 @@ namespace Planetside
 
             //GUN STATS
             gun.doesScreenShake = false;
-            gun.reloadTime = 1.2f;
+            gun.reloadTime = 1.3f;
             gun.muzzleFlashEffects.type = VFXPoolType.None;
             gun.barrelOffset.transform.localPosition = new Vector3(1.625f, 0.5625f, 0f);
-            gun.SetBaseMaxAmmo(90);
-            gun.ammo = 90;
+            gun.SetBaseMaxAmmo(300);
+            gun.ammo = 300;
             gun.PreventNormalFireAudio = true;
 
             gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).wrapMode = tk2dSpriteAnimationClip.WrapMode.LoopSection;
@@ -202,7 +202,7 @@ namespace Planetside
             {
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 HasReloaded = false;
-                AkSoundEngine.PostEvent("Play_OBJ_rock_break", base.gameObject);
+                AkSoundEngine.PostEvent("Play_ENM_statue_stomp_01", player.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
 
             }

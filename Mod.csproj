@@ -90,6 +90,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Item Components\MaintainDPSOnPierce.cs" />
+    <Compile Include="Components\Item Components\TemplateMovementModule.cs" />
     <Compile Include="EnemySetupCode\EnemyCode\ModderBullets\TurboBullet.cs" />
     <Compile Include="EnemySetupCode\ProjectileStuff\UndodgeableBulletsCode.cs" />
     <Compile Include="Guns\LaserChainsawProjectile.cs" />
@@ -190,7 +192,7 @@
     <Compile Include="Components\Item Components\LoaderPylonSynergyFormeController.cs" />
     <Compile Include="Components\Item Components\LoaderPylonController.cs" />
     <Compile Include="Components\BloodbathOnKill.cs" />
-    <Compile Include="Components\TinyPlanetMovementModule.cs" />
+    <Compile Include="Components\Item Components\TinyPlanetMovementModule.cs" />
     <Compile Include="Components\Item Components\OscillatingBulletsMovementModule.cs" />
     <Compile Include="Debuff Stuff\BlueFireEffect.cs" />
     <Compile Include="Debuff Stuff\BrokenArmorEffect.cs" />
@@ -394,6 +396,7 @@
     <Compile Include="Shrine Stuff\ShrineFakePrefabHooks.cs" />
     <Compile Include="Shrine Stuff\SimpleInteractable.cs" />
     <Compile Include="Shrine Stuff\SimpleShrine.cs" />
+    <Compile Include="Toolboxes\MathToolbox.cs" />
     <Compile Include="Toolboxes\UIToolbox.cs" />
   </ItemGroup>
   <ItemGroup>

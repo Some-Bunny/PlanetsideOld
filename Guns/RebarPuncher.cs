@@ -94,6 +94,7 @@ namespace Planetside
 			UnityEngine.Object.DontDestroyOnLoad(RebarPuncher.PlusNailsPrefab);
 			FakePrefab.MarkAsFakePrefab(RebarPuncher.PlusNailsPrefab);
 			RebarPuncher.PlusNailsPrefab.SetActive(false);
+			gun.AddToSubShop(ItemBuilder.ShopType.Trorc	, 1f);
 
 		}
 		public static int RebarerID;
