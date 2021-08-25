@@ -47,7 +47,11 @@ namespace Planetside
             testActive.quality = PickupObject.ItemQuality.B;
             testActive.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
+            ForgiveMePlease.NeverForgiveMeID = testActive.PickupObjectId;
+            ItemIDs.AddToList(testActive.PickupObjectId);
+
         }
+        public static int NeverForgiveMeID;
         public static void BuildPrefab()
         {
             GameObject gameObject = SpriteBuilder.SpriteFromResource("Planetside/Resources/ForgiveMePleaseDolls/fmg_testsprite_001", null, true);

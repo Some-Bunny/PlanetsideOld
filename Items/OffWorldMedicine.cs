@@ -36,8 +36,11 @@ namespace Planetside
             lockpicker.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
             lockpicker.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
 
+            OffWorldMedicine.OffWorldMedicineID = lockpicker.PickupObjectId;
+            ItemIDs.AddToList(lockpicker.PickupObjectId);
 
         }
+        public static int OffWorldMedicineID;
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);

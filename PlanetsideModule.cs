@@ -24,7 +24,7 @@ namespace Planetside
     public class PlanetsideModule : ETGModule
     {
         public static readonly string MOD_NAME = "Planetside Of Gunymede";
-        public static readonly string VERSION = "1.1.6";
+        public static readonly string VERSION = "1.1.7";
         public static readonly string TEXT_COLOR = "#9006FF";
 
         public static string ZipFilePath;
@@ -37,9 +37,9 @@ namespace Planetside
         public static AdvancedStringDB Strings;
         public static HellDragZoneController hellDrag;
 
+
         public override void Start()
         {
-
             var forgeDungeon = DungeonDatabase.GetOrLoadByName("Base_Forge");
             PlanetsideModule.hellDrag = forgeDungeon.PatternSettings.flows[0].AllNodes.Where(node => node.overrideExactRoom != null && node.overrideExactRoom.name.Contains("EndTimes")).First().overrideExactRoom.placedObjects.Where(ppod => ppod != null && ppod.nonenemyBehaviour != null).First().nonenemyBehaviour.gameObject.GetComponentsInChildren<HellDragZoneController>()[0];
             forgeDungeon = null;
@@ -52,6 +52,7 @@ namespace Planetside
             metadata = this.Metadata;
             ZipFilePath1 = this.Metadata.Archive;
 
+            ItemIDs.MakeCommand();
             StaticReferences.Init();
             DungeonHandler.Init();
             EnemyHooks.Init();
@@ -204,6 +205,10 @@ namespace Planetside
             Colossus.Add();
             PerfectedColossus.Add();
             ResourceGuonMaker.Init();
+
+            //ChargerGun.Add();
+            //PlanetBlade.Add();
+            TestShaderBullets.Init();
 
             Ophanaim.Init();
             Fungannon.Init();
@@ -361,8 +366,8 @@ namespace Planetside
             string color1 = "9006FF";
             OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g +h+i+j+k, color1);
             OtherTools.Init();
-            //ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.Jamnation));
         }
+
 
         public static void Log(string text, string color= "#9006FF")
         {
@@ -904,7 +909,7 @@ public class AngerGodsScript : Script
                 var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
 
                 AIActor.Spawn(Enemy.aiActor, this.Projectile.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
-                if ((GameManager.Instance.PrimaryPlayer.HasPickupID(DiamondChamber.ChamberID)))
+                if ((GameManager.Instance.PrimaryPlayer.HasPickupID(DiamondChamber.DiamondChamberID)))
                 {
                     Enemy.aiActor.IsHarmlessEnemy = true;
                     Enemy.aiActor.CanTargetPlayers = false;

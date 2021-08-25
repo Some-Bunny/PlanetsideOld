@@ -87,6 +87,7 @@ namespace Planetside
 			};
 			CustomSynergies.Add("Reverberation", AAA, null, true);
 			Oscillato.AAID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int AAID;
 		public override void PostProcessProjectile(Projectile projectile)

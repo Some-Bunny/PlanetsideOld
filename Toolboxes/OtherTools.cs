@@ -41,7 +41,95 @@ namespace Planetside
 
     public static class OtherTools
     {
-
+        public static VFXPool CreateMuzzleflash(string name, List<string> spriteNames, int fps, List<IntVector2> spriteSizes, List<tk2dBaseSprite.Anchor> anchors, List<Vector2> manualOffsets, bool orphaned, bool attached, bool persistsOnDeath,
+            bool usesZHeight, float zHeight, VFXAlignment alignment, bool destructible, List<float> emissivePowers, List<Color> emissiveColors)
+        {
+            VFXPool pool = new VFXPool();
+            pool.type = VFXPoolType.All;
+            VFXComplex complex = new VFXComplex();
+            VFXObject vfObj = new VFXObject();
+            GameObject obj = new GameObject(name);
+            obj.SetActive(false);
+            FakePrefab.MarkAsFakePrefab(obj);
+            UnityEngine.Object.DontDestroyOnLoad(obj);
+            tk2dSprite sprite = obj.AddComponent<tk2dSprite>();
+            tk2dSpriteAnimator animator = obj.AddComponent<tk2dSpriteAnimator>();
+            tk2dSpriteAnimationClip clip = new tk2dSpriteAnimationClip();
+            clip.fps = fps;
+            clip.frames = new tk2dSpriteAnimationFrame[0];
+            for (int i = 0; i < spriteNames.Count; i++)
+            {
+                string spriteName = spriteNames[i];
+                IntVector2 spriteSize = spriteSizes[i];
+                tk2dBaseSprite.Anchor anchor = anchors[i];
+                Vector2 manualOffset = manualOffsets[i];
+                float emissivePower = emissivePowers[i];
+                Color emissiveColor = emissiveColors[i];
+                tk2dSpriteAnimationFrame frame = new tk2dSpriteAnimationFrame();
+                frame.spriteId = OtherTools.VFXCollection.GetSpriteIdByName(spriteName);
+                tk2dSpriteDefinition def = OtherTools.SetupDefinitionForShellSprite(spriteName, frame.spriteId, spriteSize.x, spriteSize.y);
+                def.ConstructOffsetsFromAnchor(anchor, def.position3);
+                def.MakeOffset(manualOffset);
+                def.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+                def.material.SetFloat("_EmissiveColorPower", emissivePower);
+                def.material.SetColor("_EmissiveColor", emissiveColor);
+                def.materialInst.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+                def.materialInst.SetFloat("_EmissiveColorPower", emissivePower);
+                def.materialInst.SetColor("_EmissiveColor", emissiveColor);
+                frame.spriteCollection = OtherTools.VFXCollection;
+                clip.frames = clip.frames.Concat(new tk2dSpriteAnimationFrame[] { frame }).ToArray();
+            }
+            sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+            sprite.renderer.material.SetFloat("_EmissiveColorPower", emissivePowers[0]);
+            sprite.renderer.material.SetColor("_EmissiveColor", emissiveColors[0]);
+            clip.wrapMode = tk2dSpriteAnimationClip.WrapMode.Once;
+            clip.name = "start";
+            animator.spriteAnimator.Library = animator.gameObject.AddComponent<tk2dSpriteAnimation>();
+            animator.spriteAnimator.Library.clips = new tk2dSpriteAnimationClip[] { clip };
+            animator.spriteAnimator.Library.enabled = true;
+            SpriteAnimatorKiller kill = animator.gameObject.AddComponent<SpriteAnimatorKiller>();
+            kill.fadeTime = -1f;
+            kill.animator = animator;
+            kill.delayDestructionTime = -1f;
+            vfObj.orphaned = orphaned;
+            vfObj.attached = attached;
+            vfObj.persistsOnDeath = persistsOnDeath;
+            vfObj.usesZHeight = usesZHeight;
+            vfObj.zHeight = zHeight;
+            vfObj.alignment = alignment;
+            vfObj.destructible = destructible;
+            vfObj.effect = obj;
+            complex.effects = new VFXObject[] { vfObj };
+            pool.effects = new VFXComplex[] { complex };
+            animator.playAutomatically = true;
+            animator.DefaultClipId = animator.GetClipIdByName("start");
+            return pool;
+        }
+        public static tk2dSpriteCollectionData VFXCollection
+        {
+            get
+            {
+                return (PickupObjectDatabase.GetById(95) as Gun).clipObject.GetComponent<tk2dBaseSprite>().Collection;
+            }
+        }
+        public static tk2dSpriteDefinition SetupDefinitionForShellSprite(string name, int id, int pixelWidth, int pixelHeight, tk2dSpriteDefinition overrideToCopyFrom = null)
+        {
+            float thing = 14;
+            float trueWidth = (float)pixelWidth / thing;
+            float trueHeight = (float)pixelHeight / thing;
+            tk2dSpriteDefinition def = overrideToCopyFrom ?? OtherTools.VFXCollection.inst.spriteDefinitions[(PickupObjectDatabase.GetById(202) as Gun).shellCasing.GetComponent<tk2dBaseSprite>().spriteId].CopyDefinitionFrom();
+            def.boundsDataCenter = new Vector3(trueWidth / 2f, trueHeight / 2f, 0f);
+            def.boundsDataExtents = new Vector3(trueWidth, trueHeight, 0f);
+            def.untrimmedBoundsDataCenter = new Vector3(trueWidth / 2f, trueHeight / 2f, 0f);
+            def.untrimmedBoundsDataExtents = new Vector3(trueWidth, trueHeight, 0f);
+            def.position0 = new Vector3(0f, 0f, 0f);
+            def.position1 = new Vector3(0f + trueWidth, 0f, 0f);
+            def.position2 = new Vector3(0f, 0f + trueHeight, 0f);
+            def.position3 = new Vector3(0f + trueWidth, 0f + trueHeight, 0f);
+            def.name = name;
+            OtherTools.VFXCollection.spriteDefinitions[id] = def;
+            return def;
+        }
         //==========================================================================================================================================================
         //==========================================================================================================================================================
         //==========================================================================================================================================================

@@ -36,7 +36,11 @@ namespace Planetside
 			item.quality = PickupObject.ItemQuality.B;
 			item.SetupUnlockOnCustomFlag(CustomDungeonFlags.HIGHER_CURSE_DRAGUN_KILLED, true);
 
+			FrailtyRounds.FrailtyRoundsID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int FrailtyRoundsID;
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			try

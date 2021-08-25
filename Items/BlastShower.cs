@@ -46,7 +46,11 @@ namespace Planetside
                 "ice_cube"
             };
             CustomSynergies.Add("Watered Down", mandatoryConsoleIDs, optionalConsoleIDs, true);
+            BlastShower.BlastShowerID = lockpicker.PickupObjectId;
+            ItemIDs.AddToList(lockpicker.PickupObjectId);
+
         }
+        public static int BlastShowerID;
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);

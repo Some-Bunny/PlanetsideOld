@@ -35,7 +35,11 @@ namespace Planetside
 			item.quality = PickupObject.ItemQuality.S;
 			item.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
+			LDCBullets.TeleportingGunfireID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int TeleportingGunfireID;
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			PlayerController owner = base.Owner;
@@ -97,7 +101,10 @@ namespace Planetside
 
 		protected override void OnDestroy()
 		{
-			base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
+			if (base.Owner != null)
+            {
+				base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
+			}
 			base.OnDestroy();
 		}
 		public AIActor GetNearestEnemy(List<AIActor> activeEnemies, Vector2 position, out float nearestDistance, string[] filter, float range)

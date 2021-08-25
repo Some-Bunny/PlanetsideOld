@@ -122,19 +122,25 @@ namespace Planetside
 			{
 				Projectile = projectile2,
 				ChargeTime = 1f,
-				AdditionalWwiseEvent = "Play_OBJ_pastkiller_charge_01"
+				AdditionalWwiseEvent = "Play_OBJ_pastkiller_charge_01",
+				//UsedProperties = ProjectileModule.ChargeProjectileProperties.additionalWwiseEvent
+
 			};
 			ProjectileModule.ChargeProjectile item3 = new ProjectileModule.ChargeProjectile
 			{
 				Projectile = projectile3,
 				ChargeTime = 3f,
-				AdditionalWwiseEvent = "Play_OBJ_pastkiller_charge_01"
+				AdditionalWwiseEvent = "Play_OBJ_pastkiller_charge_01",
+				//UsedProperties = ProjectileModule.ChargeProjectileProperties.additionalWwiseEvent
+
+
 			};
 			ProjectileModule.ChargeProjectile item4 = new ProjectileModule.ChargeProjectile
 			{
 				Projectile = projectile4,
 				ChargeTime = 5f,
-				AdditionalWwiseEvent = "Play_OBJ_pastkiller_charge_01"	
+				AdditionalWwiseEvent = "Play_OBJ_pastkiller_charge_01",
+				//UsedProperties = ProjectileModule.ChargeProjectileProperties.additionalWwiseEvent
 			};
 			gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile>
 			{
@@ -144,7 +150,10 @@ namespace Planetside
 			};
 			gun.quality = PickupObject.ItemQuality.S;
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
+			Immateria.ImmateriaID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int ImmateriaID;
 
 		private bool HasReloaded;
 

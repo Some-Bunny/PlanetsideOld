@@ -54,7 +54,11 @@ namespace Planetside
                 "shock_rounds"
             };
             CustomSynergies.Add("Shocker", mandatoryConsoleIDs, optionalConsoleIsDs, true);
+            ElectrostaticGuonStone.ElectrostaticGuonStoneID = item.PickupObjectId;
+            ItemIDs.AddToList(item.PickupObjectId);
+
         }
+        public static int ElectrostaticGuonStoneID;
 
         public static void BuildPrefab()
         {
@@ -104,6 +108,7 @@ namespace Planetside
 
         public override DebrisObject Drop(PlayerController player)
         {
+            SpawnManager.Despawn(extantLink.gameObject);
             player.GetComponent<ElectrostaticGuonStone.ElectricGuonbehavior>().Destroy();
             ElectrostaticGuonStone.guonHook.Dispose();
             GameManager.Instance.OnNewLevelFullyLoaded -= this.FixGuon;
@@ -112,6 +117,7 @@ namespace Planetside
 
         protected override void OnDestroy()
         {
+            SpawnManager.Despawn(extantLink.gameObject);
             ElectrostaticGuonStone.guonHook.Dispose();
             bool flag = base.Owner && base.Owner.GetComponent<ElectrostaticGuonStone.ElectricGuonbehavior>() != null;
             bool flag2 = flag;

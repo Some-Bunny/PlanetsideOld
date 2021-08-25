@@ -75,6 +75,7 @@ namespace Planetside
 			};
 			CustomSynergies.Add("Boring Eternity", mandatoryConsoleIDs, optionalConsoleIDs, true);
 
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int RevenantID;
 		public override void PostProcessProjectile(Projectile projectile)

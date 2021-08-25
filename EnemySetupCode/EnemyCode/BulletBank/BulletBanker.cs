@@ -50,8 +50,8 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(350f);
-				companion.aiActor.healthHaver.SetHealthMaximum(350f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(370f);
+				companion.aiActor.healthHaver.SetHealthMaximum(370f);
 				companion.aiActor.CollisionKnockbackStrength = 2f;
 				companion.aiActor.CanTargetPlayers = true;
 				companion.aiActor.procedurallyOutlined = true;

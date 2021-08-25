@@ -34,7 +34,11 @@ namespace Planetside
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.Damage, 1.25f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.RangeMultiplier, 2f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			item.quality = PickupObject.ItemQuality.A;
+			OscilaltingBullets.OscillatingBulletsID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int OscillatingBulletsID;
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			try

@@ -105,6 +105,7 @@ namespace Planetside
 				ChargeTime = 1f,
 				AmmoCost = 2,
 				
+				
 			};
 			gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile>
 			{
@@ -115,7 +116,10 @@ namespace Planetside
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
+			ExecutionersCrossbow.ExecutionersCrossbowID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int ExecutionersCrossbowID;
 
 		private bool HasReloaded;
 

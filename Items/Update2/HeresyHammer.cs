@@ -55,7 +55,13 @@ namespace Planetside
 
             testActive.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
+
+            HeresyHammer.HeresyBreakerID = testActive.PickupObjectId;
+            ItemIDs.AddToList(testActive.PickupObjectId);
+
         }
+        public static int HeresyBreakerID;
+
         public static string ChallnegeIcon = "Planetside/Resources/ShrineIcons/HeresyIcons/shrineChallengeIcon";
         public static string CleanseIcon = "Planetside/Resources/ShrineIcons/HeresyIcons/cleanseshrineanger";
         public static string ShelltanIcon = "Planetside/Resources/ShrineIcons/HeresyIcons/ShelltanIcon";
@@ -171,7 +177,7 @@ namespace Planetside
             }
             catch
             {
-                ETGModConsole.Log("fuck.");
+                //ETGModConsole.Log("fuck.");
                 return false;
             }
         }
@@ -653,7 +659,7 @@ namespace Planetside
             524,
             595,
             333,
-            TableTechDevour.DevourID,
+            TableTechDevour.TableTechDevourID,
             BloodIdol.BloodIdolID
         };
         List<int> GlassItemsID = new List<int>
@@ -1086,7 +1092,7 @@ public class UltraAngryGodsScript : Script
                 var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
 
                 AIActor.Spawn(Enemy.aiActor, this.Projectile.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
-                if ((GameManager.Instance.PrimaryPlayer.HasPickupID(DiamondChamber.ChamberID)))
+                if ((GameManager.Instance.PrimaryPlayer.HasPickupID(DiamondChamber.DiamondChamberID)))
                 {
                     Enemy.aiActor.IsHarmlessEnemy = true;
                     Enemy.aiActor.CanTargetPlayers = false;

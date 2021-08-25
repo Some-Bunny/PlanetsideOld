@@ -33,8 +33,13 @@ namespace Planetside
             lockpicker.consumable = false;
             lockpicker.quality = PickupObject.ItemQuality.C;
             lockpicker.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
-        }
-        public override void Pickup(PlayerController player)
+			GunPrinter.GunPrinterID = lockpicker.PickupObjectId;
+			ItemIDs.AddToList(lockpicker.PickupObjectId);
+
+
+		}
+		public static int GunPrinterID;
+		public override void Pickup(PlayerController player)
         {
             base.Pickup(player);
         }

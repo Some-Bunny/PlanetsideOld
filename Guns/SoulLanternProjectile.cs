@@ -33,7 +33,8 @@ namespace Planetside
             bool flag2 = flag;
             if (flag2)
             {
-                projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHit));
+				projectile.statusEffectsToApply = new List<GameActorEffect> { DebuffLibrary.Possessed };
+				projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHit));
                 base.StartCoroutine(this.Speed(projectile));
 
             }
@@ -53,14 +54,14 @@ namespace Planetside
 			}
 			yield break;
 		}
-		private void HandleHit(Projectile arg1, SpeculativeRigidbody arg2, bool arg3)
+		private void HandleHit(Projectile projectile, SpeculativeRigidbody arg2, bool arg3)
 		{
 			bool flag = arg2.aiActor != null && !arg2.healthHaver.IsDead && arg2.aiActor.behaviorSpeculator && !arg2.aiActor.IsHarmlessEnemy && arg2.aiActor != null;
 			if (flag)
 			{
-				arg1.AppliesPoison = true;
-				arg1.PoisonApplyChance = 1f;
-				arg1.healthEffect = DebuffLibrary.Possessed;
+				projectile.AppliesPoison = true;
+				projectile.PoisonApplyChance = 1f;
+				projectile.healthEffect = DebuffLibrary.Possessed;
 			}
 
 		}

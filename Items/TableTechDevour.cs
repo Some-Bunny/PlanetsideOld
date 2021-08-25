@@ -46,11 +46,13 @@ namespace Planetside
                 "bloody_9mm"
             };
             CustomSynergies.Add("KILL KILL KILL", mandatoryConsoleIDs, optionalConsoleIDs, true);
-            TableTechDevour.DevourID = minigunrounds.PickupObjectId;
+            TableTechDevour.TableTechDevourID = minigunrounds.PickupObjectId;
+            ItemIDs.AddToList(minigunrounds.PickupObjectId);
+
             minigunrounds.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
         }
-        public static int DevourID;
+        public static int TableTechDevourID;
         public override void Pickup(PlayerController player)
         {
             player.OnTableFlipped = (Action<FlippableCover>)Delegate.Combine(player.OnTableFlipped, new Action<FlippableCover>(this.HandleFlip));
@@ -148,6 +150,10 @@ namespace Planetside
 
         protected override void OnDestroy()
         {
+            if (base.Owner != null)
+            {
+                base.Owner.OnTableFlipped = (Action<FlippableCover>)Delegate.Remove(base.Owner.OnTableFlipped, new Action<FlippableCover>(this.HandleFlip));
+            }
             base.OnDestroy();
         }
         public override DebrisObject Drop(PlayerController player)

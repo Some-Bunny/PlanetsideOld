@@ -111,28 +111,44 @@ namespace Planetside
 			//float RNG = (UnityEngine.Random.value > 0.5f) ? 90 : -90;
 			//return BraveMathCollege.DegreesToVector(bone.RotationAngle + RNG, Mathf.SmoothStep(0f, 0, bone.PosX));
 			
+			if (UnityEngine.Random.value < 0.0002f && FlipperVal == 90)
+            {
+				FlipperVal = -90;
+            }
+			else if (UnityEngine.Random.value < 0.0002f && FlipperVal == -90)
+            {
+				FlipperVal = 90;
+			}
+			int num = 1;//(!(inverted ^ this.ForceInvert)) ? 1 : -1;
+			BasicBeamController beaer = sourceBeam as BasicBeamController;
+			float num2 = bone.PosX - 1 * (Time.timeSinceLevelLoad % 600000f);
+			float to = (float)num * 1 * Mathf.Sign(Mathf.Sin(num2 * 3.14159274f)) / 1;
+			return BraveMathCollege.DegreesToVector(bone.RotationAngle + FlipperVal, Mathf.SmoothStep(0f, to, bone.PosX));
+
+
+			/*
 			PlayerController playerController = sourceBeam.Owner as PlayerController;
 			Vector2 vector = playerController.unadjustedAimPoint.XY() - playerController.CenterPosition;
 			float num = vector.ToAngle();
 			Vector2 barrel = playerController.CurrentGun.barrelOffset.transform.position;
 			Vector2 b = bone.Position - barrel;
 			Vector2 vector2 = new Vector2(0,0);
-
+			List<int> boneList = new List<int>();
 			BasicBeamController beaer = sourceBeam as BasicBeamController;
-			bool flag = UnityEngine.Random.value < 0.0025f;
-			if (flag)
+			
+			if (beaer.GetBoneCount() >= 1 && UnityEngine.Random.value < 0.02f)
 			{
 				float RNG = (UnityEngine.Random.value > 0.5f) ? 90 : -90;
-				Vector2 Point = MathToolbox.GetUnitOnCircle(RNG, 10);
-				bone.Velocity = b + Point;
-				bone.RotationAngle = Point.ToAngle();
-
+				beaer.GetIndexedBone(beaer.GetBoneCount() - 1).RotationAngle = beaer.GetIndexedBone(beaer.GetBoneCount() - 2).RotationAngle + RNG;
+				Vector2 Point = MathToolbox.GetUnitOnCircle(beaer.GetIndexedBone(beaer.GetBoneCount() - 1).RotationAngle = beaer.GetIndexedBone(beaer.GetBoneCount() - 2).RotationAngle + RNG, 1f);
+				vector2 = new Vector2(Point.x, Point.y);
 			}
 
 			return vector2;
-			
-		}
+			*/
 
+		}
+		private float FlipperVal = 90;
 
 
 		private bool Initialized;

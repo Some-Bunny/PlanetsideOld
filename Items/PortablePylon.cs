@@ -58,7 +58,11 @@ namespace Planetside
             CustomSynergies.Add("Sentry Goin' Up!", mandatoryConsoleIDs, optionalConsoleID1s, true);
             testActive.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
 
+            PortablePylon.PortablePylonID = testActive.PickupObjectId;
+            ItemIDs.AddToList(testActive.PickupObjectId);
+
         }
+        public static int PortablePylonID;
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);

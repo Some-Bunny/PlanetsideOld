@@ -46,7 +46,11 @@ namespace Planetside
 			CustomSynergies.Add("Shattering Justice", mandatoryConsoleIDs, optionalConsoleIDs, true);
 			item.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
 
+			HullBreakerBullets.HullBreakerBulletsID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int HullBreakerBulletsID;
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			try

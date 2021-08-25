@@ -33,7 +33,11 @@ namespace Planetside
 			counterChamber.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
 
+			Shellheart.ShellHeartID = counterChamber.PickupObjectId;
+			ItemIDs.AddToList(counterChamber.PickupObjectId);
+
 		}
+		public static int ShellHeartID;
 
 		private void ModifyIncomingDamage(HealthHaver source, HealthHaver.ModifyDamageEventArgs args)
 		{
@@ -71,11 +75,18 @@ namespace Planetside
 		}
 		public override DebrisObject Drop(PlayerController player)
 		{
+			HealthHaver healthHaver = player.healthHaver;
+			healthHaver.ModifyDamage = (Action<HealthHaver, HealthHaver.ModifyDamageEventArgs>)Delegate.Remove(healthHaver.ModifyDamage, new Action<HealthHaver, HealthHaver.ModifyDamageEventArgs>(this.ModifyIncomingDamage));
+			return base.Drop(player);
+		}
+		protected override void OnDestroy()
+		{
+			if (base.Owner != null)
 			{
-				HealthHaver healthHaver = player.healthHaver;
+				HealthHaver healthHaver = base.Owner.healthHaver;
 				healthHaver.ModifyDamage = (Action<HealthHaver, HealthHaver.ModifyDamageEventArgs>)Delegate.Remove(healthHaver.ModifyDamage, new Action<HealthHaver, HealthHaver.ModifyDamageEventArgs>(this.ModifyIncomingDamage));
-				return base.Drop(player);
 			}
+			base.OnDestroy();
 		}
 	}
 }

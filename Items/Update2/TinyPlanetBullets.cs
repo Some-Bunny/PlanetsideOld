@@ -31,17 +31,25 @@ namespace Planetside
 			string longDesc = "Warped by a fracture in reality, these bullets no longer adhere to normal standards of movement.\n\nWarped by a fracture in reality, these bullets no longer adhere to normal standards of movement.\n\nWarped by a fracture in reality, these bullets no longer adhere to normal standards of movement.\n\nWarped by a fracture in reality, these bullets no longer adhere to normal standards of movement.\n\nWarped by a fracture in reality, these bullets no longer adhere to normal standards of movement.\n\nWarped by a fracture in reality, these bullets no longer adhere to normal standards of movement.\n\nWarped by a fracture in reality, these bullets no longer adhere to normal standards of movement.\n\nWarped by a fracture in reality, these bullets no longer adhere to normal standards of movement.\n\n." +
 				"Warped by a fracture in reality, these bullets no longer adhere to normal standards of movement.\n\n";
 			ItemBuilder.SetupItem(item, shortDesc, longDesc, "psog");
-			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.Damage, 1.5f, StatModifier.ModifyMethod.MULTIPLICATIVE);
+			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.Damage, 1.75f, StatModifier.ModifyMethod.MULTIPLICATIVE);
+			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.RateOfFire, 1.33f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.RangeMultiplier, 5f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			item.quality = PickupObject.ItemQuality.D;
 			item.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
+			TinyPlanetBullets.CorruptBulletsID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int CorruptBulletsID;
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			try
 			{
-				sourceProjectile.OverrideMotionModule = new TinyPlanetMotionModule();
+				TinyPlanetMotionModule mod = new TinyPlanetMotionModule();
+				mod.ForceInvert = (UnityEngine.Random.value > 0.5f) ? false : true;
+				mod.OrbitTightness = UnityEngine.Random.Range(4.5f, 7.5f);
+				sourceProjectile.OverrideMotionModule = mod;
 			}
 			catch (Exception ex)
 			{
@@ -54,7 +62,9 @@ namespace Planetside
 
 			try
 			{
-				obj.projectile.OverrideMotionModule = new TinyPlanetMotionModule();
+				TinyPlanetMotionModule mod = new TinyPlanetMotionModule();
+				mod.ForceInvert = (UnityEngine.Random.value > 0.5f) ? false : true;
+				obj.projectile.OverrideMotionModule = mod;
 			}
 			catch (Exception ex)
 			{

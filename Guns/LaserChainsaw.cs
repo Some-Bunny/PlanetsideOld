@@ -320,7 +320,7 @@ namespace Planetside
 			gun.encounterTrackable.EncounterGuid = "https://enterthegungeon.gamepedia.com/Modding/Some_Bunny%27s_Content_Pack";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.SetupUnlockOnCustomFlag(CustomDungeonFlags.BEAT_A_BOSS_UNDER_A_SECOND, true);
-			
+
 			/*
 			List<string> mandatoryConsoleIDs1 = new List<string>
 			{
@@ -332,7 +332,10 @@ namespace Planetside
 			};
 			CustomSynergies.Add("test chainsaw syn", mandatoryConsoleIDs1, optionalConsoleIDs, true);
 			*/
+			LaserChainsaw.LaserChainsawID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int LaserChainsawID;
 
 		public override void PostProcessProjectile(Projectile proj)
 		{

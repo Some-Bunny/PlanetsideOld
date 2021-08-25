@@ -58,7 +58,12 @@ namespace Planetside
             KineticStrike.StrikePrefab = gameObject2;
             lockpicker.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
 
+            KineticStrike.KineticBombardmentID = lockpicker.PickupObjectId;
+            ItemIDs.AddToList(lockpicker.PickupObjectId);
+
         }
+        public static int KineticBombardmentID;
+
         public static GameObject StrikePrefab;
         public static List<int> spriteIds = new List<int>();
         public override void Pickup(PlayerController player)
@@ -128,9 +133,16 @@ namespace Planetside
         public override void Update()
         {
             base.Update();
-            if (CrossHair != null)
+            if (base.LastOwner != null)
             {
-                this.UpdateReticlePosition();
+                if (CrossHair != null)
+                {
+                    this.UpdateReticlePosition();
+                }
+            }
+            else if (base.LastOwner == null && CrossHair != null)
+            {
+                Destroy(CrossHair.gameObject);
             }
         }
         private void UpdateReticlePosition()
@@ -259,12 +271,12 @@ namespace Planetside
         public void Boom(Vector3 position)
         {
             ExplosionData defaultSmallExplosionData = GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultSmallExplosionData;
-            this.smallPlayerSafeExplosion.effect = defaultSmallExplosionData.effect;
-            this.smallPlayerSafeExplosion.ignoreList = defaultSmallExplosionData.ignoreList;
-            this.smallPlayerSafeExplosion.ss = defaultSmallExplosionData.ss;
-            Exploder.Explode(position, this.smallPlayerSafeExplosion, Vector2.zero, null, false, CoreDamageTypes.None, false);
+            this.KineticBomb.effect = defaultSmallExplosionData.effect;
+            this.KineticBomb.ignoreList = defaultSmallExplosionData.ignoreList;
+            this.KineticBomb.ss = defaultSmallExplosionData.ss;
+            Exploder.Explode(position, this.KineticBomb, Vector2.zero, null, false, CoreDamageTypes.None, false);
         }
-        private ExplosionData smallPlayerSafeExplosion = new ExplosionData
+        private ExplosionData KineticBomb = new ExplosionData
         {
             damageRadius = 3.75f,
             damageToPlayer = 2f,
@@ -290,13 +302,15 @@ namespace Planetside
                 Destroy(CrossHair.gameObject);
             }
         }
+
         protected override void OnDestroy()
         {
+            HasTriggeredCrossHair = false;
             if (CrossHair != null)
             {
                 Destroy(CrossHair.gameObject);
             }
-            OnDestroy();
+            base.OnDestroy();
         }
         public static GameObject StarNuke;
 

@@ -66,6 +66,7 @@ namespace Planetside
 
             gun.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
+            ItemIDs.AddToList(gun.PickupObjectId);
         }
         public static int HeartID;
 

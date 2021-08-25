@@ -39,7 +39,7 @@ namespace Planetside
             BloodIdol.BloodIdolID = lockpicker.PickupObjectId;
             lockpicker.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
-
+            ItemIDs.AddToList(lockpicker.PickupObjectId);
         }
         public static int BloodIdolID;
         public override bool CanBeUsed(PlayerController user)

@@ -67,7 +67,11 @@ namespace Planetside
 			animator.DefaultClipId = animator.GetClipIdByName("start");
 			animator.playAutomatically = true;
 			DeathMarkPrefab = deathmark;
+			DeathWarrant.DeathWarrantID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int DeathWarrantID;
 		private static GameObject DeathMarkPrefab;
 
 		private void MarkForDeath()

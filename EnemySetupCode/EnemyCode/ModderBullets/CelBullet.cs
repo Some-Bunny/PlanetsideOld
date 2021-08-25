@@ -10,6 +10,8 @@ using Dungeonator;
 using System.Linq;
 using Brave.BulletScript;
 using GungeonAPI;
+using System.Reflection;
+
 
 namespace Planetside
 {
@@ -299,7 +301,7 @@ namespace Planetside
 				bs.InstantFirstTick = behaviorSpeculator.InstantFirstTick;
 				bs.TickInterval = behaviorSpeculator.TickInterval;
 				bs.PostAwakenDelay = behaviorSpeculator.PostAwakenDelay;
-				bs.RemoveDelayOnReinforce = behaviorSpeculator.RemoveDelayOnReinforce;
+				bs.RemoveDelayOnReinforce = false;
 				bs.OverrideStartingFacingDirection = behaviorSpeculator.OverrideStartingFacingDirection;
 				bs.StartingFacingDirection = behaviorSpeculator.StartingFacingDirection;
 				bs.SkipTimingDifferentiator = behaviorSpeculator.SkipTimingDifferentiator;
@@ -311,6 +313,9 @@ namespace Planetside
 				yah.transform.position = companion.aiActor.transform.position;
 				yah.transform.localPosition = new Vector2(0f, 0f);
 				EnemyBuilder.DuplicateAIShooterAndAIBulletBank(prefab, aIActor.aiShooter, aIActor.GetComponent<AIBulletBank>(), 38, yah.transform);
+
+
+
 				Game.Enemies.Add("psog:cel_bullet", companion.aiActor);
 				PlanetsideModule.Strings.Enemies.Set("#CEL", "Cel");
 				companion.aiActor.OverrideDisplayName = "#CEL";
@@ -376,7 +381,33 @@ namespace Planetside
 			private void Update()
 			{
 				if (!base.aiActor.HasBeenEngaged) { CheckPlayerRoom(); }
+
+				/*
+				base.aiActor.aiShooter.CurrentGun.GetSprite().AttachRenderer(base.aiShooter.gameObject.GetComponent<AIShooter>().handObject.sprite);
+
+				for (int i = 0; i < base.aiActor.healthHaver.bodySprites.Count; i++)
+                {
+					tk2dBaseSprite tk2dBaseSprite = base.healthHaver.bodySprites[i];
+					tk2dBaseSprite.usesOverrideMaterial = true;
+					tk2dBaseSprite.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/Internal/RainbowChestShader");
+					tk2dBaseSprite.sprite.renderer.material.SetFloat("_ValueMaximum", 100);
+				}
+
+				base.aiActor.healthHaver.bodySprites.Add(base.aiActor.gameObject.GetComponent<AIShooter>().handObject.sprite);
+
+				PlayerHandController hand = base.aiActor.gameObject.GetComponent<AIShooter>().handObject;
+				if (hand)
+				{
+					tk2dSprite component2 = hand.GetComponent<tk2dSprite>();
+					base.aiActor.healthHaver.RegisterBodySprite(component2, false, 0);
+					Type type = typeof(AIShooter); FieldInfo _property = type.GetField("m_attachedHands", BindingFlags.NonPublic | BindingFlags.Instance); _property.GetValue(base.aiShooter);
+					List<PlayerHandController> HELP = (List<PlayerHandController>)_property.GetValue(base.aiShooter);
+					HELP.Add(base.aiActor.gameObject.GetComponent<AIShooter>().handObject);
+				}
+				base.aiActor.aiShooter.UpdateHandRenderers();
+				*/
 			}
+
 			private void CheckPlayerRoom()
 			{
 

@@ -192,7 +192,9 @@ namespace Planetside
                 "heart_bottle"
             };
             CustomSynergies.Add("Perfected", mandatoryConsoleIDs, optionalConsoleIDs, true);
-            
+
+
+            ItemIDs.AddToList(gun.PickupObjectId);
         }
         public static int ColossusID;
 

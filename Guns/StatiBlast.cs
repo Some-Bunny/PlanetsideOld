@@ -58,7 +58,10 @@ namespace Planetside
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.barrelOffset.transform.localPosition = new Vector3(2.0f, 0.75f, 0f);
 			gun.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
+			StatiBlast.StatiBlastID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int StatiBlastID;
 
 		private bool HasReloaded;
 

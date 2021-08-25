@@ -4,12 +4,8 @@ using System.Reflection;
 
 namespace Planetside
 {
-	// Token: 0x0200001A RID: 26
 	public class AdvancedStringDB
 	{
-		// Token: 0x17000006 RID: 6
-		// (get) Token: 0x060000EA RID: 234 RVA: 0x000096F8 File Offset: 0x000078F8
-		// (set) Token: 0x060000EB RID: 235 RVA: 0x00009714 File Offset: 0x00007914
 		public StringTableManager.GungeonSupportedLanguages CurrentLanguage
 		{
 			get
@@ -22,7 +18,6 @@ namespace Planetside
 			}
 		}
 
-		// Token: 0x060000EC RID: 236 RVA: 0x00009720 File Offset: 0x00007920
 		public AdvancedStringDB()
 		{
 			StringDB strings = ETGMod.Databases.Strings;

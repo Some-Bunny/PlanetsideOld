@@ -90,12 +90,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Item Components\CustomScarfDoer.cs" />
     <Compile Include="Components\Item Components\MaintainDPSOnPierce.cs" />
     <Compile Include="Components\Item Components\TemplateMovementModule.cs" />
+    <Compile Include="DungeonPlaceables\RainPlaceable.cs" />
     <Compile Include="EnemySetupCode\EnemyCode\ModderBullets\TurboBullet.cs" />
+    <Compile Include="EnemySetupCode\EnemyRelatedStuff\Behavior Stuff\TimeStopBehavior.cs" />
     <Compile Include="EnemySetupCode\ProjectileStuff\UndodgeableBulletsCode.cs" />
     <Compile Include="Guns\LaserChainsawProjectile.cs" />
+    <Compile Include="Guns\Update3\PlanetBladeProjectile.cs" />
+    <Compile Include="Guns\Update3\PlanetBlade.cs" />
+    <Compile Include="Guns\Update3\ChargerGunProjectile.cs" />
+    <Compile Include="Guns\Update3\ChargerGun.cs" />
+    <Compile Include="ItemIDs.cs" />
+    <Compile Include="Items\Test Items\TestShaderBullets.cs" />
     <Compile Include="Items\Test Items\TestShaderItem.cs" />
+    <Compile Include="Misc Stuff\SlashBehavior.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedLogging.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedStrings1.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedStrings2.cs" />

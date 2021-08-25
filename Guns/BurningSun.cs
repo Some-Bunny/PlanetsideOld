@@ -105,7 +105,11 @@ namespace Planetside
 				"gun_soul"
 			};
 			CustomSynergies.Add("Praise The Gun!", mandatoryConsoleIDs, optionalConsoleIDs, true);
+			BurningSun.BurningSunId = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int BurningSunId;
+
 
 		private bool HasReloaded;
 

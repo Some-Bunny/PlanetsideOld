@@ -33,7 +33,12 @@ namespace Planetside
             lockpicker.consumable = false;
             lockpicker.quality = PickupObject.ItemQuality.D;
             lockpicker.AddToSubShop(ItemBuilder.ShopType.OldRed, 1f);
+
+            PsychicBlank.PsychicBlankID = lockpicker.PickupObjectId;
+            ItemIDs.AddToList(lockpicker.PickupObjectId);
+
         }
+        public static int PsychicBlankID;
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);

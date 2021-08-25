@@ -104,6 +104,7 @@ namespace Planetside
 			projectile.baseData.speed *= 2;
 			BanditsRevolver.BanditsRevolverID = gun.PickupObjectId;
 
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int BanditsRevolverID;
 

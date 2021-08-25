@@ -39,8 +39,12 @@ namespace Planetside
 			UnityEngine.Object.DontDestroyOnLoad(DiasukesPolymorphine.PolyFailVFXPrefab);
 			FakePrefab.MarkAsFakePrefab(DiasukesPolymorphine.PolyFailVFXPrefab);
 			DiasukesPolymorphine.PolyFailVFXPrefab.SetActive(false);
+			DiasukesPolymorphine.DiasukesPolymorphineID = lockpicker.PickupObjectId;
+			ItemIDs.AddToList(lockpicker.PickupObjectId);
+
 		}
-        public override void Pickup(PlayerController player)
+		public static int DiasukesPolymorphineID;
+		public override void Pickup(PlayerController player)
         {
             base.Pickup(player);
         }

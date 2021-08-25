@@ -39,7 +39,11 @@ namespace Planetside
             CustomSynergies.Add("Ultra", mandatoryConsoleIDs, null, true);
             item.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
 
+            GunWarrant.GunWarrantID = item.PickupObjectId;
+            ItemIDs.AddToList(item.PickupObjectId);
+
         }
+        public static int GunWarrantID;
 
         private void Warrant()
         {

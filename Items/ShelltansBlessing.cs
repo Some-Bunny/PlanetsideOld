@@ -49,6 +49,7 @@ namespace Planetside
             item.SetupUnlockOnCustomFlag(CustomDungeonFlags.JAMMED_GUARD_DEFEATED, true);
             item.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
             ShelltansBlessing.ShelltainsBlessingID = item.PickupObjectId;
+            ItemIDs.AddToList(item.PickupObjectId);
 
         }
         public static int ShelltainsBlessingID;
@@ -99,7 +100,10 @@ namespace Planetside
 		}
 		protected override void OnDestroy()
 		{
-            base.Owner.OnAnyEnemyReceivedDamage = (Action<float, bool, HealthHaver>)Delegate.Remove(base.Owner.OnAnyEnemyReceivedDamage, new Action<float, bool, HealthHaver>(this.OnEnemyDamaged));
+            if (base.Owner != null)
+            {
+                base.Owner.OnAnyEnemyReceivedDamage = (Action<float, bool, HealthHaver>)Delegate.Remove(base.Owner.OnAnyEnemyReceivedDamage, new Action<float, bool, HealthHaver>(this.OnEnemyDamaged));
+            }
             base.OnDestroy();
 		}
 	}

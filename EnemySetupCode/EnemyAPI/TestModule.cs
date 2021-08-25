@@ -14,7 +14,7 @@ namespace Planetside
 
 	public class TestOverrideBehavior : OverrideBehavior
 	{
-		public override string OverrideAIActorGUID => "8bb5578fba374e8aae8e10b754e61d62"; // Replace the GUID with whatever enemy you want to modify. This GUID is for the bullet kin.
+		public override string OverrideAIActorGUID => "3a077fa5872d462196bb9a3cb1af02a3"; // Replace the GUID with whatever enemy you want to modify. This GUID is for the bullet kin.
 																						  // You can find a full list of GUIDs at https://github.com/ModTheGungeon/ETGMod/blob/master/Assembly-CSharp.Base.mm/Content/gungeon_id_map/enemies.txt
 		public override void DoOverride()
 		{
@@ -26,7 +26,7 @@ namespace Planetside
 
 			//The BehaviorSpeculator is responsible for almost everything an enemy does, from shooting a gun to teleporting.
 			// Tip: To debug an enemy's BehaviorSpeculator, you can uncomment the line below. This will print all the behavior information to the console.
-			//ToolsEnemy.DebugInformation(behaviorSpec);
+			ToolsEnemy.DebugInformation(behaviorSpec);
 
 			// For this first change, we're just going to increase the lead amount of the bullet kin's ShootGunBehavior so its shots fire like veteran kin.
 			//ShootBehavior shootGunBehavior2 = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[0].Behavior as ShootBehavior;
@@ -51,7 +51,7 @@ namespace Planetside
 			// Next, we're going to change another few things on the ShootGunBehavior so that it has a custom BulletScript.
 			// Makes it so the bullet kin will shoot our bullet script instead of his own gun shot.
 			//shootGunBehavior.BulletScript = new CustomBulletScriptSelector(typeof(Death)); // Sets the bullet kin's bullet script to our custom bullet script.
-
+			//behaviorSpec.aiActor.get
 		}
 		//public AIBulletBank.Entry ThesporeEntry;
 		public AIBulletBank.Entry lol; 

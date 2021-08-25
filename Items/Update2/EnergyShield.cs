@@ -35,7 +35,11 @@ namespace Planetside
             item.Identifier = IounStoneOrbitalItem.IounStoneIdentifier.GENERIC;
             item.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
 
+            EnergyShield.EnergyPlatedShieldID = item.PickupObjectId;
+            ItemIDs.AddToList(item.PickupObjectId);
+
         }
+        public static int EnergyPlatedShieldID;
 
         public static void BuildPrefab()
         {
@@ -79,6 +83,8 @@ namespace Planetside
             GameManager.Instance.OnNewLevelFullyLoaded += this.FixGuon;
             base.Pickup(player);
         }
+
+
 
         private void FixGuon()
         {

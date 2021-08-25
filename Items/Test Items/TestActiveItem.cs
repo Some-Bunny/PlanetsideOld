@@ -52,7 +52,9 @@ namespace Planetside
         public static Shader fuckyou = ShaderCache.Acquire("Brave/Internal/WorldDecay");
 
         // new Material(ShaderCache.Acquire("Brave/Effects/SimplicityDerivativeShader"));
-
+        private static AssetBundle bundle = ResourceManager.LoadAssetBundle("enemies_base_001");
+        private GameObject ShipPrefab = bundle.LoadAsset("assets/data/enemies/bosses/bossfinalrogue.prefab") as GameObject;
+        //private BasicBeamController mean = LaserReticle.get
 
         //WORKS
         //            material.shader = ShaderCache.Acquire("Brave/Internal/HologramShader");
@@ -60,10 +62,35 @@ namespace Planetside
         public GameObject spawnedPlayerObject;
         public GameObject objectToSpawn;
         //GoopDefinition goop;
+        private Projectile beamProjectile = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").GetComponent<BossFinalRogueGunController>().GetComponent<BossFinalRogueLaserGun>().beamProjectile;
 
         protected override void DoEffect(PlayerController user)
         {
+            base.DoEffect(user);
 
+            var enemy = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5");
+
+            if (!enemy)
+            {
+                ETGModConsole.Log("enemy null");
+            }
+
+            Projectile beam = null;
+
+            foreach (Component item in enemy.GetComponentsInChildren(typeof(Component)))
+            {
+                if (item is BossFinalRogueLaserGun laser)
+                {
+                    if (laser.beamProjectile)
+                    {
+                        beam = laser.beamProjectile;
+                        break;
+                    }
+                }
+            }
+
+            Fire(beam);
+            /*
             float RNG = UnityEngine.Random.Range(5.5f, 15f);
             ETGModConsole.Log("As /= ");
             float As = RNG /= 5.5f;
@@ -72,7 +99,7 @@ namespace Planetside
             float Is = RNG / 5.5f;
             ETGModConsole.Log(Is.ToString());
             ETGModConsole.Log("As /");
-
+            */
             /*
             float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
            // UIToolbox.TextBox(Color.white, "Ouroborous Level: " + Loop.ToString() ,user.gameObject,dfPivotPoint.TopCenter ,new Vector3(user.specRigidbody.UnitCenter.x - user.transform.position.x, 1.25f, 0f), 5, 1.5f);
@@ -268,15 +295,235 @@ namespace Planetside
             */
 
         }
-        public static BulletScriptSource m_bulletSource;
-        public BulletScriptSelector BulletScript;
-        public Transform ShootPoint;
-        public static Material Material;
-        public Texture2D CosmicTex;
-        public Texture2D portalEeveeTex;
-        public GameObject DeathStarExplosionVFX;
-        public Texture2D PaletteTex;
-        protected Material m_decayMaterial;
+        private BasicBeamController m_laserBeam;
+        public Transform beamTransform;
+        private bool m_firingLaser;
+        //private float LaserAngle = 90;
+
+        public void Fire(Projectile projectile)
+        {
+            m_firingLaser = true;
+            //this.m_fireTimer = this.fireTime;
+            //this.LaserAngle = -90f;
+            //if (this.LightToTrigger)
+            //{
+            //    this.LightToTrigger.ManuallyDoBulletSpawnedFade();
+            //}
+            beamTransform = GameManager.Instance.PrimaryPlayer.transform;
+            base.StartCoroutine(this.FireBeam(projectile));
+            //base.StartCoroutine(this.DoGunMotionCR());
+            //if (this.doScreenShake)
+            //{
+            //    GameManager.Instance.MainCameraController.DoContinuousScreenShake(this.screenShake, this, false);
+            //}
+        }
+
+        public void LateUpdate()
+        {
+            if (m_firingLaser && this.m_laserBeam)
+            {
+                this.m_laserBeam.LateUpdatePosition(this.beamTransform.position);
+            }
+            else if (this.m_laserBeam && this.m_laserBeam.State == BasicBeamController.BeamState.Dissipating)
+            {
+                this.m_laserBeam.LateUpdatePosition(this.beamTransform.position);
+            }
+        }
+        public IntVector2 colliderOffset;
+
+        public IntVector2 colliderSize;
+        protected IEnumerator FireBeam(Projectile projectile)
+        {
+            GameObject beamObject = UnityEngine.Object.Instantiate<GameObject>(projectile.gameObject);
+            this.m_laserBeam = beamObject.GetComponent<BasicBeamController>();
+            this.m_laserBeam.Owner = LastOwner;
+            this.m_laserBeam.HitsPlayers = false;
+            this.m_laserBeam.HitsEnemies = true;
+            this.m_laserBeam.collisionLength = 100;
+            this.m_laserBeam.collisionWidth = 6;
+            this.m_laserBeam.collisionRadius = 6;
+            this.m_laserBeam.collisionType = BasicBeamController.BeamCollisionType.Default;
+
+            //this.m_laserBeam.projectile.collidesWithEnemies = true;
+
+
+
+            this.m_laserBeam.OverrideHitChecks = delegate (SpeculativeRigidbody hitRigidbody, Vector2 dirVec)
+            {
+                HealthHaver healthHaver = (!hitRigidbody) ? null : hitRigidbody.healthHaver;
+                if (hitRigidbody && hitRigidbody.projectile && hitRigidbody.GetComponent<BeholsterBounceRocket>())
+                {
+                    BounceProjModifier component = hitRigidbody.GetComponent<BounceProjModifier>();
+                    if (component)
+                    {
+                        component.numberOfBounces = 0;
+                    }
+                    hitRigidbody.projectile.DieInAir(false, true, true, false);
+                }
+                if (healthHaver != null)
+                {
+                    if (healthHaver.aiActor)
+                    {
+                        Projectile currentProjectile = projectile;
+                        healthHaver.ApplyDamage(ProjectileData.FixedFallbackDamageToEnemies, dirVec, "Death", currentProjectile.damageTypes, DamageCategory.Normal, false, null, false);
+                    }
+                    else
+                    {
+                        Projectile currentProjectile = projectile;
+                        healthHaver.ApplyDamage(ProjectileData.FixedFallbackDamageToEnemies, dirVec, "Death", currentProjectile.damageTypes, DamageCategory.Normal, false, null, false);
+                    }
+                }
+                if (hitRigidbody.majorBreakable)
+                {
+                    hitRigidbody.majorBreakable.ApplyDamage(26f * BraveTime.DeltaTime, dirVec, false, false, false);
+                }
+            };
+
+            this.m_laserBeam.ContinueBeamArtToWall = true;
+            this.m_laserBeam.projectile.baseData.damage = 200;
+            this.m_laserBeam.projectile.collidesWithEnemies = true;
+
+
+            bool firstFrame = true;
+            while (this.m_laserBeam != null && this.m_firingLaser)
+            {
+                float clampedAngle = BraveMathCollege.ClampAngle360(LastOwner.CurrentGun.CurrentAngle);
+                Vector2 dirVec = new Vector3(Mathf.Cos(clampedAngle * 0.0174532924f), Mathf.Sin(clampedAngle * 0.0174532924f)) * 10f;
+                this.m_laserBeam.Origin = this.beamTransform.position;
+                this.m_laserBeam.Direction = dirVec;
+                if (firstFrame)
+                {
+                    yield return null;
+                    firstFrame = false;
+                }
+                else
+                {
+                    yield return null;
+                    while (Time.timeScale == 0f)
+                    {
+                        yield return null;
+                    }
+                }
+            }
+            if (!this.m_firingLaser && this.m_laserBeam != null)
+            {
+                this.m_laserBeam.CeaseAttack();
+            }
+            if (this.m_laserBeam)
+            {
+                this.m_laserBeam.SelfUpdate = false;
+                while (this.m_laserBeam)
+                {
+                    this.m_laserBeam.Origin = this.beamTransform.position;
+                    yield return null;
+                }
+            }
+            this.m_laserBeam = null;
+            yield break;
+        }
+
+        /*
+        protected IEnumerator FireBeam()
+        {
+            ETGModConsole.Log("1");
+            //this.m_firingLaser = true;
+            //GameObject beamObject = UnityEngine.Object.Instantiate<GameObject>(projectile.gameObject);
+            ETGModConsole.Log("2");
+
+            //BasicBeamController hinge = ShipPrefab.GetComponent("BasicBeamController") as BasicBeamController;
+            //List<Transform> proj = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").GetComponents<Transform>();
+
+
+            //BasicBeamController beam = ShipPrefab.GetComponentInChildren<BasicBeamController>();
+
+            BasicBeamController beam = m_laserBeam;
+            Transform beamtrans = base.LastOwner.transform;
+            //ETGModConsole.Log("2.1");
+            var enemy = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5");
+            foreach (Component item in enemy.GetComponentsInChildren(typeof(Component)))
+            {
+                //ETGModConsole.Log("2.2");
+                if (item is BossFinalRogueLaserGun laser)
+                {
+                    //ETGModConsole.Log("2.3");
+                    if (laser.beamProjectile != null)
+                    {
+                        //ETGModConsole.Log("2.4");
+                        GameObject beamObject = UnityEngine.Object.Instantiate<GameObject>(laser.beamProjectile.gameObject);
+                        beam = beamObject.GetOrAddComponent<BasicBeamController>();
+                        //GameObject beamObject = UnityEngine.Object.Instantiate<GameObject>(laser.projectile.gameObject);
+                        //this.m_laserBeam = beamObject.GetComponent<BasicBeamController>();
+                    }
+                    if (laser.beamTransform != null)
+                    {
+                        beamtrans = laser.beamTransform;
+                    }
+                }
+            }
+            
+            //ETGModConsole.Log("3");
+
+            if (beam != null)
+            {
+                //ETGModConsole.Log("4");
+                beam.Owner = base.LastOwner;
+                beam.HitsPlayers = true;//projectile.collidesWithPlayer;
+                beam.HitsEnemies = true;//projectile.collidesWithEnemies;
+                beam.ContinueBeamArtToWall = false;
+                beam.chargeDelay = 1;
+                beam.usesTelegraph = true;
+                beam.renderer.enabled = true;
+                bool firstFrame = true;
+                while (beam != null)// && this.m_firingLaser)
+                {
+                    tk2dSprite sproot1 = beam.GetComponent<tk2dSprite>();
+                    if (sproot1 != null)
+                    {
+                        sproot1.HeightOffGround = -2;
+                    }
+                    //ETGModConsole.Log(beam.Origin.ToString());
+                    //ETGModConsole.Log(base.LastOwner.transform.position.ToString());
+                    float clampedAngle = BraveMathCollege.ClampAngle360(base.LastOwner.CurrentGun.CurrentAngle);
+                    Vector2 dirVec = new Vector3(Mathf.Cos(clampedAngle * 0.0174532924f), Mathf.Sin(clampedAngle * 0.0174532924f)) * 10f;
+
+                    beam.Origin = base.LastOwner.sprite.transform.position + beamtrans.position;// + new Vector3(-15, -5);
+                    beam.Direction = dirVec;
+                    beam.transform.position.WithZ(beam.transform.position.z + 99999);
+
+                    //beam.gameObject.transform.position = GameManager.Instance.PrimaryPlayer.transform.position;
+                    beam.sprite.UpdateZDepth();
+                    if (firstFrame)
+                    {
+                        yield return null;
+                        firstFrame = false;
+                    }
+                    else
+                    {
+                        yield return null;
+                        while (Time.timeScale == 0f)
+                        {
+                            yield return null;
+                        }
+                    }
+                }
+                //if (!this.m_firingLaser && beam != null)
+                //{
+                    //this.m_firingLaser = false;
+                    //beam.CeaseAttack();
+                //}
+                /*
+                if (beam)
+                {
+                    beam.SelfUpdate = false;
+                    while (beam)
+                    {
+                        beam.Origin = base.LastOwner.sprite.transform.position + beamtrans.position;
+                        yield return null;
+                    }
+                }
+                //beam = null;
+                */
+
 
     }
 }

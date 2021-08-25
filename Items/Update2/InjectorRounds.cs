@@ -44,7 +44,12 @@ namespace Planetside
 				"antibody"
 			};
 			CustomSynergies.Add("Thats How I Lost My Medical License", mandatoryConsoleIDs, optionalConsoleIDs, true);
+
+			InjectorRounds.InjectorRoundsID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int InjectorRoundsID;
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			try

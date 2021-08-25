@@ -49,7 +49,11 @@ namespace Planetside
             CustomSynergies.Add("Gun Snek Good Maybe?", mandatoryConsoleIDs, optionalConsoleIDs, true);
             item.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
+            ShellsnakeOil.ShellSnakeOilID = item.PickupObjectId;
+            ItemIDs.AddToList(item.PickupObjectId);
+
         }
+        public static int ShellSnakeOilID;
         private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
         {
             try

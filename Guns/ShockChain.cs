@@ -123,6 +123,7 @@ namespace Planetside
 			CustomSynergies.Add("Single A", AAA, null, true);
 			ShockChain.ElectricMusicID = gun.PickupObjectId;
 
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int ElectricMusicID;
 

@@ -90,7 +90,12 @@ namespace Planetside
 
             testActive.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
+            WispInABottle.WispInABottleID = testActive.PickupObjectId;
+            ItemIDs.AddToList(testActive.PickupObjectId);
+
         }
+        public static int WispInABottleID;
+
         public static GameObject SunPrefab;
         public static List<int> spriteIds = new List<int>();
         public override void Pickup(PlayerController player)

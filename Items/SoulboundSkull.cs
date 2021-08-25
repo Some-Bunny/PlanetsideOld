@@ -30,7 +30,11 @@ namespace Planetside
                 "\n\nIt seems to absorb souls only to shortly release them...\n\n LVII : XIX";
             ItemBuilder.SetupItem(item, shortDesc, longDesc, "psog");
             item.quality = PickupObject.ItemQuality.B;
+            SoulboundSkull.SoulboundSkullID = item.PickupObjectId;
+            ItemIDs.AddToList(item.PickupObjectId);
+
         }
+        public static int SoulboundSkullID;
         private void OnEnemyDamaged(float damage, bool fatal, HealthHaver enemy)
         {
             if (base.Owner != null)
@@ -193,7 +197,10 @@ namespace Planetside
 		}
 		protected override void OnDestroy()
 		{
-            base.Owner.OnAnyEnemyReceivedDamage = (Action<float, bool, HealthHaver>)Delegate.Remove(base.Owner.OnAnyEnemyReceivedDamage, new Action<float, bool, HealthHaver>(this.OnEnemyDamaged));
+            if (base.Owner != null)
+            {
+                base.Owner.OnAnyEnemyReceivedDamage = (Action<float, bool, HealthHaver>)Delegate.Remove(base.Owner.OnAnyEnemyReceivedDamage, new Action<float, bool, HealthHaver>(this.OnEnemyDamaged));
+            }
             base.OnDestroy();
 		}
 	}

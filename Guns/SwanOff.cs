@@ -67,6 +67,7 @@ namespace Planetside
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			SwanOff.SwanOffID = gun.PickupObjectId;
 
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int SwanOffID;
 		public override void OnPostFired(PlayerController player, Gun bruhgun)

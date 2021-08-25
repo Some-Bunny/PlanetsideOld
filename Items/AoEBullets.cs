@@ -71,7 +71,11 @@ namespace Planetside
 				"glacier"
 			};
 			CustomSynergies.Add("Below Zero", mandatoryConsoleIDs, optionalConsoleID2s, true);
+			AoEBullets.AuraBulletsID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int AuraBulletsID;
 
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
@@ -133,20 +137,20 @@ namespace Planetside
 			player.PostProcessProjectile -= this.PostProcessProjectile;
 			return result;
 		}
-
-		// Token: 0x06000665 RID: 1637 RVA: 0x0003A9F6 File Offset: 0x00038BF6
+			protected override void OnDestroy()
+			{
+				if (Owner != null)
+				{
+					base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
+				}
+				base.OnDestroy();
+			}
 		public override void Pickup(PlayerController player)
 		{
 			base.Pickup(player);
 			player.PostProcessProjectile += this.PostProcessProjectile;
 		}
 
-		// Token: 0x06000666 RID: 1638 RVA: 0x0003AA14 File Offset: 0x00038C14
-		protected override void OnDestroy()
-		{
-			base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
-			base.OnDestroy();
-		}
 	}
 }
 

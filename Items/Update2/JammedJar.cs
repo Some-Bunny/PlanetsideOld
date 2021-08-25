@@ -38,10 +38,13 @@ namespace Planetside
             JammedJar.spriteIDs[2] = SpriteBuilder.AddSpriteToCollection(JammedJar.spritePaths[1], lockpicker.sprite.Collection);
             JammedJar.spriteIDs[1] = SpriteBuilder.AddSpriteToCollection(JammedJar.spritePaths[2], lockpicker.sprite.Collection);
             JammedJar.spriteIDs[0] = SpriteBuilder.AddSpriteToCollection(JammedJar.spritePaths[3], lockpicker.sprite.Collection);
-            Uses = 3;
             lockpicker.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
+            InjectorRounds.InjectorRoundsID = lockpicker.PickupObjectId;
+            ItemIDs.AddToList(lockpicker.PickupObjectId);
+
         }
+        public static int InjectorRoundsID;
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);
@@ -49,8 +52,7 @@ namespace Planetside
 
         protected override void DoEffect(PlayerController user)
         {
-           Uses--; 
-           base.sprite.SetSprite(JammedJar.spriteIDs[Uses]);
+           base.sprite.SetSprite(JammedJar.spriteIDs[base.numberOfUses]);
            AkSoundEngine.PostEvent("Play_OBJ_cursepot_shatter_01", base.gameObject);
             PickupObject pickupObject = Game.Items["psog:damned_guon_stone"];
             user.AcquirePassiveItemPrefabDirectly(pickupObject as PassiveItem);

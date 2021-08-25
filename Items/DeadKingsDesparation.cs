@@ -82,7 +82,11 @@ namespace Planetside
                 "psog:death_warrant"
             };
             CustomSynergies.Add("Vermincide.", mandatoryConsoleIDs, optionalConsoleIDs, true);
+            DeadKingsDesparation.DeadKingsDesparationID = testActive.PickupObjectId;
+            ItemIDs.AddToList(testActive.PickupObjectId);
+
         }
+        public static int DeadKingsDesparationID;
         public static void BuildPrefab()
         {
             GameObject gameObject = SpriteBuilder.SpriteFromResource("Planetside/Resources/VFX/MithrixCalldown/mithrixfalling_001", null, true);
@@ -119,18 +123,19 @@ namespace Planetside
             tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[0]); //Mithrix Fall
 
             tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[1]); //Mithrix Land
-            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[2]); 
-            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[3]); 
-            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[4]); 
-            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[5]); 
-            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[6]); 
-            
+            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[2]);
+            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[3]);
+            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[4]);
+            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[5]);
+            tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[6]);
+
             tk2dSprite.SetSprite(DeadKingsDesparation.spriteIds1[7]); //Mithrix Leap
 
             FakePrefab.MarkAsFakePrefab(gameObject2);
             UnityEngine.Object.DontDestroyOnLoad(gameObject2);
             DeadKingsDesparation.CalldownPrefab = gameObject2;
         }
+
         public static GameObject CalldownPrefab;
         public static List<int> spriteIds1 = new List<int>();
         public GameObject objectToSpawn;

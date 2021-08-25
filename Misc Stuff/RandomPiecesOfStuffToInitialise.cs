@@ -81,7 +81,7 @@ namespace Planetside
 			speculativeRigidbody.PrimaryPixelCollider.CollisionLayer = CollisionLayer.EnemyBulletBlocker;
 			orbitalPrefab.shouldRotate = false;
 			orbitalPrefab.orbitRadius = 4f;
-			orbitalPrefab.orbitDegreesPerSecond = 30;
+			orbitalPrefab.orbitDegreesPerSecond = 40;
 			//orbitalPrefab.perfectOrbitalFactor = 1000f;
 			orbitalPrefab.SetOrbitalTier(0);
 			UnityEngine.Object.DontDestroyOnLoad(gameObject);
@@ -92,8 +92,8 @@ namespace Planetside
 			ImprovedAfterImage yeah = gameObject.AddComponent<ImprovedAfterImage>();
 			yeah.dashColor = new Color(0, 0.7f, 1);
 			yeah.spawnShadows = true;
-			yeah.shadowTimeDelay = 0.01f;
-			yeah.shadowLifetime = 0.5f;
+			yeah.shadowTimeDelay = 0.02f;
+			yeah.shadowLifetime = 0.2f;
 
 			PlayerOrbital si = gameObject.GetComponent<PlayerOrbital>();
 

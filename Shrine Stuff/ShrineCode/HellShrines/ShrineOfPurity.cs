@@ -49,9 +49,17 @@ namespace Planetside
 		public static string spriteDefinition1 = "Planetside/Resources/ShrineIcons/PurityIcon";
 		public static bool CanUse(PlayerController player, GameObject shrine)
 		{
-			if( player.gameObject.GetComponent<ShrineOfDarkness.DarknessTime>() != null || player.gameObject.GetComponent<ShrineOfCurses.JamTime>() != null || player.gameObject.GetComponent<ShrineOfPetrification.PetrifyTime>() != null || player.gameObject.GetComponent<ShrineOfSomething.SomethingTime>() != null && !player.IsInCombat)
+
+			if( player.gameObject.GetComponent<ShrineOfDarkness.DarknessTime>() != null || player.gameObject.GetComponent<ShrineOfCurses.JamTime>() != null || player.gameObject.GetComponent<ShrineOfPetrification.PetrifyTime>() != null || player.gameObject.GetComponent<ShrineOfSomething.SomethingTime>() != null)
             {
-				return shrine.GetComponent<CustomShrineController>().numUses <= 0;
+				if (!player.IsInCombat)
+                {
+					return shrine.GetComponent<CustomShrineController>().numUses <= 0;
+				}
+				else
+                {
+					return false;
+				}
 			}
 			else
             {
@@ -139,13 +147,8 @@ namespace Planetside
 			}
 			private void EnteredCombat()
             {
-				RoomHandler absoluteRoom = playeroue.transform.position.GetAbsoluteRoom();
-
-				bool flag2 = absoluteRoom.IsDarkAndTerrifying == false;
-				if (flag2)
-				{
-					absoluteRoom.BecomeTerrifyingDarkRoom(1f, 0.15f, 0.3f, "Play_ENM_darken_world_01");
-				}
+				RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
+				absoluteRoom.BecomeTerrifyingDarkRoom(1f, 0.15f, 0.3f, "Play_ENM_darken_world_01");
 			}
 
 			private void RoomCleared(PlayerController obj)
@@ -164,7 +167,11 @@ namespace Planetside
 				bool S = SaveAPIManager.GetFlag(CustomDungeonFlags.DEJAM);
 				bool D = SaveAPIManager.GetFlag(CustomDungeonFlags.DEPETRIFY);
 				bool F = SaveAPIManager.GetFlag(CustomDungeonFlags.DEDARKEN);
-
+				Material outlineMaterial1 = SpriteOutlineManager.GetOutlineMaterial(chest2.sprite);
+				if (outlineMaterial1 != null)
+				{
+					outlineMaterial1.SetColor("_OverrideColor", new Color(30f, 30f, 30f));
+				}
 				if (A == true && S == true && D == true && F == true)
 				{
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, true);
@@ -221,7 +228,11 @@ namespace Planetside
 				bool S = SaveAPIManager.GetFlag(CustomDungeonFlags.DEJAM);
 				bool D = SaveAPIManager.GetFlag(CustomDungeonFlags.DEPETRIFY);
 				bool F = SaveAPIManager.GetFlag(CustomDungeonFlags.DEDARKEN);
-
+				Material outlineMaterial1 = SpriteOutlineManager.GetOutlineMaterial(chest2.sprite);
+				if (outlineMaterial1 != null)
+				{
+					outlineMaterial1.SetColor("_OverrideColor", new Color(30f, 30f, 30f));
+				}
 				if (A == true && S == true && D == true && F == true)
 				{
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, true);
@@ -259,7 +270,7 @@ namespace Planetside
 				if (target != null && !OtherTools.BossBlackList.Contains(target.aiActor.encounterTrackable.EncounterGuid))
 				{
 					PetrifyThing pet = target.gameObject.AddComponent<PetrifyThing>();
-					pet.Time = 7f;
+					pet.Time = 6f;
 				}
 			}
 			private void RoomCleared(PlayerController obj)
@@ -272,12 +283,18 @@ namespace Planetside
 				IntVector2 bestRewardLocation = playeroue.CurrentRoom.GetBestRewardLocation(IntVector2.One * 3, RoomHandler.RewardLocationStyle.CameraCenter, true);
 				Chest chest2 = GameManager.Instance.RewardManager.SpawnRewardChestAt(bestRewardLocation, -1f, PickupObject.ItemQuality.EXCLUDED);
 				chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
+				
 				chest2.IsLocked = false;
 				bool A = SaveAPIManager.GetFlag(CustomDungeonFlags.DEBOLSTER);
 				bool S = SaveAPIManager.GetFlag(CustomDungeonFlags.DEJAM);
 				bool D = SaveAPIManager.GetFlag(CustomDungeonFlags.DEPETRIFY);
 				bool F = SaveAPIManager.GetFlag(CustomDungeonFlags.DEDARKEN);
 
+				Material outlineMaterial1 = SpriteOutlineManager.GetOutlineMaterial(chest2.sprite);
+				if (outlineMaterial1 != null)
+                {
+					outlineMaterial1.SetColor("_OverrideColor", new Color(30f, 30f, 30f));
+				}
 				if (A == true && S == true && D == true && F == true)
 				{
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, true);
@@ -330,6 +347,11 @@ namespace Planetside
 				bool S = SaveAPIManager.GetFlag(CustomDungeonFlags.DEJAM);
 				bool D = SaveAPIManager.GetFlag(CustomDungeonFlags.DEPETRIFY);
 				bool F = SaveAPIManager.GetFlag(CustomDungeonFlags.DEDARKEN);
+				Material outlineMaterial1 = SpriteOutlineManager.GetOutlineMaterial(chest2.sprite);
+				if (outlineMaterial1 != null)
+				{
+					outlineMaterial1.SetColor("_OverrideColor", new Color(30f, 30f, 30f));
+				}
 
 				if (A ==true && S == true && D == true && F == true)
 				{

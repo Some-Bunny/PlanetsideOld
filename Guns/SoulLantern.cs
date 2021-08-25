@@ -62,6 +62,9 @@ namespace Planetside
 			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
 			projectile.gameObject.AddComponent<SoulLanternProjectile>();
+			
+			//projectile.PoisonApplyChance = 100;
+
 			//projectile.baseData.range = 5.8f;
 			gun.carryPixelOffset = new IntVector2((int)2f, (int)2f);
 			PierceProjModifier spook = projectile.gameObject.AddComponent<PierceProjModifier>();
@@ -104,7 +107,10 @@ namespace Planetside
 			gun.barrelOffset.transform.localPosition -= new Vector3(0.25f, 0, 0f);
 
 
+			SoulLantern.SoulLanternID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int SoulLanternID;
 
 		private bool HasReloaded;
 		public override void PostProcessProjectile(Projectile projectile)

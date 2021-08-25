@@ -37,7 +37,11 @@ namespace Planetside
 			item.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
 
+			Unstabullets.UnstabulletsID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int UnstabulletsID;
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			PlayerController owner = base.Owner;

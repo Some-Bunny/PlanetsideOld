@@ -31,9 +31,11 @@ namespace Planetside
 				"gilded_bullets"
 			};
 			CustomSynergies.Add("Expert Demolitionist", mandatoryConsoleIDs, optionalConsoleIDs, true);
+			GildedPots.GildedPotsID = warVase.PickupObjectId;
+			ItemIDs.AddToList(warVase.PickupObjectId);
 
-		
 		}
+		public static int GildedPotsID;
 
 		// Token: 0x06000198 RID: 408 RVA: 0x0001013B File Offset: 0x0000E33B
 		public override void Pickup(PlayerController player)
@@ -88,10 +90,7 @@ namespace Planetside
 			}
 		}
 
-		// Token: 0x0600019B RID: 411 RVA: 0x00010248 File Offset: 0x0000E448
-		
-			
-		// Token: 0x0600019C RID: 412 RVA: 0x0001032C File Offset: 0x0000E52C
+	
 		private void HandleBroken(MinorBreakable mb)
 		{
 			float coinchance = 0.0416f;

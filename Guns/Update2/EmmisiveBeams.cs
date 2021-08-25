@@ -84,6 +84,21 @@ namespace Planetside
             }   
         }
 
+        public void Update()
+        {
+            Transform trna = base.transform.Find("beam pierce impact vfx");
+            if (trna != null)
+            {
+                tk2dSprite sproot = trna.GetComponent<tk2dSprite>();
+                if (sproot != null)
+                {
+                    sproot.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+                    sproot.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+                    sproot.renderer.material.SetFloat("_EmissivePower", EmissivePower);
+                    sproot.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
+                }
+            }
+        }
 
         private BasicBeamController beamcont;
         public float EmissivePower;

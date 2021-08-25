@@ -48,8 +48,8 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(450f);
-				companion.aiActor.healthHaver.SetHealthMaximum(450f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(525f);
+				companion.aiActor.healthHaver.SetHealthMaximum(525f);
 				companion.aiActor.CollisionKnockbackStrength = 2f;
 				companion.aiActor.procedurallyOutlined = false;
 				companion.aiActor.CanTargetPlayers = true;
@@ -1076,18 +1076,18 @@ namespace Planetside
 			base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("da797878d215453abba824ff902e21b4").bulletBank.GetBullet("snakeBullet"));
 
 			base.PostWwiseEvent("Play_BOSS_RatMech_Stomp_01", null);
-			int AAmountToShoot = UnityEngine.Random.Range(20, 40);
+			int AAmountToShoot = UnityEngine.Random.Range(20, 35);
 			for (int i = 0; i < AAmountToShoot; i++)
 			{
 				int RNG = UnityEngine.Random.Range(0, 3);
 				bool OneInTheChamber = RNG == 1;
 				if (OneInTheChamber)
 				{
-					base.Fire(new Direction(UnityEngine.Random.Range(30 + (i / 4), -30 - (i / 2)), DirectionType.Aim, -1f), new Speed(UnityEngine.Random.Range(6, 10), SpeedType.Absolute), new Slammo.BabyShot());
+					base.Fire(new Direction(UnityEngine.Random.Range(30 + (i / 4), -30 - (i / 2)), DirectionType.Aim, -1f), new Speed(UnityEngine.Random.Range(6, 9), SpeedType.Absolute), new Slammo.BabyShot());
 				}
 				else
 				{
-					base.Fire(new Direction(UnityEngine.Random.Range(30 + (i / 4), -30 - (i / 2)), DirectionType.Aim, -1f), new Speed(UnityEngine.Random.Range(6, 10), SpeedType.Absolute), new Slammo.Yees());
+					base.Fire(new Direction(UnityEngine.Random.Range(30 + (i / 4), -30 - (i / 2)), DirectionType.Aim, -1f), new Speed(UnityEngine.Random.Range(6, 9), SpeedType.Absolute), new Slammo.Yees());
 
 				}
 			}
@@ -1134,7 +1134,7 @@ namespace Planetside
 			base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("465da2bb086a4a88a803f79fe3a27677").bulletBank.GetBullet("homing"));
 			base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("da797878d215453abba824ff902e21b4").bulletBank.GetBullet("snakeBullet"));
 
-			int AAmountToShoot = UnityEngine.Random.Range(3, 7);
+			int AAmountToShoot = UnityEngine.Random.Range(3, 5);
 			for (int i = 0; i < AAmountToShoot; i++)
             {
 				base.PostWwiseEvent("Play_ENM_kali_shockwave_01", null);

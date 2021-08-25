@@ -32,7 +32,11 @@ namespace Planetside
 			item.quality = PickupObject.ItemQuality.B;
 			item.CompanionGuid = BabyGoodCandleKin.guid;
 			BabyGoodCandleKin.BuildPrefab();
+			BabyGoodCandleKin.BabyGoodCandleKinID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int BabyGoodCandleKinID;
 
 		public static void BuildPrefab()
 		{

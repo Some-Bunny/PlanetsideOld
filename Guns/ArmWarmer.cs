@@ -70,7 +70,10 @@ namespace Planetside
 
 			gun.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
+			ArmWarmer.ArmWarmerID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int ArmWarmerID;
 
 
 		public override void OnReloadPressed(PlayerController player, Gun gun, bool bSOMETHING)

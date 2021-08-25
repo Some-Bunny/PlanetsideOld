@@ -66,7 +66,6 @@ namespace Planetside
             //Gun FUUUU = PickupObjectDatabase.GetById(577) as Gun;
             //gun.gunSwitchGroup = FUUUU.gunSwitchGroup;
             ETGMod.Databases.Items.Add(gun, null, "ANY");
-            HardlightNailgun.HardAsNailsID = gun.PickupObjectId;
             projectile.transform.parent = gun.barrelOffset;
             behav.activeReloadEnabled = true;
             behav.reloads = new List<MultiActiveReloadData>
@@ -77,6 +76,8 @@ namespace Planetside
 
                 }, true, "SwitchClip"),
             };
+            HardlightNailgun.HardAsNailsID = gun.PickupObjectId;
+            ItemIDs.AddToList(gun.PickupObjectId);
         }
         public static int HardAsNailsID;
 

@@ -38,9 +38,13 @@ namespace Planetside
             };
             CustomSynergies.Add("Heavy Metals", mandatoryConsoleIDs, optionalConsoleIDs, true);
 
-        }
+            UnstableTeslaCoil.VolatileTeslaPackID = warVase.PickupObjectId;
+            ItemIDs.AddToList(warVase.PickupObjectId);
 
-		public override void Pickup(PlayerController player)
+        }
+        public static int VolatileTeslaPackID;
+
+        public override void Pickup(PlayerController player)
 		{
 			base.Pickup(player);
 		}
@@ -113,7 +117,7 @@ namespace Planetside
         public AIActor GetNearestEnemy(List<AIActor> activeEnemies, Vector2 position, out float nearestDistance, string[] filter)
         {
             AIActor aiactor = null;
-            nearestDistance = 4.66f;
+            nearestDistance = 6f;
             bool flag = activeEnemies == null;
             bool flag2 = flag;
             bool flag3 = flag2;
@@ -170,7 +174,7 @@ namespace Planetside
         private void ApplyLinearDamage(Vector2 p1, Vector2 p2)
         {
             PlayerController player = (GameManager.Instance.PrimaryPlayer);
-            float num = 3.75f;
+            float num = 4f;
             for (int i = 0; i < StaticReferenceManager.AllEnemies.Count; i++)
             {
                 AIActor aiactor = StaticReferenceManager.AllEnemies[i];

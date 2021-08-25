@@ -32,10 +32,13 @@ namespace Planetside
 			ammolet.quality = PickupObject.ItemQuality.B;
 			ammolet.AddPassiveStatModifier(PlayerStats.StatType.AdditionalBlanksPerFloor, 1f, StatModifier.ModifyMethod.ADDITIVE);
 			ammolet.AddToSubShop(ItemBuilder.ShopType.OldRed, 1f);
-			FrailtyAmmolet.FrailetID = ammolet.PickupObjectId;
+			FrailtyAmmolet.FrailtyAmmoletID = ammolet.PickupObjectId;
+			ItemIDs.AddToList(ammolet.PickupObjectId);
+
 			ammolet.SetupUnlockOnCustomFlag(CustomDungeonFlags.HIGHER_CURSE_DRAGUN_KILLED, true);
 		}
-		private static int FrailetID;
+
+		private static int FrailtyAmmoletID;
 		private static Hook BlankHook = new Hook(typeof(SilencerInstance).GetMethod("ProcessBlankModificationItemAdditionalEffects", BindingFlags.Instance | BindingFlags.NonPublic), typeof(FrailtyAmmolet).GetMethod("BlankModHook", BindingFlags.Instance | BindingFlags.Public), typeof(SilencerInstance));
 
 		public void BlankModHook(Action<SilencerInstance, BlankModificationItem, Vector2, PlayerController> orig, SilencerInstance silencer, BlankModificationItem bmi, Vector2 centerPoint, PlayerController user)
@@ -43,7 +46,7 @@ namespace Planetside
 			orig(silencer, bmi, centerPoint, user);
 			try
 			{
-				if (user.HasPickupID(FrailetID))
+				if (user.HasPickupID(FrailtyAmmoletID))
 				{
 					RoomHandler currentRoom = user.CurrentRoom;
 					if (currentRoom.HasActiveEnemies(RoomHandler.ActiveEnemyType.All))

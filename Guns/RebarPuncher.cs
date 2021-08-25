@@ -96,6 +96,7 @@ namespace Planetside
 			RebarPuncher.PlusNailsPrefab.SetActive(false);
 			gun.AddToSubShop(ItemBuilder.ShopType.Trorc	, 1f);
 
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int RebarerID;
 

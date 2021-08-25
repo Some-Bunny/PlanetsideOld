@@ -69,7 +69,11 @@ namespace Planetside
 			gun.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
 
+
+			Funcannon.FuncannonID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int FuncannonID;
 		public override void PostProcessProjectile(Projectile projectile)
 		{
 

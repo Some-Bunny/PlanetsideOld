@@ -34,7 +34,11 @@ namespace Planetside
 
             minigunrounds.SetupItem(shortDesc, longDesc, "psog");
             minigunrounds.quality = PickupObject.ItemQuality.C;
+            TableTechNullReferenceException.TableTechNullID = minigunrounds.PickupObjectId;
+            ItemIDs.AddToList(minigunrounds.PickupObjectId);
+
         }
+        public static int TableTechNullID;
 
         public override void Pickup(PlayerController player)
         {
@@ -74,6 +78,10 @@ namespace Planetside
         };
         protected override void OnDestroy()
         {
+            if (base.Owner != null)
+            {
+                base.Owner.OnTableFlipped = (Action<FlippableCover>)Delegate.Remove(base.Owner.OnTableFlipped, new Action<FlippableCover>(this.HandleFlip));
+            }
             this.FlippedInShrineRoom = false;
             base.OnDestroy();
         }

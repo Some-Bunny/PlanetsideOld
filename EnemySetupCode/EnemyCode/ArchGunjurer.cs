@@ -44,11 +44,11 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(70f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(60f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = true;
 				companion.aiActor.CanTargetPlayers = true;
-				companion.aiActor.healthHaver.SetHealthMaximum(70f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(60f, null, false);
 				companion.aiActor.HasShadow = true;
 				companion.aiActor.SetIsFlying(true, "Gamemode: Creative", true, true);
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("4db03291a12144d69fe940d5a01de376").ShadowObject;
@@ -605,6 +605,10 @@ namespace Planetside
 
 			protected override IEnumerator Top()
 			{
+				//base.Projectile.sprite.usesOverrideMaterial = true;
+				//base.Projectile.sprite.renderer.material.shader = Shader.Find("Brave/Internal/SimpleAlphaFadeUnlit");
+				//base.Projectile.sprite.renderer.material.SetFloat("_Fade", 0.2f);
+
 				float speed = this.Speed;
 				yield return this.Wait(30);
 				this.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 60);

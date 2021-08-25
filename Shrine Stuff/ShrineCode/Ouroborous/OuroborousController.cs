@@ -195,6 +195,25 @@ namespace Planetside
 				OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g + h+i+j+k, color1);
 			});
 
+			ETGModConsole.Commands.GetGroup("psog").AddUnit("help", delegate (string[] args)
+			{
+				string color1 = "9006FF";
+				OtherTools.PrintNoID("List Of Commands:", color1);
+				OtherTools.PrintNoID("=========.", color1);
+				OtherTools.PrintNoID("psog toggleloops" + ": Enables/Disables Ouroborous mode.", color1);
+				OtherTools.PrintNoID("psog current_loop" + ": Displays the current player loop.", color1);
+				OtherTools.PrintNoID("psog set_loop" + ": Sets the current loop to a given number.", color1);
+				OtherTools.PrintNoID("psog reset_loop" + ": Sets the loop to 0.", color1);
+				OtherTools.PrintNoID("=========.", color1);
+				OtherTools.PrintNoID("psog to_do_list" + ": Displays all unlock conditions.", color1);
+				OtherTools.PrintNoID("psog lock_all" + ": Forces all Planetside unlocks to be locked.", color1);
+				OtherTools.PrintNoID("psog unlock_all" + ": Forces all Planetside unlocks to be unlocked.", color1);
+				OtherTools.PrintNoID("=========.", color1);
+
+				OtherTools.PrintNoID("psog set_item_weight" + ": Changes how often Planetside items and guns appear to a given value.", color1);
+
+			});
+
 			global::ETGModConsole.Commands.GetGroup("psog").AddUnit("uitoggle", delegate (string[] args)
 			{
 				if (!disabled)

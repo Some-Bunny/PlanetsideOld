@@ -30,11 +30,15 @@ namespace Planetside
             ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.AdditionalBlanksPerFloor, 1f, StatModifier.ModifyMethod.ADDITIVE);
             ItemBuilder.SetupItem(item, shortDesc, longDesc, "psog");
             item.quality = PickupObject.ItemQuality.A;
-            EcholocationAmmolet.EchoAmmoletID = item.PickupObjectId;
+            EcholocationAmmolet.EcholocationAmmoletID = item.PickupObjectId;
 
             item.AddToSubShop(ItemBuilder.ShopType.OldRed, 1f);
 
+            EcholocationAmmolet.EcholocationAmmoletID = item.PickupObjectId;
+            ItemIDs.AddToList(item.PickupObjectId);
+
         }
+        public static int EcholocationAmmoletID;
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);
@@ -58,6 +62,5 @@ namespace Planetside
                 Minimap.Instance.RevealAllRooms(false);
             }   
         }
-        private static int EchoAmmoletID;
     }
 }

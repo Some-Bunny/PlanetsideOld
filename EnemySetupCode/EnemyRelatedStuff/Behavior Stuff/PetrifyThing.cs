@@ -24,7 +24,7 @@ namespace Planetside
 	{
 		public PetrifyThing()
         {
-			this.Time = 5f;
+			this.Time = 4f;
 		}
 
 		public bool HasTriggered;
@@ -45,7 +45,7 @@ namespace Planetside
 			AkSoundEngine.PostEvent("Play_ENM_gorgun_gaze_01", base.gameObject);
 			float m_prevWaveDist = 0f;
 			float distortionMaxRadius = 20f;
-			float distortionDuration = 1.5f;
+			float distortionDuration = 1f;
 			float distortionIntensity = 0.5f;
 			float distortionThickness = 0.04f;
 			Exploder.DoDistortionWave(startPoint, distortionIntensity, distortionThickness, distortionMaxRadius, distortionDuration);
@@ -63,7 +63,7 @@ namespace Planetside
 						{
 							Vector2 unitCenter = playerController.specRigidbody.GetUnitCenter(ColliderType.HitBox);
 							float num = Vector2.Distance(unitCenter, startPoint);
-							if (num >= m_prevWaveDist - 0.25f && num <= waveDist +0.25f)
+							if (num >= m_prevWaveDist - 3f && num <= waveDist +3)
 							{
 								playerController.CurrentStoneGunTimer = Time;
 							}

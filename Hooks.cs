@@ -43,6 +43,12 @@ namespace Planetside
                 Hook Reard = new Hook(typeof(RoomHandler).GetMethod("HandleRoomClearReward", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("OuroborousRoomDrop"));
                 
                 Hook TabelFlip = new Hook(typeof(FlippableCover).GetMethod("Interact", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("TableFlipOuroborous"));
+
+                //var StartHook = new Hook(
+               //typeof(BehaviorSpeculator).GetMethod("Start", BindingFlags.Instance | BindingFlags.NonPublic),
+               //typeof(Hooks).GetMethod("StartHookSB", BindingFlags.Static | BindingFlags.NonPublic));
+
+
             }
             catch (Exception e)
             {
@@ -425,12 +431,120 @@ namespace Planetside
             orig(self);
             try
             {
-                self.gameObject.AddComponent<PingPongComponent>();
-                //AddBeholsterBeamComponent yee = self.gameObject.GetOrAddComponent<AddBeholsterBeamComponent>();
-                //yee.AddsBaseBeamBehavior = true;
-                //yee.CustomAngleValue = 72;
-                //yee.UsesCustomAngle = true;
-                //self.gameObject.GetOrAddComponent<AddDashComponent>();
+                PlayerController player = GameManager.Instance.PrimaryPlayer;
+
+                bool flag = self && self.aiActor && self.aiActor.EnemyGuid != null;
+                if (flag)
+                {
+                    string text;
+                    if (self == null)
+                    {
+                        text = null;
+                    }
+                    else
+                    {
+                        AIActor aiActor = self.aiActor;
+                        text = ((aiActor != null) ? aiActor.EnemyGuid : null);
+                    }
+                    string text2 = text;
+                    bool flag2 = !string.IsNullOrEmpty(text2);
+                    if (flag2)
+                    {
+                        try
+                        {
+                            bool flag3 = PlanetBlade.weakEnemies.Contains(text2);
+                            if (flag3)
+                            {
+
+                                self.aiActor.ApplyEffect(GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultPermanentCharmEffect, 1f, null);
+                                self.aiActor.CanTargetPlayers = true;
+                                self.aiActor.CanTargetEnemies = true;
+                                self.aiActor.IsHarmlessEnemy = true;
+                                self.aiActor.IgnoreForRoomClear = true;
+                                CompanionController yup = self.gameObject.AddComponent<CompanionController>();
+                                yup.companionID = CompanionController.CompanionIdentifier.NONE;
+                                yup.CanCrossPits = true;
+                                yup.Initialize(player);
+                                Planetside.OtherTools.CompanionisedEnemyBulletModifiers yeehaw = yup.gameObject.AddComponent<Planetside.OtherTools.CompanionisedEnemyBulletModifiers>();
+                                yeehaw.jammedDamageMultiplier *= 3;
+                                yeehaw.baseBulletDamage = 10f;
+                                yeehaw.TintBullets = false;
+
+                                bool flag4 = self.gameObject.GetComponent<SpawnEnemyOnDeath>();
+                                if (flag4)
+                                {
+                                    UnityEngine.Object.Destroy(self.gameObject.GetComponent<SpawnEnemyOnDeath>());
+                                }
+                                var bs = self.GetComponent<BehaviorSpeculator>();
+
+                                foreach (MovementBehaviorBase att in self.behaviorSpeculator.MovementBehaviors)
+                                {
+                                    if (att is SeekTargetBehavior)
+                                    {
+                                        SeekTargetBehavior tagr = att as SeekTargetBehavior;
+                                        tagr.ReturnToSpawn = false;
+                                        tagr.StopWhenInRange = false;
+                                        tagr.CustomRange = 7;
+                                        tagr.LineOfSight = true;
+                                        tagr.SpawnTetherDistance = 0;
+                                        tagr.PathInterval = 0.25f;
+                                        tagr.SpecifyRange = false;
+                                        tagr.MinActiveRange = 0;
+                                        tagr.MaxActiveRange = 0;
+
+                                    }
+                                }
+
+                                AIAnimator aiAnimator = self.aiAnimator;
+
+                                CompanionFollowPlayerBehavior comp = new CompanionFollowPlayerBehavior();
+                                comp.CanRollOverPits = false;
+                                comp.CatchUpOutAnimation = aiAnimator.MoveAnimation.Prefix;
+                                comp.DisableInCombat = false;
+                                comp.IdleAnimations = aiAnimator.IdleAnimation.AnimNames;
+                                comp.PathInterval = 0.25f;
+                                comp.IdealRadius = 3;
+                                comp.CatchUpRadius = 8;
+                                comp.CatchUpAccelTime = 5;
+                                comp.CatchUpSpeed = self.aiActor.MovementSpeed *= 1.125f;
+                                comp.CatchUpMaxSpeed = self.aiActor.MovementSpeed *= 1.4f;
+                                comp.CatchUpAnimation = aiAnimator.MoveAnimation.Prefix;
+                                comp.RollAnimation = aiAnimator.MoveAnimation.Prefix;
+                                comp.TemporarilyDisabled = true;
+
+                                bs.MovementBehaviors.Add(comp);
+
+                                /*
+                                SeekTargetBehavior seek = new SeekTargetBehavior();
+                                seek.ReturnToSpawn = false;
+                                seek.StopWhenInRange = false;
+                                seek.CustomRange = 7;
+                                seek.LineOfSight = true;
+                                seek.SpawnTetherDistance = 0;
+                                seek.PathInterval = 0.25f;
+                                seek.SpecifyRange = false;
+                                seek.MinActiveRange = 0;
+                                seek.MaxActiveRange = 0;
+
+                                bs.MovementBehaviors.Add(seek);
+                                */
+
+                                self.aiActor.CompanionOwner = player;
+
+                                //RoomHandler absoluteRoomFromPosition = GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(self.specRigidbody.UnitCenter.ToIntVector2(VectorConversions.Floor));
+                                //if (absoluteRoomFromPosition != null)
+                                //{
+                                //absoluteRoomFromPosition.DeregisterEnemy(self.aiActor, true);
+                                //}
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            ETGModConsole.Log(ex.Message, false);
+                        }
+                    }
+                }
             }
             catch
             {

@@ -24,10 +24,10 @@ namespace Planetside
 			ItemBuilder.SetupItem(chamber, shortDesc, longDesc, "psog");
 			chamber.quality = PickupObject.ItemQuality.S;
 			chamber.SetupUnlockOnCustomFlag(CustomDungeonFlags.BROKEN_CHAMBER_RUN_COMPLETED, true);
-			DiamondChamber.ChamberID = chamber.PickupObjectId;
-
+			DiamondChamber.DiamondChamberID = chamber.PickupObjectId;
+			ItemIDs.AddToList(chamber.PickupObjectId);
 		}
-		public static int ChamberID;
+		public static int DiamondChamberID;
 
 		public override void Pickup(PlayerController player)
 		{
@@ -61,7 +61,7 @@ namespace Planetside
 				if (Q == true && W == true && E == true && R == true && T == true && Y == true && U == true && I == true && O == true && P == true && A == true)
                 {
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.PLATE_DIAMOND_CHAMBER, true);
-					base.Owner.RemovePassiveItem(DiamondChamber.ChamberID);
+					base.Owner.RemovePassiveItem(DiamondChamber.DiamondChamberID);
 					LootEngine.TryGivePrefabToPlayer(ETGMod.Databases.Items["Netherite Chamber"].gameObject, base.Owner, true);
 
 				}

@@ -80,6 +80,7 @@ namespace Planetside
 			};
 			CustomSynergies.Add("Old War", mandatoryConsoleIDs1, optionalConsoleIDs, true);
 			VeteranShotgun.VeteranID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int VeteranID;
 		public override void PostProcessProjectile(Projectile projectile)

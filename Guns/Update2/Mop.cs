@@ -124,6 +124,7 @@ namespace Planetside
 			gun.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
 
 
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int MopID;
 		public override void OnPostFired(PlayerController player, Gun bruhgun)

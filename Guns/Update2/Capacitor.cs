@@ -99,7 +99,11 @@ namespace Planetside
 			};
 			CustomSynergies.Add("Back For Seconds", AAA, aee, true);
 
+			Capactior.CapacitorID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int CapacitorID;
+
 		public static GameObject ChargeUpPrefab;
 		public static List<int> spriteIds = new List<int>();
 		public override void PostProcessProjectile(Projectile projectile)

@@ -60,7 +60,10 @@ namespace Planetside
 			gun.encounterTrackable.EncounterGuid = "Malachite Elite go BWOOOOOOOOOOOOOOOOOM";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
+			WitherLance.WitherLanceID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
+		public static int WitherLanceID;
 
 		private bool HasReloaded;
 

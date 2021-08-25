@@ -950,6 +950,31 @@ namespace Planetside
 				AIActor actor = EnemyDatabase.GetOrLoadByGuid("4b992de5b4274168a8878ef9bf7ea36b");
 				BeholsterController beholsterbeam = actor.GetComponent<BeholsterController>();
 
+				//======================
+				var enemy = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5");
+
+				if (!enemy)
+				{
+					ETGModConsole.Log("enemy null");
+				}
+
+				Projectile beam = null;
+
+				foreach (Component item in enemy.GetComponentsInChildren(typeof(Component)))
+				{
+					if (item is BossFinalRogueLaserGun laser)
+					{
+						if (laser.beamProjectile)
+						{
+							beam = laser.beamProjectile;
+							break;
+						}
+					}
+				}
+				//====================================
+
+
+
 				AIBeamShooter2 bholsterbeam1 = companion.gameObject.AddComponent<AIBeamShooter2>();
 				bholsterbeam1.beamTransform = m_CachedGunAttachPoint.transform;
 				bholsterbeam1.beamModule = beholsterbeam.beamModule;
@@ -957,6 +982,7 @@ namespace Planetside
 				bholsterbeam1.firingEllipseCenter = LaserOne.transform.position;
 				bholsterbeam1.name = "240";
 				bholsterbeam1.northAngleTolerance = 240 + 30;
+				
 
 				AIBeamShooter2 bholsterbeam2 = companion.gameObject.AddComponent<AIBeamShooter2>();
 				bholsterbeam2.beamTransform = m_CachedGunAttachPoint.transform;
@@ -1045,9 +1071,9 @@ namespace Planetside
 					Behavior = new DashBehavior{
 					//dashAnim = "wail",
 					ShootPoint = Centre,
-					dashDistance = 7f,
+					dashDistance = 6f,
 					dashTime = 0.25f,
-					doubleDashChance = 1,
+					doubleDashChance = 0.33f,
 					enableShadowTrail = false,
 					Cooldown = 3,
 					dashDirection = DashBehavior.DashDirection.PerpendicularToTarget,
@@ -1076,7 +1102,7 @@ namespace Planetside
 					{
 					Probability = 1f,
 					Behavior = new CustomBeholsterLaserBehavior{
-
+					//UsesBeamProjectileWithoutModule = fa,
 					InitialCooldown = 8f,
 					firingTime = 6f,
 					Cooldown = 12,
@@ -1098,8 +1124,8 @@ namespace Planetside
 					//initialAimType = CustomShootBeamBehavior.InitialAimType.Aim,
 					BulletScript = new CustomBulletScriptSelector(typeof(BigBall)),
 					ShootPoint = Centre.transform,
-					maxTurnRate = 12,
-					turnRateAcceleration = 12,
+					maxTurnRate = 10,
+					turnRateAcceleration = 10,
 					LockInPlaceWhileAttacking = false,
 					useUnitOvershoot = true,
 					minUnitForOvershoot = 1,
@@ -1113,7 +1139,7 @@ namespace Planetside
 					Behavior = new ChargeBehavior{
 						InitialCooldown = 1,
 						chargeAcceleration = -1,
-						chargeSpeed = 35,
+						chargeSpeed = 30,
 						maxChargeDistance = -1,
 						bulletScript = new CustomBulletScriptSelector(typeof(ChargeAttack1Attack)),
 						ShootPoint = Centre,
@@ -1121,7 +1147,7 @@ namespace Planetside
 						chargeKnockback = 100,
 						collidesWithDodgeRollingPlayers = false,
 						primeAnim = "dashprime",
-						primeTime = 1f,
+						primeTime = 1.25f,
 						chargeAnim = "dashdash",
 						stopDuringPrime = false,
 						stoppedByProjectiles = false,
@@ -1229,7 +1255,7 @@ namespace Planetside
 						chargeKnockback = 100,
 						collidesWithDodgeRollingPlayers = false,
 						primeAnim = "cloakdash_prime",
-						primeTime = 0.66f,
+						primeTime = 0.9f,
 						chargeAnim = "cloakdash_charge",
 						stopDuringPrime = true,
 						stoppedByProjectiles = false,
@@ -1439,7 +1465,6 @@ namespace Planetside
 		public class AnnihiChamberBehavior : BraveBehaviour
 		{
 			private RoomHandler m_StartRoom;
-
 			public void Update()
 			{
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
@@ -1452,56 +1477,54 @@ namespace Planetside
 				{
 					float maxHealth = base.aiActor.healthHaver.GetMaxHealth();
 					float num = maxHealth * 0.35f;
-					float currentHealth = base.aiActor.healthHaver.GetCurrentHealth();
-					bool flag2 = currentHealth < num;
-					if (flag2)
+					//float currentHealth = base.aiActor.healthHaver.GetCurrentHealth();
+					if (base.healthHaver.GetCurrentHealth() <= num && Phase2AnnihiChamberCheck == false)
 					{
-						if (Phase2AnnihiChamberCheck != true)
-						{
-							StaticReferenceManager.DestroyAllEnemyProjectiles();
-							Phase2AnnihiChamberCheck = true;
-							base.aiActor.aiAnimator.OverrideIdleAnimation = "cloak";
-							base.aiActor.aiAnimator.OverrideMoveAnimation = "cloak";
-							base.aiAnimator.PlayUntilFinished("cloakidle_left", true, null, -1f, false);
-							base.aiActor.behaviorSpeculator.Interrupt();
-							base.aiActor.healthHaver.IsVulnerable = false;
-							foreach (OtherTools.EasyTrailOnEnemy c in base.aiActor.gameObject.GetComponents(typeof(OtherTools.EasyTrailOnEnemy)))
-							{
-								c.SetMode(UnityEngine.Rendering.ShadowCastingMode.On);
-								//c.castingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-								//ETGModConsole.Log(c.name);
-							}
+						ConvertToDark();
+					}
 
-							if (!base.aiActor.IsBlackPhantom)
-							{
-								Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
-								mat.mainTexture = base.aiActor.sprite.renderer.material.mainTexture;
-								mat.SetColor("_EmissiveColor", new Color32(255, 255, 255, 255));
-								mat.SetFloat("_EmissiveColorPower", 1.55f);
-								mat.SetFloat("_EmissivePower", 100);
-								mat.SetFloat("_EmissiveThresholdSensitivity", 0.05f);
+				}
+			}
 
-								base.aiActor.sprite.renderer.material = mat;
-								//yes.dashColor = Color.white;
-							}
-							else
-							{
-								//yes.dashColor = Color.red;
-							}
-							for (int j = 0; j < base.aiActor.behaviorSpeculator.AttackBehaviors.Count; j++)
-							{
-								if (base.behaviorSpeculator.AttackBehaviors[j] is AttackBehaviorGroup && base.behaviorSpeculator.AttackBehaviors[j] != null)
-								{
-									this.ProcessAttackGroup(base.behaviorSpeculator.AttackBehaviors[j] as AttackBehaviorGroup);
-								}
-							}
-							base.aiActor.MovementSpeed = 5f;
-							m_StartRoom.BecomeTerrifyingDarkRoom(3f, 0.5f, 0.1f, "Play_ENM_darken_world_01");
-							GameManager.Instance.StartCoroutine(LoseIFRames());
+			private void ConvertToDark()
+            {
+				base.aiActor.healthHaver.minimumHealth = 0f;
+				StaticReferenceManager.DestroyAllEnemyProjectiles();
+				Phase2AnnihiChamberCheck = true;
+				base.aiActor.aiAnimator.OverrideIdleAnimation = "cloak";
+				base.aiActor.aiAnimator.OverrideMoveAnimation = "cloak";
+				base.aiAnimator.PlayUntilFinished("cloakidle_left", true, null, -1f, false);
+				base.aiActor.behaviorSpeculator.Interrupt();
+				base.aiActor.healthHaver.IsVulnerable = false;
+				foreach (OtherTools.EasyTrailOnEnemy c in base.aiActor.gameObject.GetComponents(typeof(OtherTools.EasyTrailOnEnemy)))
+				{
+					c.SetMode(UnityEngine.Rendering.ShadowCastingMode.On);
+					//c.castingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+					//ETGModConsole.Log(c.name);
+				}
 
-						}
+				if (!base.aiActor.IsBlackPhantom)
+				{
+					Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
+					mat.mainTexture = base.aiActor.sprite.renderer.material.mainTexture;
+					mat.SetColor("_EmissiveColor", new Color32(255, 255, 255, 255));
+					mat.SetFloat("_EmissiveColorPower", 1.55f);
+					mat.SetFloat("_EmissivePower", 100);
+					mat.SetFloat("_EmissiveThresholdSensitivity", 0.05f);
+
+					base.aiActor.sprite.renderer.material = mat;
+				}
+				for (int j = 0; j < base.aiActor.behaviorSpeculator.AttackBehaviors.Count; j++)
+				{
+					if (base.behaviorSpeculator.AttackBehaviors[j] is AttackBehaviorGroup && base.behaviorSpeculator.AttackBehaviors[j] != null)
+					{
+						this.ProcessAttackGroup(base.behaviorSpeculator.AttackBehaviors[j] as AttackBehaviorGroup);
 					}
 				}
+				base.aiActor.MovementSpeed = 5f;
+				m_StartRoom.BecomeTerrifyingDarkRoom(2f, 0.5f, 0.1f, "Play_ENM_darken_world_01");
+
+				GameManager.Instance.StartCoroutine(LoseIFRames());
 			}
 			private void ProcessAttackGroup(AttackBehaviorGroup attackGroup)
 			{
@@ -1541,6 +1564,9 @@ namespace Planetside
 			public Material PitCausticsMaterial;
 			private void Start()
 			{
+				float maxHealth = base.aiActor.healthHaver.GetMaxHealth();
+				float num = maxHealth * 0.35f;
+				base.healthHaver.minimumHealth = num;
 				//Important for not breaking basegame stuff!
 				StaticReferenceManager.AllHealthHavers.Remove(base.aiActor.healthHaver);
 

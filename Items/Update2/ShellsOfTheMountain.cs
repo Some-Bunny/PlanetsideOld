@@ -31,7 +31,11 @@ namespace Planetside
 			string longDesc = "No matter how steep it is, the bullets climb to the top to stay level with their foes.";
 			ItemBuilder.SetupItem(item, shortDesc, longDesc, "psog");
 			item.quality = PickupObject.ItemQuality.A;
+			ShellsOfTheMountain.ShellsOfTheMountainID = item.PickupObjectId;
+			ItemIDs.AddToList(item.PickupObjectId);
+
 		}
+		public static int ShellsOfTheMountainID;
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			try

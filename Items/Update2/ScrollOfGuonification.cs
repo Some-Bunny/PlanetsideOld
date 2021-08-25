@@ -99,8 +99,12 @@ namespace Planetside
 				"gunknight_armor"
 			};
 			CustomSynergies.Add("More To Armor", mandatoryConsoleIDs, ForArmorSynergy, true);
+			ResourceGuonMaker.ScrollOfGuonificationID = testActive.PickupObjectId;
+			ItemIDs.AddToList(testActive.PickupObjectId);
+
 		}
-        public override void Pickup(PlayerController player)
+		public static int ScrollOfGuonificationID;
+		public override void Pickup(PlayerController player)
         {
             base.Pickup(player);
         }

@@ -96,30 +96,11 @@ namespace Planetside
 				if (flag)
 				{
 					RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
-					AIActor randomActiveEnemy;
-
-
-					randomActiveEnemy = playeroue.CurrentRoom.GetRandomActiveEnemy(true);
-					int num = 5;
-					do
+					//AIActor randomActiveEnemy;
+					if (UnityEngine.Random.value <= 0.5f)
 					{
-						randomActiveEnemy = playeroue.CurrentRoom.GetRandomActiveEnemy(true);
-						num--;
-					}
-					while (num > 0 && (OtherTools.BossBlackList.Contains(randomActiveEnemy.EnemyGuid)));
-					bool ee = num == 0;
-					if (ee)
-					{
-
-					}
-					else
-					{
-						bool flag2 = OtherTools.Randomizer(0.5f) && absoluteRoom.IsDarkAndTerrifying == false; 
-						if (flag2)
-						{
-							absoluteRoom.BecomeTerrifyingDarkRoom(2f, 0.6f, 0.6f, "Play_ENM_darken_world_01");
-							IsDark = true;
-						}
+						absoluteRoom.BecomeTerrifyingDarkRoom(2f, 0.5f, 0.5f, "Play_ENM_darken_world_01");
+						IsDark = true;
 					}
 				}
 				else

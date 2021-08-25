@@ -123,6 +123,7 @@ namespace Planetside
 			CustomSynergies.Add("Recycling", aaa, aw, true);
 
 			ResaultSelf = gun;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int ResaultID;
 		public static Gun ResaultSelf; 

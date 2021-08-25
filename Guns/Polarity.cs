@@ -98,6 +98,7 @@ namespace Planetside
 				"glacier"
 			};
 			CustomSynergies.Add("Refridgeration", mandatoryConsoleIDs1, optionalConsoleIDs, true);
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int PolarityID;
 

@@ -85,8 +85,12 @@ namespace Planetside
                 "red_guon_stone"
             };
             CustomSynergies.Add("Chapter Of Speed", RedGuon, null, true);
-            BulletGuonMaker.BuildBasePrefab(); 
+            BulletGuonMaker.BuildBasePrefab();
+            BulletGuonMaker.TomeOfGuonmancyID = testActive.PickupObjectId;
+            ItemIDs.AddToList(testActive.PickupObjectId);
+
         }
+        public static int TomeOfGuonmancyID;
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);

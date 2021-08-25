@@ -110,7 +110,10 @@ namespace Planetside
                 "psog:immateria"
             };
             CustomSynergies.Add("Event Horizon", mandatoryConsoleIDs, optionalConsoleIDs, true);
+            Riftaker.RiftakerID = gun.PickupObjectId;
+            ItemIDs.AddToList(gun.PickupObjectId);
         }
+        public static int RiftakerID;
         //private static Gun RiftTakerGun;
 
 

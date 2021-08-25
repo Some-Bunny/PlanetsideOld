@@ -478,6 +478,7 @@ namespace ItemAPI
                 aishooter.IsReallyBigBoy = sourceShooter.IsReallyBigBoy;
                 aishooter.BackupAimInMoveDirection = sourceShooter.BackupAimInMoveDirection;
                 aishooter.RegenerateCache();
+                
             }
         }
     }

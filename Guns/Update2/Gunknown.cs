@@ -82,7 +82,6 @@ namespace Planetside
 			gun.encounterTrackable.EncounterGuid = "I. AM. ETERNAL.";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			//====================================================================================================================
-			UnknownGun.GunknownID = gun.PickupObjectId;
 			GameObject gameObject = SpriteBuilder.SpriteFromResource("Planetside/Resources/Guons/GunknownGuon/superguon.png");
 			gameObject.name = $"Gunknown Guon";
 			SpeculativeRigidbody speculativeRigidbody = gameObject.GetComponent<tk2dSprite>().SetUpSpeculativeRigidbody(IntVector2.Zero, new IntVector2(12, 12));
@@ -128,6 +127,8 @@ namespace Planetside
 
 			gun.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
 
+			UnknownGun.GunknownID = gun.PickupObjectId;
+			ItemIDs.AddToList(gun.PickupObjectId);
 		}
 		public static int GunknownID;
 		public static GameObject GunknownGuon;
