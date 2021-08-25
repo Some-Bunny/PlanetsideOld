@@ -282,7 +282,7 @@ namespace Planetside
 
                     if (base.LastOwner != null)
                     {
-                        float StatBooster = target.healthHaver.GetMaxHealth() * 0.002f;
+                        float StatBooster = target.healthHaver.GetMaxHealth() * 0.00025f;
                         StatModifier item = new StatModifier
                         {
                             statToBoost = PlayerStats.StatType.Damage,

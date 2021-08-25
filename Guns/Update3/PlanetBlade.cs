@@ -168,7 +168,11 @@ namespace Planetside
         public void OnDestroy()
         {
             ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Remove(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
+            GameManager.Instance.OnNewLevelFullyLoaded -= this.OnNewFloor;
+            CleanupReticles();
         }
+        private void OnNewFloor() { VFXActive = false; CleanupReticles();   }
+
 
         protected override void Update()
 		{
@@ -273,7 +277,7 @@ namespace Planetside
         
         protected override void OnPickup(PlayerController player)
         {
-
+            GameManager.Instance.OnNewLevelFullyLoaded += this.OnNewFloor;
             ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
             VFXActive = false;
             player.GunChanged += this.OnGunChanged;
@@ -283,6 +287,7 @@ namespace Planetside
 
         protected override void OnPostDrop(PlayerController player)
         {
+            GameManager.Instance.OnNewLevelFullyLoaded -= this.OnNewFloor;
             ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Remove(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
             player.GunChanged -= this.OnGunChanged;
             base.OnPostDrop(player);
@@ -331,8 +336,8 @@ namespace Planetside
                                 AIActor aiactor = AIActor.Spawn(enemyPrefab, AIActor.gameActor.CenterPosition.ToIntVector2(VectorConversions.Floor), AIActor.GetAbsoluteParentRoom(), true, AIActor.AwakenAnimationType.Default, true);
 
                                 aiactor.gameObject.AddComponent<MarkForDupe>();
-                                aiactor.procedurallyOutlined = false;
-                                AIActor.procedurallyOutlined = false;
+                                aiactor.procedurallyOutlined = true;
+                                aiactor.aiAnimator.facingType = AIAnimator.FacingType.Movement;
                                 aiactor.AssignedCurrencyToDrop = AIActor.AssignedCurrencyToDrop;
                                 aiactor.AdditionalSafeItemDrops = AIActor.AdditionalSafeItemDrops;
                                 aiactor.AdditionalSimpleItemDrops = AIActor.AdditionalSimpleItemDrops;
@@ -345,7 +350,7 @@ namespace Planetside
                                 {
                                     aiactor.CollisionDamage = 0f;
                                     aiactor.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.PlayerHitBox));
-                                    //aiactor.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.Projectile));
+                                    aiactor.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.Projectile));
                                 }
                                 else if (aiactor.EnemyGuid == "249db525a9464e5282d02162c88e0357")
                                 {

@@ -24,7 +24,7 @@ namespace Planetside
     public class PlanetsideModule : ETGModule
     {
         public static readonly string MOD_NAME = "Planetside Of Gunymede";
-        public static readonly string VERSION = "1.1.7";
+        public static readonly string VERSION = "1.1.7.1";
         public static readonly string TEXT_COLOR = "#9006FF";
 
         public static string ZipFilePath;
