@@ -66,30 +66,25 @@ namespace Planetside
 
         protected override void DoEffect(PlayerController user)
         {
+
             base.DoEffect(user);
 
-            var enemy = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5");
-
+            var enemy = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec");
             if (!enemy)
             {
                 ETGModConsole.Log("enemy null");
             }
 
             Projectile beam = null;
-
             foreach (Component item in enemy.GetComponentsInChildren(typeof(Component)))
             {
-                if (item is BossFinalRogueLaserGun laser)
-                {
-                    if (laser.beamProjectile)
-                    {
-                        beam = laser.beamProjectile;
-                        break;
-                    }
-                }
+                ETGModConsole.Log("====");
+                ETGModConsole.Log(item.name);
+                ETGModConsole.Log(item.GetType().Name.ToString());
             }
 
             Fire(beam);
+
             /*
             float RNG = UnityEngine.Random.Range(5.5f, 15f);
             ETGModConsole.Log("As /= ");

@@ -18,35 +18,36 @@ using UnityEngine.Serialization;
 
 namespace Planetside
 {
-	public class ShellsOfTheMountain : PassiveItem
+	public class DerpyBullets : PassiveItem
 	{
 		public static void Init()
 		{
-			string itemName = "Shells Of The Mountain";
-			string resourceName = "Planetside/Resources/bulletofthemountain.png";
+			string itemName = "Derpy Bullets";
+			string resourceName = "Planetside/Resources/derpybullets.png";
 			GameObject obj = new GameObject(itemName);
-			var item = obj.AddComponent<ShellsOfTheMountain>();
+			var item = obj.AddComponent<DerpyBullets>();
 			ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
-			string shortDesc = "Forged For The Mountain King";
-			string longDesc = "No matter how steep it is, the bullets climb to the top to stay level with their foes.";
+			string shortDesc = "Zig Zaggy";
+			string longDesc = "These unusual bullets had an excess amount of rubber added to them to create incredibly bouncy bullets, however the end result ended up with the poor things unable to stand up straight and end up just flopping from left to right.";
 			ItemBuilder.SetupItem(item, shortDesc, longDesc, "psog");
-			item.quality = PickupObject.ItemQuality.A;
-			ShellsOfTheMountain.ShellsOfTheMountainID = item.PickupObjectId;
+			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.Damage, 1.4f, StatModifier.ModifyMethod.MULTIPLICATIVE);
+			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.RangeMultiplier, 3f, StatModifier.ModifyMethod.MULTIPLICATIVE);
+
+			item.quality = PickupObject.ItemQuality.C;
+
+			DerpyBullets.DerpyBulletsID = item.PickupObjectId;
 			ItemIDs.AddToList(item.PickupObjectId);
 
 		}
-		public static int ShellsOfTheMountainID;
+		public static int DerpyBulletsID;
 		private void PostProcessProjectile(Projectile sourceProjectile, float effectChanceScalar)
 		{
 			try
 			{
-				float num = 1f;
-				GameLevelDefinition lastLoadedLevelDefinition = GameManager.Instance.GetLastLoadedLevelDefinition();
-				if (lastLoadedLevelDefinition != null)
-				{
-					num = lastLoadedLevelDefinition.enemyHealthMultiplier - 1;
-				}
-				sourceProjectile.baseData.damage = sourceProjectile.baseData.damage*((num/3)+1);
+				DerpyMovementModule move = new DerpyMovementModule();
+				move.TimeDelay = UnityEngine.Random.Range(0.025f, 0.5f);
+
+				sourceProjectile.OverrideMotionModule = move;
 			}
 			catch (Exception ex)
 			{
@@ -56,15 +57,12 @@ namespace Planetside
 		}
 		private void PostProcessBeam(BeamController obj)
 		{
+
 			try
 			{
-				float num = 1f;
-				GameLevelDefinition lastLoadedLevelDefinition = GameManager.Instance.GetLastLoadedLevelDefinition();
-				if (lastLoadedLevelDefinition != null)
-				{
-					num = lastLoadedLevelDefinition.enemyHealthMultiplier - 1;
-				}
-				obj.projectile.baseData.damage = obj.projectile.baseData.damage * ((num / 3) + 1);
+
+
+				obj.projectile.OverrideMotionModule = new DerpyMovementModule();
 			}
 			catch (Exception ex)
 			{
@@ -88,11 +86,8 @@ namespace Planetside
 
 		protected override void OnDestroy()
 		{
-			if (base.Owner)
-            {
-				base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
-				base.Owner.PostProcessBeam -= this.PostProcessBeam;
-			}
+			base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
+			base.Owner.PostProcessBeam -= this.PostProcessBeam;
 			base.OnDestroy();
 		}
 	}

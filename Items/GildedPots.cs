@@ -62,7 +62,7 @@ namespace Planetside
 			tr.endColor = new Color(7f, 0f, 1f, 0f);
 			*/
 			base.Pickup(player);
-			player.OnEnteredCombat = (Action)Delegate.Combine(player.OnEnteredCombat, new Action(this.EnterRoom));
+			//player.OnEnteredCombat = (Action)Delegate.Combine(player.OnEnteredCombat, new Action(this.EnterRoom));
 		}
 		public Texture _gradTexture;
 
@@ -70,7 +70,7 @@ namespace Planetside
 		public override DebrisObject Drop(PlayerController player)
 		{
 			DebrisObject result = base.Drop(player);
-			player.OnEnteredCombat = (Action)Delegate.Remove(player.OnEnteredCombat, new Action(this.EnterRoom));
+			//player.OnEnteredCombat = (Action)Delegate.Remove(player.OnEnteredCombat, new Action(this.EnterRoom));
 			return result;
 		}
 
@@ -93,7 +93,7 @@ namespace Planetside
 	
 		private void HandleBroken(MinorBreakable mb)
 		{
-			float coinchance = 0.0416f;
+			float coinchance = 0.04f;
 			PlayerController player = base.Owner;
 			bool flagA = player.PlayerHasActiveSynergy("Expert Demolitionist");
 			if (flagA)

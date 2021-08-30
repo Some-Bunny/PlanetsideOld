@@ -439,6 +439,23 @@ namespace Planetside
 		public static void DoFairy(Action<MinorBreakable> orig, MinorBreakable self)
 		{
 			orig(self);
+			PlayerController player = GameManager.Instance.GetActivePlayerClosestToPoint(self.CenterPoint);
+			if (player.HasPickupID(GildedPots.GildedPotsID) && player != null)
+            {
+				float coinchance = 0.04f;
+				bool flagA = player.PlayerHasActiveSynergy("Expert Demolitionist");
+				if (flagA)
+				{
+					coinchance *= 2;
+				}
+				float num = UnityEngine.Random.Range(0f, 1f);
+				bool flag2 = (double)num < coinchance;
+				if (flag2)
+				{
+					LootEngine.SpawnItem(PickupObjectDatabase.GetById(68).gameObject, self.sprite.WorldCenter, Vector2.zero, 1f, false, false, false);
+				}
+			}
+
 			bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
 			if (LoopOn == true)
             {

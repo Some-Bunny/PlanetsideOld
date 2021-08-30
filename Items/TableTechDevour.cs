@@ -67,7 +67,7 @@ namespace Planetside
             {
                 foreach (AIActor aiactor in activeEnemies)
                 {
-                    bool ae = Vector2.Distance(aiactor.CenterPosition, centerPosition) < 6 && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && base.Owner != null && !aiactor.healthHaver.IsBoss;
+                    bool ae = Vector2.Distance(aiactor.CenterPosition, centerPosition) < 4.5f && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && base.Owner != null && !aiactor.healthHaver.IsBoss;
                     if (ae)
                     {
                         GameManager.Instance.Dungeon.StartCoroutine(this.HandleEnemySuck(aiactor, tabler));

@@ -167,6 +167,8 @@ namespace Planetside
         private bool HasReloaded;
         public void OnDestroy()
         {
+
+
             ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Remove(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
             GameManager.Instance.OnNewLevelFullyLoaded -= this.OnNewFloor;
             CleanupReticles();

@@ -24,7 +24,7 @@ namespace Planetside
     public class PlanetsideModule : ETGModule
     {
         public static readonly string MOD_NAME = "Planetside Of Gunymede";
-        public static readonly string VERSION = "1.1.7.1";
+        public static readonly string VERSION = "1.1.8";
         public static readonly string TEXT_COLOR = "#9006FF";
 
         public static string ZipFilePath;
@@ -110,7 +110,6 @@ namespace Planetside
             TableTechNullReferenceException.Init();
             WispInABottle.Init();
 
-            TestActiveItem.Init();
             //Unlocked by killing Shellrax
             Shellheart.Init();
 
@@ -208,7 +207,8 @@ namespace Planetside
 
             //ChargerGun.Add();
             //PlanetBlade.Add();
-            TestShaderBullets.Init();
+            //TestShaderBullets.Init();
+            //DerpyBullets.Init();
 
             Ophanaim.Init();
             Fungannon.Init();
@@ -275,6 +275,8 @@ namespace Planetside
             QuestWanderer.Add();
             DungeonHooks.OnPostDungeonGeneration += this.PlaceHellShrines;
             DungeonHooks.OnPostDungeonGeneration += this.PlaceOtherHellShrines;
+
+            TestActiveItem.Init();
 
             //AdvancedLogging.Log($"{MOD_NAME} v{VERSION} started successfully.", new Color(144, 6, 255, 255), false, true, null);
             PlanetsideModule.Log($"{MOD_NAME} v{VERSION} started successfully.", TEXT_COLOR);

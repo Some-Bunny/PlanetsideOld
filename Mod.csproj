@@ -93,6 +93,7 @@
     <Compile Include="Components\Item Components\CustomScarfDoer.cs" />
     <Compile Include="Components\Item Components\MaintainDPSOnPierce.cs" />
     <Compile Include="Components\Item Components\TemplateMovementModule.cs" />
+    <Compile Include="Components\Item Components\DerpyMovementModule.cs" />
     <Compile Include="DungeonPlaceables\RainPlaceable.cs" />
     <Compile Include="EnemySetupCode\EnemyCode\ModderBullets\TurboBullet.cs" />
     <Compile Include="EnemySetupCode\EnemyRelatedStuff\Behavior Stuff\TimeStopBehavior.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="ItemIDs.cs" />
     <Compile Include="Items\Test Items\TestShaderBullets.cs" />
     <Compile Include="Items\Test Items\TestShaderItem.cs" />
+    <Compile Include="Items\Update3\DerpyBullets.cs" />
     <Compile Include="Misc Stuff\SlashBehavior.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedLogging.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedStrings1.cs" />
@@ -2163,6 +2165,9 @@
     <EmbeddedResource Include="Resources\Static\static2.png" />
     <EmbeddedResource Include="Resources\Static\static3.png" />
     <EmbeddedResource Include="Resources\Static\static4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\derpybullets.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

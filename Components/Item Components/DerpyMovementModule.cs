@@ -17,7 +17,7 @@ using UnityEngine.Serialization;
 
 namespace Planetside
 {
-	public class TemplateMovementModule : ProjectileAndBeamMotionModule
+	public class DerpyMovementModule : ProjectileAndBeamMotionModule
 	{
 
 		//Used to presumably prevent itself from instantly destroying itself upon colliding with a wall if it moves in a weird way.
@@ -60,6 +60,7 @@ namespace Planetside
 
 			//To keep track of how much time has passed.
 			timeElapsed += BraveTime.DeltaTime;
+			TimerCount += BraveTime.DeltaTime;
 
 			//I assume this is used to roate the projectile sprite in the direction it's shot towards.
 			if (source.angularVelocity != 0f)
@@ -83,7 +84,17 @@ namespace Planetside
 			timeElapsed *= 1f - baseData.damping * timeElapsed;
 
 			source.LastVelocity = specRigidbody.Velocity;
+
+			if (TimerCount >= TimeDelay)
+            {
+				float RNG = (UnityEngine.Random.value > 0.5f) ? 90 : -90;
+				TimerCount = 0;
+				Vector2 Point = MathToolbox.GetUnitOnCircle(m_currentDirection.ToAngle() + RNG, 10);
+				source.SendInDirection(Point, false, true);
+			}
 		}
+		private float TimerCount;
+		public float TimeDelay = 0.25f;
 
 		//No idea what this is, probably some form of Start method to set some stuff up
 		public override void SentInDirection(ProjectileData baseData, Transform projectileTransform, tk2dBaseSprite projectileSprite, SpeculativeRigidbody specRigidbody, ref float m_timeElapsed, ref Vector2 m_currentDirection, bool shouldRotate, Vector2 dirVec, bool resetDistance, bool updateRotation)
@@ -100,8 +111,20 @@ namespace Planetside
 		{
 			//float RNG = (UnityEngine.Random.value > 0.5f) ? 90 : -90;
 			//return BraveMathCollege.DegreesToVector(bone.RotationAngle + RNG, Mathf.SmoothStep(0f, 0, bone.PosX));
-
-			return new Vector2(0, 0);
+			
+			if (UnityEngine.Random.value < 0.0002f && FlipperVal == 90)
+            {
+				FlipperVal = -90;
+            }
+			else if (UnityEngine.Random.value < 0.0002f && FlipperVal == -90)
+            {
+				FlipperVal = 90;
+			}
+			int num = 1;//(!(inverted ^ this.ForceInvert)) ? 1 : -1;
+			BasicBeamController beaer = sourceBeam as BasicBeamController;
+			float num2 = bone.PosX - 1 * (Time.timeSinceLevelLoad % 600000f);
+			float to = (float)num * 1 * Mathf.Sign(Mathf.Sin(num2 * 3.14159274f)) / 1;
+			return BraveMathCollege.DegreesToVector(bone.RotationAngle + FlipperVal, Mathf.SmoothStep(0f, to, bone.PosX));
 
 
 			/*
@@ -126,6 +149,8 @@ namespace Planetside
 			*/
 
 		}
+		private float FlipperVal = 90;
+
 
 		private bool Initialized;
 
