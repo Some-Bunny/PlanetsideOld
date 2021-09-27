@@ -12,62 +12,66 @@ namespace Planetside
 {
 	public class UndodgeableProjectile : Projectile
 	{
-		//OtherTools.CopyFields<UndodgeableProjectile>(bulletObj.GetComponent<Projectile>());
+		//	OtherTools.CopyFields<UndodgeableProjectile>(bulletObj.GetComponent<Projectile>());
 
 		protected override void OnPreCollision(SpeculativeRigidbody myRigidbody, PixelCollider myCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherCollider)
 		{
-			if (otherRigidbody == Shooter && !allowSelfShooting)
-			{
-				PhysicsEngine.SkipCollision = true;
-				return;
-			}
-			if (otherRigidbody.gameActor != null && otherRigidbody.gameActor is PlayerController && (!collidesWithPlayer || (otherRigidbody.gameActor as PlayerController).IsGhost || (otherRigidbody.gameActor as PlayerController).IsEthereal))
-			{
-				PhysicsEngine.SkipCollision = true;
-				return;
-			}
-			if (otherRigidbody.aiActor)
-			{
-				if (Owner is PlayerController && !otherRigidbody.aiActor.IsNormalEnemy)
+			if (myRigidbody != null && myCollider != null && otherRigidbody != null && otherCollider != null)
+            {
+				if (otherRigidbody == Shooter && !allowSelfShooting)
 				{
 					PhysicsEngine.SkipCollision = true;
 					return;
 				}
-				if (Owner is AIActor && !collidesWithEnemies && otherRigidbody.aiActor.IsNormalEnemy && !otherRigidbody.aiActor.HitByEnemyBullets)
+				if (otherRigidbody.gameActor != null && otherRigidbody.gameActor is PlayerController && (!collidesWithPlayer || (otherRigidbody.gameActor as PlayerController).IsGhost || (otherRigidbody.gameActor as PlayerController).IsEthereal))
+				{
+					PhysicsEngine.SkipCollision = true;
+					return;
+				}
+				if (otherRigidbody.aiActor)
+				{
+					if (Owner is PlayerController && !otherRigidbody.aiActor.IsNormalEnemy)
+					{
+						PhysicsEngine.SkipCollision = true;
+						return;
+					}
+					if (Owner is AIActor && !collidesWithEnemies && otherRigidbody.aiActor.IsNormalEnemy && !otherRigidbody.aiActor.HitByEnemyBullets)
+					{
+						PhysicsEngine.SkipCollision = true;
+						return;
+					}
+				}
+				if (!GameManager.PVP_ENABLED && Owner is PlayerController && otherRigidbody.GetComponent<PlayerController>() != null && !allowSelfShooting)
+				{
+					PhysicsEngine.SkipCollision = true;
+					return;
+				}
+				if (GameManager.Instance.InTutorial)
+				{
+					PlayerController component = otherRigidbody.GetComponent<PlayerController>();
+					if (component)
+					{
+						if (component.spriteAnimator.QueryInvulnerabilityFrame())
+						{
+							GameManager.BroadcastRoomTalkDoerFsmEvent("playerDodgedBullet");
+						}
+						else if (component.IsDodgeRolling)
+						{
+							GameManager.BroadcastRoomTalkDoerFsmEvent("playerAlmostDodgedBullet");
+						}
+						else
+						{
+							GameManager.BroadcastRoomTalkDoerFsmEvent("playerDidNotDodgeBullet");
+						}
+					}
+				}
+				if (collidesWithProjectiles && collidesOnlyWithPlayerProjectiles && otherRigidbody.projectile && !(otherRigidbody.projectile.Owner is PlayerController))
 				{
 					PhysicsEngine.SkipCollision = true;
 					return;
 				}
 			}
-			if (!GameManager.PVP_ENABLED && Owner is PlayerController && otherRigidbody.GetComponent<PlayerController>() != null && !allowSelfShooting)
-			{
-				PhysicsEngine.SkipCollision = true;
-				return;
-			}
-			if (GameManager.Instance.InTutorial)
-			{
-				PlayerController component = otherRigidbody.GetComponent<PlayerController>();
-				if (component)
-				{
-					if (component.spriteAnimator.QueryInvulnerabilityFrame())
-					{
-						GameManager.BroadcastRoomTalkDoerFsmEvent("playerDodgedBullet");
-					}
-					else if (component.IsDodgeRolling)
-					{
-						GameManager.BroadcastRoomTalkDoerFsmEvent("playerAlmostDodgedBullet");
-					}
-					else
-					{
-						GameManager.BroadcastRoomTalkDoerFsmEvent("playerDidNotDodgeBullet");
-					}
-				}
-			}
-			if (collidesWithProjectiles && collidesOnlyWithPlayerProjectiles && otherRigidbody.projectile && !(otherRigidbody.projectile.Owner is PlayerController))
-			{
-				PhysicsEngine.SkipCollision = true;
-				return;
-			}
+			
 		}
 
 		protected override HandleDamageResult HandleDamage(SpeculativeRigidbody rigidbody, PixelCollider hitPixelCollider, out bool killedTarget, PlayerController player, bool alreadyPlayerDelayed = false)

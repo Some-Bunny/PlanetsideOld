@@ -66,6 +66,8 @@ namespace Planetside
 			animator.Library.clips = new tk2dSpriteAnimationClip[] { animationClip };
 			animator.DefaultClipId = animator.GetClipIdByName("start");
 			animator.playAutomatically = true;
+
+
 			DeathMarkPrefab = deathmark;
 			DeathWarrant.DeathWarrantID = item.PickupObjectId;
 			ItemIDs.AddToList(item.PickupObjectId);

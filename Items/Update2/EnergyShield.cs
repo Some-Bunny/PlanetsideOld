@@ -79,7 +79,7 @@ namespace Planetside
                EnergyOrbitals.Add(guon);
             }
                 EnergyShield.guonHook = new Hook(typeof(PlayerOrbital).GetMethod("Initialize"), typeof(EnergyShield).GetMethod("GuonInit"));
-            player.gameObject.AddComponent<EnergyShield.ElectricGuonbehavior>();
+           // player.gameObject.AddComponent<EnergyShield.ElectricGuonbehavior>();
             GameManager.Instance.OnNewLevelFullyLoaded += this.FixGuon;
             base.Pickup(player);
         }
@@ -88,6 +88,7 @@ namespace Planetside
 
         private void FixGuon()
         {
+            /*
             bool flag = base.Owner && base.Owner.GetComponent<EnergyShield.ElectricGuonbehavior>() != null;
             bool flag2 = flag;
             bool flag3 = flag2;
@@ -95,8 +96,9 @@ namespace Planetside
             {
                 base.Owner.GetComponent<EnergyShield.ElectricGuonbehavior>().Destroy();
             }
+            */
             PlayerController owner = base.Owner;
-            owner.gameObject.AddComponent<EnergyShield.ElectricGuonbehavior>();
+            //owner.gameObject.AddComponent<EnergyShield.ElectricGuonbehavior>();
         }
 
         public override DebrisObject Drop(PlayerController player)
@@ -108,7 +110,7 @@ namespace Planetside
                     Destroy(guon.gameObject);
                 }
             }
-                player.GetComponent<EnergyShield.ElectricGuonbehavior>().Destroy();
+                //player.GetComponent<EnergyShield.ElectricGuonbehavior>().Destroy();
             EnergyShield.guonHook.Dispose();
             GameManager.Instance.OnNewLevelFullyLoaded -= this.FixGuon;
             return base.Drop(player);
@@ -124,6 +126,7 @@ namespace Planetside
                 }
             }
             EnergyShield.guonHook.Dispose();
+            /*
             bool flag = base.Owner && base.Owner.GetComponent<EnergyShield.ElectricGuonbehavior>() != null;
             bool flag2 = flag;
             bool flag3 = flag2;
@@ -131,6 +134,7 @@ namespace Planetside
             {
                 base.Owner.GetComponent<EnergyShield.ElectricGuonbehavior>().Destroy();
             }
+            */
             GameManager.Instance.OnNewLevelFullyLoaded -= this.FixGuon;
             base.OnDestroy();
         }
@@ -152,19 +156,7 @@ namespace Planetside
         }
         public static Hook guonHook;
         public static PlayerOrbital orbitalPrefab;
-        private class ElectricGuonbehavior : BraveBehaviour
-        {
-            private void Start()
-            {
-
-            }
-          
-                     
-            public void Destroy()
-            {
-                UnityEngine.Object.Destroy(this);
-            }
-        }
+       
     }
 }
 

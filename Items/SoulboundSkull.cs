@@ -27,7 +27,7 @@ namespace Planetside
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
             string shortDesc = "Spirit Vessel";
             string longDesc = "A skull of lead, wrapped in old prayer beads." +
-                "\n\nIt seems to absorb souls only to shortly release them...\n\n LVII : XIX";
+                "\n\nIt seems to absorb souls only to shortly release them...\n\n LIII : XIX";
             ItemBuilder.SetupItem(item, shortDesc, longDesc, "psog");
             item.quality = PickupObject.ItemQuality.B;
             SoulboundSkull.SoulboundSkullID = item.PickupObjectId;

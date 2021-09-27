@@ -33,7 +33,7 @@ namespace Planetside
             string itemName = "RoomReader";
             string resourceName = "Planetside/Resources/blashshower.png";
             GameObject obj = new GameObject(itemName);
-            TestActiveItem testActive = obj.AddComponent<TestActiveItem>();
+            RoomReader testActive = obj.AddComponent<RoomReader>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
             string shortDesc = "Reads Rooms";
             string longDesc = "Prints The Name Of The Current Room Into The F2 Console";

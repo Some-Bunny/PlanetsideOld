@@ -15,7 +15,6 @@ using MonoMod.RuntimeDetour;
 
 namespace Planetside
 {
-	// Token: 0x02000009 RID: 9
 	public static class NullShrine
 	{
 

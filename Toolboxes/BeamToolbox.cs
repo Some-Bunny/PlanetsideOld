@@ -80,6 +80,8 @@ namespace Planetside
             try
             {
                 projectile.specRigidbody.CollideWithOthers = false;
+
+
                 float convertedColliderX = colliderDimensions.x / 16f;
                 float convertedColliderY = colliderDimensions.y / 16f;
                 float convertedOffsetX = colliderOffsets.x / 16f;
@@ -87,7 +89,6 @@ namespace Planetside
 
                 int spriteID = SpriteBuilder.AddSpriteToCollection(spritePath, ETGMod.Databases.Items.ProjectileCollection);
                 tk2dTiledSprite tiledSprite = projectile.gameObject.GetOrAddComponent<tk2dTiledSprite>();
-
 
 
                 tiledSprite.SetSprite(ETGMod.Databases.Items.ProjectileCollection, spriteID);
@@ -105,6 +106,8 @@ namespace Planetside
                 animation.clips = new tk2dSpriteAnimationClip[0];
                 animator.Library = animation;
                 UnityEngine.Object.Destroy(projectile.GetComponentInChildren<tk2dSprite>());
+                projectile.sprite = tiledSprite;
+
                 BasicBeamController beamController = projectile.gameObject.GetOrAddComponent<BasicBeamController>();
 
                 //---------------- Sets up the animation for the main part of the beam

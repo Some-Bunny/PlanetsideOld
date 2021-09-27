@@ -64,7 +64,7 @@ namespace Planetside
 				enemy.aiActor.healthHaver.ForceSetCurrentHealth(1075f);
 				enemy.aiActor.CollisionKnockbackStrength = 10f;
 				enemy.aiActor.CanTargetPlayers = true;
-				enemy.aiActor.healthHaver.SetHealthMaximum(1025f, null, false);
+				enemy.aiActor.healthHaver.SetHealthMaximum(1075f, null, false);
 
 				aiAnimator.IdleAnimation = new DirectionalAnimation
 				{
@@ -122,6 +122,25 @@ namespace Planetside
 					new AIAnimator.NamedDirectionalAnimation
 					{
 						name = "charge",
+						anim = ctahge
+					}
+				};
+				//=====================================================================================
+				DirectionalAnimation BirdUp = new DirectionalAnimation
+				{
+					Type = DirectionalAnimation.DirectionType.TwoWayHorizontal,
+					AnimNames = new string[]
+					{
+						"chargecannon",
+
+					},
+					Flipped = new DirectionalAnimation.FlipType[2]
+				};
+				aiAnimator.OtherAnimations = new List<AIAnimator.NamedDirectionalAnimation>
+				{
+					new AIAnimator.NamedDirectionalAnimation
+					{
+						name = "chargecannon",
 						anim = ctahge
 					}
 				};
@@ -309,10 +328,11 @@ namespace Planetside
 					{
 					
 					53,
+					53,
 					54,
 					55
 
-					}, "jumpland", tk2dSpriteAnimationClip.WrapMode.Once).fps = 10f;
+					}, "jumpland", tk2dSpriteAnimationClip.WrapMode.Once).fps =9f;
 
 
 
@@ -487,9 +507,26 @@ namespace Planetside
 					26,
 					25
 					}, "charge", tk2dSpriteAnimationClip.WrapMode.Once).fps = 8f;
+
+					SpriteBuilder.AddAnimation(enemy.spriteAnimator, FunganonClooection, new List<int>
+					{
+					25,
+					26,
+					27,
+					28,
+					27,
+					26,
+					27,
+					28,
+					29,
+					28,
+					29,
+
+					}, "chargecannon", tk2dSpriteAnimationClip.WrapMode.Once).fps = 11f;
 				}
 
-
+				prefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("chargecannon").frames[1].eventAudio = "Play_BOSS_dragun_charge_01";
+				prefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("chargecannon").frames[1].triggerEvent = true;
 
 				prefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("jump").frames[4].eventAudio = "Play_ENM_bigshroom_jump_01";
 				prefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("jump").frames[4].triggerEvent = true;
@@ -606,15 +643,15 @@ namespace Planetside
 
 					new AttackBehaviorGroup.AttackGroupItem()
 						{
-						Probability = 1.1f,
+						Probability = 1.5f,
 						Behavior = new ShootBehavior()
 						{
 
-							BulletScript = new CustomBulletScriptSelector(typeof(PrimaryCannonScript)),
+							BulletScript = new CustomBulletScriptSelector(typeof(MegaCannon)),
 							LeadAmount = 0,
-							
-							AttackCooldown = 1.5f,
-							Cooldown = 6f,
+
+							AttackCooldown = 3f,
+							Cooldown = 8f,
 
 							RequiresLineOfSight = true,
 							ShootPoint = CentreOfAllCannons,
@@ -636,8 +673,50 @@ namespace Planetside
 							resetCooldownOnDamage = null,
 							MaxUsages = 0,
 							ImmobileDuringStop = false,
+							ChargeAnimation = "chargecannon",
+							//FireAnimation = "jumpland",
+							PostFireAnimation = "jumpland",
+							StopDuring = ShootBehavior.StopType.Charge
+
+						},
+						NickName = "ffefefefe"
+					},
+
+					new AttackBehaviorGroup.AttackGroupItem()
+						{
+						Probability = 1.1f,
+						Behavior = new ShootBehavior()
+						{
+
+							BulletScript = new CustomBulletScriptSelector(typeof(PrimaryCannonScript)),
+							LeadAmount = 0,
+							
+							AttackCooldown = 2f,
+							Cooldown = 6f,
+
+							RequiresLineOfSight = true,
+							ShootPoint = CentreOfAllCannons,
+							CooldownVariance = 0f,
+							GlobalCooldown = 0,
+							InitialCooldown = 4,
+							InitialCooldownVariance = 0,
+							GroupName = null,
+							MinRange = 0,
+							Range = 1000,
+							MinWallDistance = 0,
+							MaxEnemiesInRoom = -1,
+							MinHealthThreshold = 0,
+							MaxHealthThreshold = 1,
+							HealthThresholds = new float[0],
+							AccumulateHealthThresholds = true,
+							targetAreaStyle = null,
+							IsBlackPhantom = false,
+							resetCooldownOnDamage = null,
+							MaxUsages = 0,
+							ImmobileDuringStop = false,
 							ChargeAnimation = "jump",
-							FireAnimation = "jumpland",
+							//FireAnimation = "jumpland",
+							PostFireAnimation = "jumpland",
 							StopDuring = ShootBehavior.StopType.Charge
 
 						},
@@ -653,7 +732,7 @@ namespace Planetside
 							LeadAmount = 0,
 
 							AttackCooldown = 0.25f,
-							Cooldown = 0.5f,
+							Cooldown = 1f,
 
 							RequiresLineOfSight = true,
 							ShootPoint = CentreOfAllCannons,
@@ -687,14 +766,14 @@ namespace Planetside
 							BulletScript = new CustomBulletScriptSelector(typeof(RainingPoot)),
 							LeadAmount = 0,
 
-							AttackCooldown = 0f,
+							AttackCooldown = 1f,
 							Cooldown = 5f,
 
 							RequiresLineOfSight = true,
 							ShootPoint = CentreOfAllCannons,
 							CooldownVariance = 0f,
 							GlobalCooldown = 0,
-							InitialCooldown = 1,
+							InitialCooldown = 8,
 							InitialCooldownVariance = 0,
 							GroupName = null,
 							MinRange = 0,
@@ -761,8 +840,8 @@ namespace Planetside
 							BulletScript = new CustomBulletScriptSelector(typeof(FastCannons)),
 							LeadAmount = 0,
 
-							AttackCooldown = 0.5f,
-							Cooldown = 0.1f,
+							AttackCooldown = 0.7f,
+							Cooldown = 0.3f,
 
 							RequiresLineOfSight = true,
 							ShootPoint = CentreOfAllCannons,
@@ -1064,13 +1143,15 @@ namespace Planetside
 			}
 
 		}
+		private static List<GameObject> m_reticles = new List<GameObject>();
+
 		public class FastCannons : Script
 		{
 			protected override IEnumerator Top()
 			{
 				CellArea area = base.BulletBank.aiActor.ParentRoom.area;
 
-				for (int j = 0; j < 1; j++)
+				for (int j = 0; j < 2; j++)
 				{
 					List<float> log = new List<float>()
 					{
@@ -1082,13 +1163,13 @@ namespace Planetside
 					vfx.name = "LaserTell"+j.ToString();
 
 					base.PostWwiseEvent("Play_BOSS_RatMech_Barrel_01", null);
-					for (int i = 0; i < 4; i++)
+					for (int i = 0; i < 3+j; i++)
 					{
-						float angle = base.AimDirection + (UnityEngine.Random.Range(-45, 45));
+						float angle = base.AimDirection + (UnityEngine.Random.Range(-60, 60));
 						float num2 = 20f;
 
 						Vector2 zero = Vector2.zero;
-						if (BraveMathCollege.LineSegmentRectangleIntersection(this.Position, this.Position + BraveMathCollege.DegreesToVector(angle, 60f), area.UnitBottomLeft, area.UnitTopRight - new Vector2(0f, 6f), ref zero))
+						if (BraveMathCollege.LineSegmentRectangleIntersection(this.Position, this.Position + BraveMathCollege.DegreesToVector(angle, 60f), area.UnitBottomLeft, area.UnitTopRight, ref zero))
 						{
 							num2 = (zero - this.Position).magnitude;
 						}
@@ -1108,11 +1189,8 @@ namespace Planetside
 						log.Add(angle);
 						yield return this.Wait(1);
 					}
-					yield return this.Wait(15f);
+					yield return this.Wait(20f);
 					this.CleanupReticles();
-
-					//var hand = base.BulletBank.transform.Find("LaserTell"+j.ToString()).gameObject;
-					//UnityEngine.Object.Destroy(hand);
 					ExplosionData aww = GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultSmallExplosionData;
 					GameManager.Instance.MainCameraController.DoScreenShake(aww.ss, new Vector2?(base.Position), false);
 					foreach (float h in log)
@@ -1120,10 +1198,10 @@ namespace Planetside
 						base.PostWwiseEvent("Play_ENM_cannonball_blast_01", null);
 						string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
 						base.Fire(new Direction(h, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(25f, SpeedType.Absolute), new FastCannons.Cannonball());
-						yield return this.Wait(4);
+						yield return this.Wait(3);
 
 					}
-					yield return this.Wait(10);
+					yield return this.Wait(30);
 				}
 				yield break;
 			}
@@ -1183,64 +1261,70 @@ namespace Planetside
 				Fungannon.m_reticles.Clear();
 			}
 		}
-		private static List<GameObject> m_reticles = new List<GameObject>();
 		public class BigEverywhereAttack : Script
 		{
 			protected override IEnumerator Top()
 			{
 				CellArea area = base.BulletBank.aiActor.ParentRoom.area;
-				float delta = 10f;
+				float delta = 20f;
 				float startDirection = AimDirection;
 				float radius = 0.04f;
 				base.PostWwiseEvent("Play_BOSS_Rat_Cheese_Summon_01", null);
-				for (int j = 0; j < 36; j++)
+				for (int j = 0; j < 18; j++)
 				{
-					base.Fire(new Direction(-90f, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BigEverywhereAttack.TheGear(30, 40, "spore2", this, (startDirection + (float)j * delta) + 180, radius));
-					base.Fire(new Direction(-90f, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BigEverywhereAttack.TheGear(-30, 60, "spore2", this, (startDirection + (float)j * delta) + 180, radius + 0.006f));
-					base.Fire(new Direction(-90f, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BigEverywhereAttack.TheGear(60, 70, "spore1", this, (startDirection + (float)j * delta) + 180, radius + 0.01f));
-					base.Fire(new Direction(-90f, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BigEverywhereAttack.TheGear(-60, 100, "spore1", this, (startDirection + (float)j * delta) + 180, radius + 0.009f));
+					base.Fire(new Direction(-90f, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BigEverywhereAttack.TheGear(15, 25, 240 ,"spore2", this, (startDirection + (float)j * delta) + 180, radius));
+					base.Fire(new Direction(-90f, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BigEverywhereAttack.TheGear(-15, 75, 360, "spore1", this, (startDirection + (float)j * delta) + 180, radius));
+					base.Fire(new Direction(-90f, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BigEverywhereAttack.TheGear(15, 50, 480,"spore2", this, (startDirection + (float)j * delta) + 180, radius));
+					base.Fire(new Direction(-90f, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new BigEverywhereAttack.TheGear(-15, 100, 600,"spore1", this, (startDirection + (float)j * delta) + 180, radius));
 				}
+
 				for (int j = 0; j < 8; j++)
 				{
-					yield return this.Wait(50f);
-					base.Fire(new Direction((UnityEngine.Random.Range(-180, 180)), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(10, SpeedType.Absolute), new BigEverywhereAttack.Superball());
+					yield return this.Wait(60f);
 					List<float> log = new List<float>()
 					{
 
 
 					};
 					FungannonController vfx = base.BulletBank.GetComponent<FungannonController>();
+
 					vfx.LaserShit = EnemyDatabase.GetOrLoadByGuid("6868795625bd46f3ae3e4377adce288b").GetComponent<ResourcefulRatController>().ReticleQuad;
 					vfx.name = "LaserTell" + j.ToString();
 					base.PostWwiseEvent("Play_BOSS_RatMech_Barrel_01", null);
-					for (int i = 0; i < 16; i++)
+					int Amount = 12+j;
+					for (int e = 0; e < Amount; e++)
+                    {
+						float anim = (360 / Amount) * e;
+						float angle = base.AimDirection + anim;
+						log.Add(angle);
+					}
+					List<float> list = log.Shuffle<float>();
+
+					for (int i = 0; i < Amount; i++)
 					{
-						float angle = base.AimDirection + (UnityEngine.Random.Range(-150, 150));
 						float num2 = 20f;
 
 						Vector2 zero = Vector2.zero;
-						if (BraveMathCollege.LineSegmentRectangleIntersection(this.Position, this.Position + BraveMathCollege.DegreesToVector(angle, 60f), area.UnitBottomLeft, area.UnitTopRight - new Vector2(0f, 6f), ref zero))
+
+
+						if (BraveMathCollege.LineSegmentRectangleIntersection(this.Position, this.Position + BraveMathCollege.DegreesToVector(list[i], 60f), area.UnitBottomLeft, area.UnitTopRight, ref zero))
 						{
 							num2 = (zero - this.Position).magnitude;
 						}
 						if (vfx == null)
 						{
 							vfx.LaserShit = EnemyDatabase.GetOrLoadByGuid("6868795625bd46f3ae3e4377adce288b").GetComponent<ResourcefulRatController>().ReticleQuad;
-							//ETGModConsole.Log("TRIPPED NULLCHECK");
 						}
-						//ETGModConsole.Log("1");
 						GameObject gameObject = SpawnManager.SpawnVFX(vfx.LaserShit, false);
-						//ETGModConsole.Log("2");
 						tk2dSlicedSprite component2 = gameObject.GetComponent<tk2dSlicedSprite>();
-						component2.transform.position = new Vector3(this.Position.x, this.Position.y, this.Position.y) + BraveMathCollege.DegreesToVector(angle, 2f).ToVector3ZUp(0);
-						component2.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
+						component2.transform.position = new Vector3(this.Position.x, this.Position.y, this.Position.y) + BraveMathCollege.DegreesToVector(list[i], 0f).ToVector3ZUp(0);
+						component2.transform.localRotation = Quaternion.Euler(0f, 0f, list[i]);
 						component2.dimensions = new Vector2((num2) * 16f, 5f);
 						component2.UpdateZDepth();
 						Fungannon.m_reticles.Add(gameObject);
-						log.Add(angle);
 						yield return this.Wait(1);
 					}
-					yield return this.Wait(14);
+					yield return this.Wait(20);
 					this.CleanupReticles();
 					base.PostWwiseEvent("Play_ENM_cannonball_blast_01", null);
 					ExplosionData aww = GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultSmallExplosionData;
@@ -1313,13 +1397,14 @@ namespace Planetside
 				}
 				Fungannon.m_reticles.Clear();
 			}
-			//private List<GameObject> m_reticles = new List<GameObject>();
 			public class TheGear : Bullet
 			{
-				public TheGear(float spinspeed, float RevUp, string BulletType, BigEverywhereAttack parent, float angle = 0f, float aradius = 0) : base(BulletType, false, false, false)
+				public TheGear(float spinspeed, float RevUp,float StartSpeenAgain ,string BulletType, BigEverywhereAttack parent, float angle = 0f, float aradius = 0) : base(BulletType, false, false, false)
 				{
 					this.m_spinSpeed = spinspeed;
 					this.TimeToRevUp = RevUp;
+					this.StartAgain = StartSpeenAgain;
+
 					this.m_parent = parent;
 					this.m_angle = angle;
 					this.m_radius = aradius;
@@ -1341,20 +1426,23 @@ namespace Planetside
 						{
 							radius += m_radius;
 						}
-						if (i == TimeToRevUp)
+						if (StartAgain < i)
+                        {
+							radius += m_radius*2;
+						}
+						if (i == StartAgain)
 						{
 							this.Projectile.spriteAnimator.Play();
+							//base.ChangeSpeed(new Speed(6f, SpeedType.Absolute), 120);
+							//base.ChangeDirection(new Direction(this.m_parent.GetAimDirection(1f, 10f), Brave.BulletScript.DirectionType.Absolute, -1f), 20);
+							//base.StartTask(this.ChangeSpinSpeedTask(180f, 240));
 						}
-						if (i == 400 + (TimeToRevUp * 2))
-						{
-							base.ChangeSpeed(new Speed(6f, SpeedType.Absolute), 120);
-							base.ChangeDirection(new Direction(this.m_parent.GetAimDirection(1f, 10f), Brave.BulletScript.DirectionType.Absolute, -1f), 20);
-							base.StartTask(this.ChangeSpinSpeedTask(180f, 240));
-						}
+						/*
 						if (i > 400 + (TimeToRevUp * 2) && UnityEngine.Random.value < 0.01f)
                         {
 							base.Vanish(false);
                         }
+						*/
 						centerPosition += this.Velocity / 60f;
 						base.UpdateVelocity();
 						this.m_angle += this.m_spinSpeed / 60f;
@@ -1383,6 +1471,7 @@ namespace Planetside
 				private float m_radius;
 				private string m_bulletype;
 				private float TimeToRevUp;
+				private float StartAgain;
 
 
 			}
@@ -1422,7 +1511,7 @@ namespace Planetside
 					if (!preventSpawningProjectiles)
 					{
 						base.PostWwiseEvent("Play_BOSS_Rat_Cheese_Burst_02", null);
-						for (int i = 0; i < 14; i++)
+						for (int i = 0; i < 10; i++)
 						{
 							string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
 							float speed = 1f;
@@ -1435,7 +1524,7 @@ namespace Planetside
 								speed *= UnityEngine.Random.Range(0.6f, 1.4f);
 
 							}
-							base.Fire(new Direction(UnityEngine.Random.Range(-180, 180), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(6f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
+							base.Fire(new Direction(UnityEngine.Random.Range(-180, 180), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
 						}
 						return;
 					}
@@ -1473,14 +1562,14 @@ namespace Planetside
 
 				CellArea area = base.BulletBank.aiActor.ParentRoom.area;
 				AIActor aiActor = base.BulletBank.aiActor;
-				aiActor.aiAnimator.PlayUntilFinished("roar", false, null, -1f, false);
+				yield return this.Wait(40f);
 				Vector2 roomLowerLeft = area.UnitBottomLeft;
 				Vector2 roomUpperRight = area.UnitTopRight - new Vector2(0f, 3.125f);
 				Vector2 roomCenter = area.UnitCenter - new Vector2(0f, 2.25f);
 				for (int i = 0; i < 3; i++)
 				{
 					int fired;
-					fired = UnityEngine.Random.Range(11, 18);
+					fired = UnityEngine.Random.Range(2, 4);
 					for (int j = 0; j < fired; j++)
 					{
 						Vector2 vector = new Vector2(roomLowerLeft.x, base.SubdivideRange(roomLowerLeft.y, roomUpperRight.y, fired+1, j, true));
@@ -1512,7 +1601,7 @@ namespace Planetside
 						vector4.y -= 2.5f;
 						this.FireWallBullet(90f, vector4, roomCenter);
 					}
-					yield return base.Wait(36);
+					yield return base.Wait(25);
 				}
 				yield return base.Wait(240);
 
@@ -1535,7 +1624,7 @@ namespace Planetside
 				}
 				protected override IEnumerator Top()
 				{
-					int travelTime = UnityEngine.Random.Range(120, 450);
+					int travelTime = UnityEngine.Random.Range(150, 450);
 					this.Projectile.IgnoreTileCollisionsFor(90f);
 					this.Projectile.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.HighObstacle, CollisionLayer.LowObstacle));
 					this.Projectile.sprite.ForceRotationRebuild();
@@ -1545,7 +1634,7 @@ namespace Planetside
 					Vector2 area = base.BulletBank.aiActor.sprite.WorldCenter;
 					this.Direction = (area - base.Position).ToAngle();
 
-					base.ChangeSpeed(new Speed(10f, SpeedType.Absolute), UnityEngine.Random.Range(150, 600));
+					base.ChangeSpeed(new Speed(11f, SpeedType.Absolute), UnityEngine.Random.Range(150, 600));
 					yield return base.Wait(travelTime);
 					base.Vanish(false);
 					yield break;
@@ -1558,7 +1647,6 @@ namespace Planetside
 		{
 			protected override IEnumerator Top()
 			{
-
 				for (int e = 0; e < 5; e++)
                 {
 					ExplosionData aww = GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultSmallExplosionData;
@@ -1570,7 +1658,8 @@ namespace Planetside
 					if (WeakShot)
 					{
 						Num = 0;
-						base.Fire(new Offset("CannonNorth"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(15f, SpeedType.Absolute), new PooterCannon.Cannonball());
+						//base.Fire(new Offset("CannonNorth"), new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(8f, SpeedType.Absolute), new PooterCannon.Cannonball());
+						base.Fire(new Offset("CannonNorth"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(14f, SpeedType.Absolute), new PooterCannon.Cannonball());
 						for (int i = 0; i < 8; i++)
 						{
 							string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
@@ -1584,14 +1673,15 @@ namespace Planetside
 								speed *= UnityEngine.Random.Range(0.6f, 1.4f);
 
 							}
-							base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45)+180, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(9.5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
+							base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45)+180, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(4.5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
 						}
 					}
 					bool NormalShot = RNG == 1;
 					if (NormalShot)
 					{
 						Num = 90;
-						base.Fire(new Offset("CannonEast"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(15f, SpeedType.Absolute), new PooterCannon.Cannonball());
+						//base.Fire(new Offset("CannonSouth"), new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(8f, SpeedType.Absolute), new PooterCannon.Cannonball());
+						base.Fire(new Offset("CannonSouth"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(14f, SpeedType.Absolute), new PooterCannon.Cannonball());
 						for (int i = 0; i < 8; i++)
 						{
 							string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
@@ -1605,14 +1695,15 @@ namespace Planetside
 								speed *= UnityEngine.Random.Range(0.6f, 1.4f);
 
 							}
-							base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45) + 180, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(9.5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
+							base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45) + 180, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(4.5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
 						}
 					}
 					bool yeet = RNG == 2;
 					if (yeet)
 					{
 						Num = 180;
-						base.Fire(new Offset("CannonSouth"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(15f, SpeedType.Absolute), new PooterCannon.Cannonball());
+						//base.Fire(new Offset("CannonSouth"), new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(8f, SpeedType.Absolute), new PooterCannon.Cannonball());
+						base.Fire(new Offset("CannonSouth"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(14f, SpeedType.Absolute), new PooterCannon.Cannonball());
 						for (int i = 0; i < 8; i++)
 						{
 							string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
@@ -1626,14 +1717,15 @@ namespace Planetside
 								speed *= UnityEngine.Random.Range(0.6f, 1.4f);
 
 							}
-							base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45) + 180, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(9.5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
+							base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45) + 180, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(4.5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
 						}
 					}
 					bool rr = RNG == 3;
 					if (rr)
 					{
 						Num = 270;
-						base.Fire(new Offset("CannonWest"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(15f, SpeedType.Absolute), new PooterCannon.Cannonball());
+						//base.Fire(new Offset("CannonWest"), new Direction(0, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(8f, SpeedType.Absolute), new PooterCannon.Cannonball());
+						base.Fire(new Offset("CannonWest"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(14f, SpeedType.Absolute), new PooterCannon.Cannonball());
 						for (int i = 0; i < 8; i++)
 						{
 							string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
@@ -1646,10 +1738,10 @@ namespace Planetside
 							{
 								speed *= UnityEngine.Random.Range(0.6f, 1.4f);
 							}
-							base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45) + 180, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(9.5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
+							base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(Num - 45, Num + 45) + 180, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(4.5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 180));
 						}
 					}
-					yield return this.Wait(50f);
+					yield return this.Wait(60f);
 				}
 				yield break;
 			}
@@ -1669,7 +1761,7 @@ namespace Planetside
 					for (int i = 0; i < 600; i++)
 					{
 						string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
-						base.Fire(new Direction(UnityEngine.Random.Range(150, 210), Brave.BulletScript.DirectionType.Relative, -1f), new Speed(4, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, UnityEngine.Random.Range(15, 90)));
+						base.Fire(new Direction(UnityEngine.Random.Range(150, 210), Brave.BulletScript.DirectionType.Relative, -1f), new Speed(4, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, UnityEngine.Random.Range(30, 120)));
 						yield return this.Wait(2f);
 
 					}
@@ -1710,10 +1802,11 @@ namespace Planetside
 				base.PostWwiseEvent("Play_BOSS_RatMech_Stomp_01", null);
 				ExplosionData aww = GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultExplosionData;
 				GameManager.Instance.MainCameraController.DoScreenShake(aww.ss, new Vector2?(base.Position), false);
-				base.Fire(new Offset("CannonNorth"), new Direction(0, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(18f, SpeedType.Absolute), new PrimaryCannonScript.Cannonball());
-				base.Fire(new Offset("CannonSouth"), new Direction(180, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(18f, SpeedType.Absolute), new PrimaryCannonScript.Cannonball());
-				base.Fire(new Offset("CannonEast"), new Direction(90, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(18f, SpeedType.Absolute), new PrimaryCannonScript.Cannonball());
-				base.Fire(new Offset("CannonWest"), new Direction(270, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(18f, SpeedType.Absolute), new PrimaryCannonScript.Cannonball());
+				base.Fire(new Offset("CannonNorth"), new Direction(45, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(7f, SpeedType.Absolute), new PrimaryCannonScript.Cannonball());
+				base.Fire(new Offset("CannonSouth"), new Direction(225, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(7f, SpeedType.Absolute), new PrimaryCannonScript.Cannonball());
+				base.Fire(new Offset("CannonEast"), new Direction(135, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(7f, SpeedType.Absolute), new PrimaryCannonScript.Cannonball());
+				base.Fire(new Offset("CannonWest"), new Direction(315, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(7f, SpeedType.Absolute), new PrimaryCannonScript.Cannonball());
+				/*
 				for (int i = 0; i < 28; i++)
                 {
 					string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
@@ -1721,14 +1814,15 @@ namespace Planetside
 					if (bankName == "spore2")
                     {
 						speed *= UnityEngine.Random.Range(1.2f, 1.666f);
-						base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(180, -180), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(12f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 360));
+						base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(180, -180), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(8f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 360));
 					}
 					if (bankName == "spore1")
 					{
 						speed *= UnityEngine.Random.Range(0.75f, 1.1f);
-						base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(180, -180), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(11f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 450));
+						base.Fire(new Offset("CentreOfAllCannons"), new Direction(UnityEngine.Random.Range(180, -180), Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(5f * speed, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, 450));
 					}
 				}
+				*/
 				yield break;
 			}
 
@@ -1744,10 +1838,11 @@ namespace Planetside
 				{
 					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("f905765488874846b7ff257ff81d6d0c").bulletBank.GetBullet("spore2"));
 					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("f905765488874846b7ff257ff81d6d0c").bulletBank.GetBullet("spore1"));
+					base.ChangeSpeed(new Speed(18f, SpeedType.Absolute), 60);
 					for (int i = 0; i < 600; i++)
 					{
 						string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
-						base.Fire(new Direction(UnityEngine.Random.Range(150 ,210), Brave.BulletScript.DirectionType.Relative, -1f), new Speed(2.5f, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, UnityEngine.Random.Range(150, 600)));
+						base.Fire(new Direction(UnityEngine.Random.Range(150 ,210), Brave.BulletScript.DirectionType.Relative, -1f), new Speed(1.5f, SpeedType.Absolute), new PrimaryCannonScript.Spore(bankName, UnityEngine.Random.Range(150, 600)));
 						yield return this.Wait(2f);
 
 					}
@@ -1780,7 +1875,109 @@ namespace Planetside
 				public float AirTime;
 			}
 		}
-		
+
+
+		public class MegaCannon : Script
+		{
+			protected override IEnumerator Top()
+			{
+				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("41ee1c8538e8474a82a74c4aff99c712").bulletBank.GetBullet("big"));
+				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("f905765488874846b7ff257ff81d6d0c").bulletBank.GetBullet("spore2"));
+				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("f905765488874846b7ff257ff81d6d0c").bulletBank.GetBullet("spore1"));
+				float ANim = base.AimDirection;
+				base.PostWwiseEvent("Play_ENM_hammer_target_01", null);
+				yield return this.Wait(20f);
+				for (int i = 0; i < 30; i++)
+				{
+					string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
+					base.Fire(new Direction(UnityEngine.Random.Range(-180, 180), Brave.BulletScript.DirectionType.Relative, -1f), new Speed(UnityEngine.Random.Range(4, 8), SpeedType.Absolute), new MegaCannon.Spore(bankName, UnityEngine.Random.Range(30, 120)));
+
+				}
+				base.PostWwiseEvent("Play_BOSS_RatMech_Stomp_01", null);
+				base.Fire(new Direction(ANim, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(25, SpeedType.Absolute), new MegaCannon.Superball());
+
+
+				yield break;
+			}
+
+			public class Superball : Bullet
+			{
+				public Superball() : base("big", false, false, false)
+				{
+				}
+				protected override IEnumerator Top()
+				{
+					for (int i = 0; i < 100; i++)
+					{
+						base.Fire(new Direction(0, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new MegaCannon.Cannonball());
+						yield return this.Wait(4f);
+
+					}
+					yield break;
+				}
+				public override void OnBulletDestruction(Bullet.DestroyType destroyType, SpeculativeRigidbody hitRigidbody, bool preventSpawningProjectiles)
+				{
+					if (!preventSpawningProjectiles)
+					{
+						for (int i = 0; i < 60; i++)
+						{
+							string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
+							base.Fire(new Direction(UnityEngine.Random.Range(-180, 180), Brave.BulletScript.DirectionType.Relative, -1f), new Speed(UnityEngine.Random.Range(7, 11), SpeedType.Absolute), new MegaCannon.Spore(bankName, UnityEngine.Random.Range(30, 120)));
+
+						}
+						return;
+					}
+				}
+			}
+			public class Cannonball : Bullet
+			{
+				public Cannonball() : base("bigBullet", false, false, false)
+				{
+
+				}
+
+				protected override IEnumerator Top()
+				{
+					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("f905765488874846b7ff257ff81d6d0c").bulletBank.GetBullet("spore2"));
+					base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("f905765488874846b7ff257ff81d6d0c").bulletBank.GetBullet("spore1"));
+					yield return this.Wait(180f);
+					for (int i = 0; i < 7; i++)
+					{
+						string bankName = (UnityEngine.Random.value > 0.33f) ? "spore2" : "spore1";
+						base.Fire(new Direction(UnityEngine.Random.Range(-180, 180), Brave.BulletScript.DirectionType.Relative, -1f), new Speed(UnityEngine.Random.Range(3, 6), SpeedType.Absolute), new MegaCannon.Spore(bankName, UnityEngine.Random.Range(90, 450)));
+
+					}
+					base.Vanish(false);
+					yield break;
+				}
+			}
+			public class Spore : Bullet
+			{
+				public Spore(string bulletname, float Airtime) : base(bulletname, false, false, false)
+				{
+					this.BulletName = bulletname;
+					this.AirTime = Airtime;
+				}
+
+				protected override IEnumerator Top()
+				{
+					if (this.BulletName == "spore2")
+					{
+						base.ChangeSpeed(new Speed(0, SpeedType.Absolute), 60);
+					}
+					else
+					{
+						base.ChangeSpeed(new Speed(0, SpeedType.Absolute), 120);
+					}
+					yield return this.Wait(AirTime);
+					base.Vanish(false);
+					yield break;
+				}
+				public string BulletName;
+				public float AirTime;
+			}
+		}
+
 	}
 }
 

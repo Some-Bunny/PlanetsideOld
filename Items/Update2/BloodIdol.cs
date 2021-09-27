@@ -86,7 +86,10 @@ namespace Planetside
         public bool BllodCanBeUsed;
         protected override void OnDestroy()
         {
-            base.LastOwner.OnAnyEnemyReceivedDamage = (Action<float, bool, HealthHaver>)Delegate.Remove(base.LastOwner.OnAnyEnemyReceivedDamage, new Action<float, bool, HealthHaver>(this.OnEnemyDamaged));
+            if (base.LastOwner != null)
+            {
+                base.LastOwner.OnAnyEnemyReceivedDamage = (Action<float, bool, HealthHaver>)Delegate.Remove(base.LastOwner.OnAnyEnemyReceivedDamage, new Action<float, bool, HealthHaver>(this.OnEnemyDamaged));
+            }
             base.OnDestroy();
         }
         protected override void DoEffect(PlayerController user)

@@ -43,7 +43,6 @@ namespace Planetside
 			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.reloadAnimation).frames[0].eventAudio = "Play_WPN_frostgiant_reload_01";
 			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.reloadAnimation).frames[0].triggerEvent = true;
 
-
 			for (int i = 0; i < 20; i++)
 			{
 				gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(88) as Gun, true, false);
@@ -65,7 +64,7 @@ namespace Planetside
 				Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
 				projectile.gameObject.SetActive(false);
 				projectileModule.projectiles[0] = projectile;
-				projectile.baseData.damage = 2f;
+				projectile.baseData.damage = 4f;
 				projectile.AdditionalScaleMultiplier = 2f;
 				projectile.shouldRotate = true;
 				projectile.baseData.range = 1000f;
@@ -129,6 +128,40 @@ namespace Planetside
 			material.SetTexture("_MainTex", sharedMaterials[0].GetTexture("_MainTex"));
 			sharedMaterials[sharedMaterials.Length - 1] = material;
 			component.sharedMaterials = sharedMaterials;
+
+
+			/*
+			tk2dSpriteAnimationClip animationClip = new tk2dSpriteAnimationClip();
+			animationClip.fps = 11;
+			animationClip.wrapMode = tk2dSpriteAnimationClip.WrapMode.Loop;
+			animationClip.name = "start";
+
+			//GameObject spriteObject = new GameObject("spriteObject");
+			ItemBuilder.AddSpriteToObject("spriteObject", $"Planetside/Resources/VFX/DeathMark/markedfordeathvfx_001", gun.gameObject);
+			tk2dSpriteAnimationFrame starterFrame = new tk2dSpriteAnimationFrame();
+			starterFrame.spriteId = gun.GetComponent<tk2dSprite>().spriteId;
+			starterFrame.spriteCollection = ETGMod.Databases.Items.WeaponCollection;
+			tk2dSpriteAnimationFrame[] frameArray = new tk2dSpriteAnimationFrame[]
+			{
+				starterFrame
+			};
+			animationClip.frames = frameArray;
+			for (int i = 2; i < 9; i++)
+			{
+				ItemBuilder.AddSpriteToObject("spriteForObject", $"Planetside/Resources/VFX/DeathMark/markedfordeathvfx_00{i}", gun.gameObject);
+				tk2dSpriteAnimationFrame frame = new tk2dSpriteAnimationFrame();
+				frame.spriteId = gun.GetComponent<tk2dSprite>().spriteId;
+				frame.spriteCollection = ETGMod.Databases.Items.WeaponCollection;
+			animationClip.frames = animationClip.frames.Concat(new tk2dSpriteAnimationFrame[] { frame }).ToArray();
+			}
+			gun.GetComponent<tk2dSpriteAnimator>().Library = gun.GetComponent<tk2dSpriteAnimator>().Library;
+
+			Array.Resize<tk2dSpriteAnimationClip>(ref gun.spriteAnimator.Library.clips, gun.spriteAnimator.Library.clips.Length + 1);
+			gun.spriteAnimator.Library.clips[gun.spriteAnimator.Library.clips.Length + 1] = animationClip;
+			//gun.GetComponent<tk2dSpriteAnimator>().DefaultClipId = gun.GetComponent<tk2dSpriteAnimator>().GetClipIdByName("idle");
+			gun.GetComponent<tk2dSpriteAnimator>().playAutomatically = true;
+			*/
+
 		}
 
 
@@ -170,8 +203,6 @@ namespace Planetside
 							VFXActive = true;
 							ChargerGun vfx = gun.GetComponent<ChargerGun>();
 							
-							//GameObject iconPrefab =
-							//vfx.LaserReticle = iconPrefab;
 							for (int i = 0; i < 7; i++)
 							{
 								float num2 = 16f;
@@ -179,10 +210,6 @@ namespace Planetside
 								if (BraveMathCollege.LineSegmentRectangleIntersection(this.gun.barrelOffset.transform.position, this.gun.barrelOffset.transform.position + BraveMathCollege.DegreesToVector(player.CurrentGun.CurrentAngle, 60f).ToVector3ZisY(-0.25f), new Vector2(-40, -40), new Vector2(40, 40), ref zero))
 								{
 									num2 = (zero - new Vector2(this.gun.barrelOffset.transform.position.x, this.gun.barrelOffset.transform.position.y)).magnitude;
-								}
-								if (vfx == null)
-								{
-									//vfx.LaserReticle = iconPrefab;
 								}
 								GameObject gameObject = SpawnManager.SpawnVFX(vfx.LaserReticle, false);
 								tk2dTiledSprite component2 = gameObject.GetComponent<tk2dTiledSprite>();
@@ -200,7 +227,6 @@ namespace Planetside
 
 						for (int i = -3; i < 4; i++)
                         {
-							float AddaAngle = 0;
 							GameObject obj = Chargerreticles[i + 3];
 							if (obj != null)
                             {
@@ -213,10 +239,7 @@ namespace Planetside
 								{
 									component2.dimensions = new Vector2((10) * 2f, 1f);
 								}
-
 								component2.usesOverrideMaterial = true;
-								//component2.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/Internal/RainbowChestShader");
-								//component2.sprite.renderer.material.SetFloat("_ValueMaximum", 100);
 								component2.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
 								component2.sprite.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
 
@@ -226,7 +249,7 @@ namespace Planetside
 								component2.sprite.renderer.material.SetColor("_OverrideColor", laser);
 								component2.sprite.renderer.material.SetColor("_EmissiveColor", laser);
 
-								AddaAngle = (elapsed * (Accuracy * i));
+								float AddaAngle = (elapsed * (Accuracy * i));
 								float ix = obj.transform.localRotation.eulerAngles.x + player.CurrentGun.barrelOffset.transform.localRotation.eulerAngles.x;
 								float wai = obj.transform.localRotation.eulerAngles.y + player.CurrentGun.barrelOffset.transform.localRotation.eulerAngles.y;
 								float zee = obj.transform.localRotation.z + player.CurrentGun.transform.eulerAngles.z;
@@ -246,7 +269,6 @@ namespace Planetside
 							float spd = player.stats.GetStatValue(PlayerStats.StatType.ProjectileSpeed);
 							proj.baseData.damage = ((elapsed * 5.75f) + 2)*dmg;
 							proj.baseData.speed = UnityEngine.Random.Range(22f, 28f) * spd; 
-
 						}
 					}
 					else
@@ -272,7 +294,6 @@ namespace Planetside
 		{
 			if (gun.IsReloading && this.HasReloaded)
 			{
-				//AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
 				HasReloaded = false;
 				base.OnReloadPressed(player, gun, bSOMETHING);
 			}
@@ -299,6 +320,10 @@ namespace Planetside
 				{
 					CleanupReticles();
 				}
+				//else
+                //{
+					//gun.GetComponent<tk2dSpriteAnimator>().Play("start");
+				//}
 			}
 		}
 	}

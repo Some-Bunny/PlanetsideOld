@@ -161,6 +161,33 @@ namespace ItemAPI
             return texture;
         }
 
+        public static Texture2D AnotherGetTextureFromResource(string resourceName)
+        {
+            byte[] array = ResourceExtractor.ExtractEmbeddedResource(resourceName);
+            bool flag = array == null;
+            Texture2D result;
+            if (flag)
+            {
+                Tools.PrintError<string>("No bytes found in " + resourceName, "FF0000");
+                result = null;
+            }
+            else
+            {
+                Texture2D texture2D = new Texture2D(1, 1, TextureFormat.RGBAFloat, false);
+                texture2D.LoadImage(array);
+                texture2D.filterMode = FilterMode.Point;
+                string text = resourceName.Substring(0, resourceName.LastIndexOf('.'));
+                bool flag2 = text.LastIndexOf('.') >= 0;
+                if (flag2)
+                {
+                    text = text.Substring(text.LastIndexOf('.') + 1);
+                }
+                texture2D.name = text;
+                result = texture2D;
+            }
+            return result;
+        }
+
 
         /// <summary>
         /// Returns a list of the names of all embedded resources

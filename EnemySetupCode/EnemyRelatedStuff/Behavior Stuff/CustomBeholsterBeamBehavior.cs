@@ -470,6 +470,14 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 			}
 			Vector3 dirVec2 = new Vector3(Mathf.Cos(clampedAngle * 0.0174532924f), Mathf.Sin(clampedAngle * 0.0174532924f), 0f) * 10f;
 			Vector2 startingPoint = aibeamShooter2.beamTransform.position;
+			//aibeamShooter2.gameObject.layer = 30;
+
+			//aibeamShooter2.sprite.allowDefaultLayer = false;
+
+			//aibeamShooter2.gameObject.GetComponent<tk2dBaseSprite>().SortingOrder = 10;
+			aibeamShooter2.sprite.HeightOffGround = -20;
+			//aibeamShooter2.sprite.allowDefaultLayer
+
 			//ETGModConsole.Log("Enemy:" + m_aiActor.transform.position.x.ToString() + "," + m_aiActor.transform.position.y.ToString());
 			//ETGModConsole.Log("Beam:" + aibeamShooter2.transform.position.x.ToString() + "," + aibeamShooter2.transform.position.y.ToString());
 			//float tanAngle = Mathf.Tan(clampedAngle * 0.0174532924f);
@@ -477,7 +485,7 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 			//float denominator = Mathf.Sqrt(this.firingEllipseB * this.firingEllipseB + this.firingEllipseA * this.firingEllipseA * (tanAngle * tanAngle));
 			//startingPoint.x += sign * this.firingEllipseA * this.firingEllipseB / denominator;
 			//startingPoint.y += sign * this.firingEllipseA * this.firingEllipseB * tanAngle / denominator;
-			beamCont.Origin = startingPoint + this.m_aiActor.sprite.WorldCenter;
+			beamCont.Origin = startingPoint;// + this.m_aiActor.sprite.WorldCenter;
 			beamCont.Direction = dirVec2;
 			bool flag5 = firstFrame;
 			if (flag5)

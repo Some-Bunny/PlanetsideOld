@@ -366,6 +366,7 @@ namespace GungeonAPI
         {
             try
             {
+                //ETGModConsole.Log("LOADING ASSETPATH:" + assetPath);
                 GameObject asset = GetGameObjectFromBundles(assetPath);
                 if (asset)
                 {

@@ -309,23 +309,23 @@ namespace Planetside
 					ShootPoint = m_CachedGunAttachPoint,
 					BulletScript = new CustomBulletScriptSelector(typeof(NormalAttack)),
 					LeadAmount = 0f,
-					AttackCooldown = 0f,
+					AttackCooldown = 2f,
 					Cooldown = 4f,
 					InitialCooldown = 0.5f,
 					RequiresLineOfSight = true,
 					MultipleFireEvents = false,
-					Uninterruptible = false,
+					Uninterruptible = true,
 					
 
 				},
-				new DashBehavior()
+				new CustomDashBehavior()
 				{
 					ShootPoint = m_CachedGunAttachPoint,
-					dashDistance = 6f,
-					dashTime = 0.3f,
-					doubleDashChance = 0.4f,
+					dashDistance = 7f,
+					dashTime = 0.5f,
+					AmountOfDashes = 2,
 					enableShadowTrail = false,
-					Cooldown = 3,
+					Cooldown = 2f,
 					dashDirection = DashBehavior.DashDirection.Random,
 					warpDashAnimLength = true,
 					hideShadow = true,
@@ -333,6 +333,7 @@ namespace Planetside
 					InitialCooldown = 1f,
 					bulletScript = new CustomBulletScriptSelector(typeof(DashAttack)),
 					RequiresLineOfSight = false,
+					AttackCooldown = 0.1f,
 
 				}
 				};

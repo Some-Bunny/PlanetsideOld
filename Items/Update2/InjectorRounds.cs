@@ -108,8 +108,11 @@ namespace Planetside
 
 		protected override void OnDestroy()
 		{
-			base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
-			base.Owner.PostProcessBeam -= this.PostProcessBeam;
+			if (base.Owner != null)
+            {
+				base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
+				base.Owner.PostProcessBeam -= this.PostProcessBeam;
+			}
 			base.OnDestroy();
 		}
 	}

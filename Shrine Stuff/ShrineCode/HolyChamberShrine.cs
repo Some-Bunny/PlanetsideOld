@@ -28,7 +28,7 @@ namespace Planetside
 				modID = "psog",
 				text = "The Shrine of the Holy Chamber. It's so quiet here it very feels wrong to make any noise. Seems like it's missing something...",
 				spritePath = "Planetside/Resources/Shrines/HolyChamberShrine.png",
-				room = RoomFactory.BuildFromResource("Planetside/Resources/ShrineRooms/HolyChamberRoom.room").room,
+				room = RoomFactory.BuildFromResource("Planetside/Resources2/balls.room").room,
 				RoomWeight = 2f,
 				acceptText = "Grant a Heart, and some supplies.",
 				declineText = "Leave.",

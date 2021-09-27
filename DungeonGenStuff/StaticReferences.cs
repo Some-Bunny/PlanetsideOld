@@ -26,10 +26,6 @@ namespace GungeonAPI
             { "bullethell", "BulletHell_RoomTable" },
 
             //{ "unknown", "SecretHelpers_RoomTable" },
-
-            { "resourcefulrat", "Resourceful Rat Maze Rooms" }
-
-
         };
 
         public static Dictionary<string, string> specialRoomTableMap = new Dictionary<string, string>()
@@ -93,8 +89,6 @@ namespace GungeonAPI
             "base_sewer",
             "base_cathedral",
             "base_bullethell",
-
-            "base_resourcefulrat",
         };
 
         public static void Init()
@@ -110,6 +104,8 @@ namespace GungeonAPI
                         Tools.PrintError($"Failed to load asset bundle: {name}");
                         continue;
                     }
+                    //Tools.PrintError($"Loaded assetbundle: {name}");
+
                     AssetBundles.Add(name, ResourceManager.LoadAssetBundle(name));
                 }
                 catch (Exception e)
@@ -205,7 +201,8 @@ namespace GungeonAPI
                 case GlobalDungeonData.ValidTilesets.CATHEDRALGEON:
                     return RoomTables["cathedral"];
                 case GlobalDungeonData.ValidTilesets.RATGEON:
-                    return RoomTables["resourcefulrat"];
+                    ETGModConsole.Log("CANNOT ADD TO RAT FLOOR. DEFAULTING TO GUNGEON PROPER");
+                    return RoomTables["gungeon"];
                 case GlobalDungeonData.ValidTilesets.HELLGEON:
                     return RoomTables["bullethell"];
                 default:

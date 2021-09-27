@@ -36,103 +36,14 @@ namespace Planetside
     }
 }
 
+
+
 namespace Planetside
 {
 
     public static class OtherTools
     {
-        public static VFXPool CreateMuzzleflash(string name, List<string> spriteNames, int fps, List<IntVector2> spriteSizes, List<tk2dBaseSprite.Anchor> anchors, List<Vector2> manualOffsets, bool orphaned, bool attached, bool persistsOnDeath,
-            bool usesZHeight, float zHeight, VFXAlignment alignment, bool destructible, List<float> emissivePowers, List<Color> emissiveColors)
-        {
-            VFXPool pool = new VFXPool();
-            pool.type = VFXPoolType.All;
-            VFXComplex complex = new VFXComplex();
-            VFXObject vfObj = new VFXObject();
-            GameObject obj = new GameObject(name);
-            obj.SetActive(false);
-            FakePrefab.MarkAsFakePrefab(obj);
-            UnityEngine.Object.DontDestroyOnLoad(obj);
-            tk2dSprite sprite = obj.AddComponent<tk2dSprite>();
-            tk2dSpriteAnimator animator = obj.AddComponent<tk2dSpriteAnimator>();
-            tk2dSpriteAnimationClip clip = new tk2dSpriteAnimationClip();
-            clip.fps = fps;
-            clip.frames = new tk2dSpriteAnimationFrame[0];
-            for (int i = 0; i < spriteNames.Count; i++)
-            {
-                string spriteName = spriteNames[i];
-                IntVector2 spriteSize = spriteSizes[i];
-                tk2dBaseSprite.Anchor anchor = anchors[i];
-                Vector2 manualOffset = manualOffsets[i];
-                float emissivePower = emissivePowers[i];
-                Color emissiveColor = emissiveColors[i];
-                tk2dSpriteAnimationFrame frame = new tk2dSpriteAnimationFrame();
-                frame.spriteId = OtherTools.VFXCollection.GetSpriteIdByName(spriteName);
-                tk2dSpriteDefinition def = OtherTools.SetupDefinitionForShellSprite(spriteName, frame.spriteId, spriteSize.x, spriteSize.y);
-                def.ConstructOffsetsFromAnchor(anchor, def.position3);
-                def.MakeOffset(manualOffset);
-                def.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
-                def.material.SetFloat("_EmissiveColorPower", emissivePower);
-                def.material.SetColor("_EmissiveColor", emissiveColor);
-                def.materialInst.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
-                def.materialInst.SetFloat("_EmissiveColorPower", emissivePower);
-                def.materialInst.SetColor("_EmissiveColor", emissiveColor);
-                frame.spriteCollection = OtherTools.VFXCollection;
-                clip.frames = clip.frames.Concat(new tk2dSpriteAnimationFrame[] { frame }).ToArray();
-            }
-            sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
-            sprite.renderer.material.SetFloat("_EmissiveColorPower", emissivePowers[0]);
-            sprite.renderer.material.SetColor("_EmissiveColor", emissiveColors[0]);
-            clip.wrapMode = tk2dSpriteAnimationClip.WrapMode.Once;
-            clip.name = "start";
-            animator.spriteAnimator.Library = animator.gameObject.AddComponent<tk2dSpriteAnimation>();
-            animator.spriteAnimator.Library.clips = new tk2dSpriteAnimationClip[] { clip };
-            animator.spriteAnimator.Library.enabled = true;
-            SpriteAnimatorKiller kill = animator.gameObject.AddComponent<SpriteAnimatorKiller>();
-            kill.fadeTime = -1f;
-            kill.animator = animator;
-            kill.delayDestructionTime = -1f;
-            vfObj.orphaned = orphaned;
-            vfObj.attached = attached;
-            vfObj.persistsOnDeath = persistsOnDeath;
-            vfObj.usesZHeight = usesZHeight;
-            vfObj.zHeight = zHeight;
-            vfObj.alignment = alignment;
-            vfObj.destructible = destructible;
-            vfObj.effect = obj;
-            complex.effects = new VFXObject[] { vfObj };
-            pool.effects = new VFXComplex[] { complex };
-            animator.playAutomatically = true;
-            animator.DefaultClipId = animator.GetClipIdByName("start");
-            return pool;
-        }
-        public static tk2dSpriteCollectionData VFXCollection
-        {
-            get
-            {
-                return (PickupObjectDatabase.GetById(95) as Gun).clipObject.GetComponent<tk2dBaseSprite>().Collection;
-            }
-        }
-        public static tk2dSpriteDefinition SetupDefinitionForShellSprite(string name, int id, int pixelWidth, int pixelHeight, tk2dSpriteDefinition overrideToCopyFrom = null)
-        {
-            float thing = 14;
-            float trueWidth = (float)pixelWidth / thing;
-            float trueHeight = (float)pixelHeight / thing;
-            tk2dSpriteDefinition def = overrideToCopyFrom ?? OtherTools.VFXCollection.inst.spriteDefinitions[(PickupObjectDatabase.GetById(202) as Gun).shellCasing.GetComponent<tk2dBaseSprite>().spriteId].CopyDefinitionFrom();
-            def.boundsDataCenter = new Vector3(trueWidth / 2f, trueHeight / 2f, 0f);
-            def.boundsDataExtents = new Vector3(trueWidth, trueHeight, 0f);
-            def.untrimmedBoundsDataCenter = new Vector3(trueWidth / 2f, trueHeight / 2f, 0f);
-            def.untrimmedBoundsDataExtents = new Vector3(trueWidth, trueHeight, 0f);
-            def.position0 = new Vector3(0f, 0f, 0f);
-            def.position1 = new Vector3(0f + trueWidth, 0f, 0f);
-            def.position2 = new Vector3(0f, 0f + trueHeight, 0f);
-            def.position3 = new Vector3(0f + trueWidth, 0f + trueHeight, 0f);
-            def.name = name;
-            OtherTools.VFXCollection.spriteDefinitions[id] = def;
-            return def;
-        }
-        //==========================================================================================================================================================
-        //==========================================================================================================================================================
-        //==========================================================================================================================================================
+
         public static T CopyFields<T>(Projectile sample2) where T : Projectile
         {
             T sample = sample2.gameObject.AddComponent<T>();
@@ -248,6 +159,230 @@ namespace Planetside
             UnityEngine.Object.Destroy(sample2);
             return sample;
         }
+
+        public static void DumpCollection(tk2dSpriteCollectionData collection)
+        {
+            string collectionName = string.IsNullOrEmpty(collection.name) ? collection.gameObject.name + "_Collection" : collection.name;
+
+            tk2dSpriteDefinition def;
+            string defName;
+            Material material;
+            Texture2D texture, output;
+            int width, height, minX, minY, maxX, maxY, w, h;
+            Vector2[] uvs;
+            Color[] pixels;
+            for (int i = 0; i < collection.spriteDefinitions.Length; i++)
+            {
+                def = collection.spriteDefinitions[i];
+                if (def == null) continue;
+
+
+                defName = string.IsNullOrEmpty(def.name) ? collectionName + "_" + i : def.name;
+                material = def.material == null ? def.materialInst : def.material;
+                if (material == null || material.mainTexture == null)
+                {
+                    GungeonAPI.ShrineTools.PrintError($"Failed to dump {defName} in {collectionName}: No valid material");
+                    continue;
+                }
+
+                texture = (Texture2D)material.mainTexture.GetReadable();
+                width = texture.width;
+                height = texture.height;
+
+                uvs = def.uvs;
+                if (def.uvs == null || def.uvs.Length < 4)
+                {
+                    GungeonAPI.ShrineTools.PrintError($"Failed to dump {defName} in {collectionName}: Invalid UV's");
+                    continue;
+                }
+
+                minX = Mathf.RoundToInt(uvs[0].x * width);
+                minY = Mathf.RoundToInt(uvs[0].y * height);
+                maxX = Mathf.RoundToInt(uvs[3].x * width);
+                maxY = Mathf.RoundToInt(uvs[3].y * height);
+
+                w = maxX - minX;
+                h = maxY - minY;
+                if (w <= 0 || h <= 0)
+                {
+                    GungeonAPI.ShrineTools.ExportTexture(new Texture2D(1, 1) { name = defName });
+                    continue;
+                };
+
+                pixels = texture.GetPixels(minX, minY, w, h);
+
+                output = new Texture2D(w, h);
+                output.SetPixels(pixels);
+                output.Apply();
+                if (def.flipped == tk2dSpriteDefinition.FlipMode.Tk2d)
+                {
+                    output = output.Rotated().Flipped();
+                }
+                output.name = def.name;
+                PlanetsideModule.Log(output.name, PlanetsideModule.TEXT_COLOR);
+                GungeonAPI.ShrineTools.ExportTexture(output, "SpriteDump/" + collectionName);
+
+
+
+            }
+        }
+        public static Texture2D Rotated(this Texture2D texture, bool clockwise = false)
+        {
+            Color32[] original = texture.GetPixels32();
+            Color32[] rotated = new Color32[original.Length];
+            int w = texture.width;
+            int h = texture.height;
+
+            int iRotated, iOriginal;
+
+            for (int j = 0; j < h; ++j)
+            {
+                for (int i = 0; i < w; ++i)
+                {
+                    iRotated = (i + 1) * h - j - 1;
+                    iOriginal = clockwise ? original.Length - 1 - (j * w + i) : j * w + i;
+                    rotated[iRotated] = original[iOriginal];
+                }
+            }
+
+            Texture2D rotatedTexture = new Texture2D(h, w);
+            rotatedTexture.SetPixels32(rotated);
+            rotatedTexture.Apply();
+            return rotatedTexture;
+        }
+
+        public static Texture2D Flipped(this Texture2D texture, bool horizontal = true)
+        {
+            int w = texture.width;
+            int h = texture.height;
+
+            Texture2D output = new Texture2D(w, h);
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    output.SetPixel(i, j, texture.GetPixel(w - i - 1, j));
+                }
+            }
+            output.Apply();
+            return output;
+        }
+        public static Texture GetReadable(this Texture texture)
+        {
+            RenderTexture tmp = RenderTexture.GetTemporary(
+                    texture.width,
+                    texture.height,
+                    0,
+                    RenderTextureFormat.Default,
+                    RenderTextureReadWrite.Linear);
+
+            // Blit the pixels on texture to the RenderTexture
+            Graphics.Blit(texture, tmp);
+
+            RenderTexture previous = RenderTexture.active;
+            RenderTexture.active = tmp;
+
+            Texture2D output = new Texture2D(texture.width, texture.height);
+            output.ReadPixels(new Rect(0, 0, tmp.width, tmp.height), 0, 0);
+            output.Apply();
+            RenderTexture.active = previous;
+
+            return output;
+        }
+
+
+        public static VFXPool CreateMuzzleflash(string name, List<string> spriteNames, int fps, List<IntVector2> spriteSizes, List<tk2dBaseSprite.Anchor> anchors, List<Vector2> manualOffsets, bool orphaned, bool attached, bool persistsOnDeath,
+            bool usesZHeight, float zHeight, VFXAlignment alignment, bool destructible, List<float> emissivePowers, List<Color> emissiveColors)
+        {
+            VFXPool pool = new VFXPool();
+            pool.type = VFXPoolType.All;
+            VFXComplex complex = new VFXComplex();
+            VFXObject vfObj = new VFXObject();
+            GameObject obj = new GameObject(name);
+            obj.SetActive(false);
+            FakePrefab.MarkAsFakePrefab(obj);
+            UnityEngine.Object.DontDestroyOnLoad(obj);
+            tk2dSprite sprite = obj.AddComponent<tk2dSprite>();
+            tk2dSpriteAnimator animator = obj.AddComponent<tk2dSpriteAnimator>();
+            tk2dSpriteAnimationClip clip = new tk2dSpriteAnimationClip();
+            clip.fps = fps;
+            clip.frames = new tk2dSpriteAnimationFrame[0];
+            for (int i = 0; i < spriteNames.Count; i++)
+            {
+                string spriteName = spriteNames[i];
+                IntVector2 spriteSize = spriteSizes[i];
+                tk2dBaseSprite.Anchor anchor = anchors[i];
+                Vector2 manualOffset = manualOffsets[i];
+                float emissivePower = emissivePowers[i];
+                Color emissiveColor = emissiveColors[i];
+                tk2dSpriteAnimationFrame frame = new tk2dSpriteAnimationFrame();
+                frame.spriteId = OtherTools.VFXCollection.GetSpriteIdByName(spriteName);
+                tk2dSpriteDefinition def = OtherTools.SetupDefinitionForShellSprite(spriteName, frame.spriteId, spriteSize.x, spriteSize.y);
+                def.ConstructOffsetsFromAnchor(anchor, def.position3);
+                def.MakeOffset(manualOffset);
+                def.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+                def.material.SetFloat("_EmissiveColorPower", emissivePower);
+                def.material.SetColor("_EmissiveColor", emissiveColor);
+                def.materialInst.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+                def.materialInst.SetFloat("_EmissiveColorPower", emissivePower);
+                def.materialInst.SetColor("_EmissiveColor", emissiveColor);
+                frame.spriteCollection = OtherTools.VFXCollection;
+                clip.frames = clip.frames.Concat(new tk2dSpriteAnimationFrame[] { frame }).ToArray();
+            }
+            sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+            sprite.renderer.material.SetFloat("_EmissiveColorPower", emissivePowers[0]);
+            sprite.renderer.material.SetColor("_EmissiveColor", emissiveColors[0]);
+            clip.wrapMode = tk2dSpriteAnimationClip.WrapMode.Once;
+            clip.name = "start";
+            animator.spriteAnimator.Library = animator.gameObject.AddComponent<tk2dSpriteAnimation>();
+            animator.spriteAnimator.Library.clips = new tk2dSpriteAnimationClip[] { clip };
+            animator.spriteAnimator.Library.enabled = true;
+            SpriteAnimatorKiller kill = animator.gameObject.AddComponent<SpriteAnimatorKiller>();
+            kill.fadeTime = -1f;
+            kill.animator = animator;
+            kill.delayDestructionTime = -1f;
+            vfObj.orphaned = orphaned;
+            vfObj.attached = attached;
+            vfObj.persistsOnDeath = persistsOnDeath;
+            vfObj.usesZHeight = usesZHeight;
+            vfObj.zHeight = zHeight;
+            vfObj.alignment = alignment;
+            vfObj.destructible = destructible;
+            vfObj.effect = obj;
+            complex.effects = new VFXObject[] { vfObj };
+            pool.effects = new VFXComplex[] { complex };
+            animator.playAutomatically = true;
+            animator.DefaultClipId = animator.GetClipIdByName("start");
+            return pool;
+        }
+        public static tk2dSpriteCollectionData VFXCollection
+        {
+            get
+            {
+                return (PickupObjectDatabase.GetById(95) as Gun).clipObject.GetComponent<tk2dBaseSprite>().Collection;
+            }
+        }
+        public static tk2dSpriteDefinition SetupDefinitionForShellSprite(string name, int id, int pixelWidth, int pixelHeight, tk2dSpriteDefinition overrideToCopyFrom = null)
+        {
+            float thing = 14;
+            float trueWidth = (float)pixelWidth / thing;
+            float trueHeight = (float)pixelHeight / thing;
+            tk2dSpriteDefinition def = overrideToCopyFrom ?? OtherTools.VFXCollection.inst.spriteDefinitions[(PickupObjectDatabase.GetById(202) as Gun).shellCasing.GetComponent<tk2dBaseSprite>().spriteId].CopyDefinitionFrom();
+            def.boundsDataCenter = new Vector3(trueWidth / 2f, trueHeight / 2f, 0f);
+            def.boundsDataExtents = new Vector3(trueWidth, trueHeight, 0f);
+            def.untrimmedBoundsDataCenter = new Vector3(trueWidth / 2f, trueHeight / 2f, 0f);
+            def.untrimmedBoundsDataExtents = new Vector3(trueWidth, trueHeight, 0f);
+            def.position0 = new Vector3(0f, 0f, 0f);
+            def.position1 = new Vector3(0f + trueWidth, 0f, 0f);
+            def.position2 = new Vector3(0f, 0f + trueHeight, 0f);
+            def.position3 = new Vector3(0f + trueWidth, 0f + trueHeight, 0f);
+            def.name = name;
+            OtherTools.VFXCollection.spriteDefinitions[id] = def;
+            return def;
+        }
+        //==========================================================================================================================================================
+        //==========================================================================================================================================================
+        //==========================================================================================================================================================
         public static FieldInfo ProjectileHealthHaverHitCountInfo = typeof(Projectile).GetField("m_healthHaverHitCount", AnyBindingFlags);
         public static MethodInfo ProjectileHandleDelayedDamageInfo = typeof(Projectile).GetMethod("HandleDelayedDamage", AnyBindingFlags);
 

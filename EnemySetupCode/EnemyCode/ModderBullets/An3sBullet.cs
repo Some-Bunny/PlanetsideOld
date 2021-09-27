@@ -314,6 +314,13 @@ namespace Planetside
 			}
 			private void Start()
 			{
+				if (base.aiActor != null && !base.aiActor.IsBlackPhantom)
+                {
+					base.aiActor.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+					base.aiActor.sprite.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+					base.aiActor.sprite.renderer.material.SetFloat("_EmissivePower", 40);
+					base.aiActor.sprite.renderer.material.SetFloat("_EmissiveColorPower", 1.2f);
+				}
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
 				//base.aiActor.HasBeenEngaged = true;
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>

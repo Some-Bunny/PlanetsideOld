@@ -36,6 +36,15 @@ namespace Planetside
 			METABOLLS.PartnerGunID = ShockChain.ElectricMusicID;
 			METABOLLS.SynergyNameToCheck = "UNLIMITED POWER!!!";
 
+			AdvancedDualWieldSynergyProcessor LockOnGun2 = (PickupObjectDatabase.GetById(LockOnGun.LockOnGunID) as Gun).gameObject.AddComponent<AdvancedDualWieldSynergyProcessor>();
+			LockOnGun2.PartnerGunID = 372;
+			LockOnGun2.SynergyNameToCheck = "Double Trouble!";
+			AdvancedDualWieldSynergyProcessor LockOnGun1 = (PickupObjectDatabase.GetById(372) as Gun).gameObject.AddComponent<AdvancedDualWieldSynergyProcessor>();
+			LockOnGun1.PartnerGunID = LockOnGun.LockOnGunID;
+			LockOnGun1.SynergyNameToCheck = "Double Trouble!";
+
+
+
 			AdvancedTransformGunSynergyProcessor advancedTransformGunSynergyProcessor = (PickupObjectDatabase.GetById(Polarity.PolarityID) as Gun).gameObject.AddComponent<AdvancedTransformGunSynergyProcessor>();
 			advancedTransformGunSynergyProcessor.NonSynergyGunId = Polarity.PolarityID;
 			advancedTransformGunSynergyProcessor.SynergyGunId = PolarityForme.PolarityFormeID;

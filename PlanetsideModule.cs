@@ -24,7 +24,7 @@ namespace Planetside
     public class PlanetsideModule : ETGModule
     {
         public static readonly string MOD_NAME = "Planetside Of Gunymede";
-        public static readonly string VERSION = "1.1.8";
+        public static readonly string VERSION = "1.1+";
         public static readonly string TEXT_COLOR = "#9006FF";
 
         public static string ZipFilePath;
@@ -36,7 +36,6 @@ namespace Planetside
 
         public static AdvancedStringDB Strings;
         public static HellDragZoneController hellDrag;
-
 
         public override void Start()
         {
@@ -53,8 +52,14 @@ namespace Planetside
             ZipFilePath1 = this.Metadata.Archive;
 
             ItemIDs.MakeCommand();
+
+            ItemBuilder.Init();
+
             StaticReferences.Init();
             DungeonHandler.Init();
+
+
+
             EnemyHooks.Init();
             ToolsEnemy.Init();
             Hooks.Init();
@@ -82,13 +87,14 @@ namespace Planetside
             OldShrineFactory.Init();
             EnemyBuilder.Init();
             FakePrefabHooks.Init();
-            ItemBuilder.Init();
             BossBuilder.Init();
+
 
 
             GunOrbitShrine.Add();
             NullShrine.Add();
             HolyChamberShrine.Add();
+
 
             Unstabullets.Init();
             HullBreakerBullets.Init();
@@ -205,10 +211,12 @@ namespace Planetside
             PerfectedColossus.Add();
             ResourceGuonMaker.Init();
 
-            //ChargerGun.Add();
-            //PlanetBlade.Add();
-            //TestShaderBullets.Init();
-            //DerpyBullets.Init();
+            ChargerGun.Add();
+            PlanetBlade.Add();
+            TestShaderBullets.Init();
+            DerpyBullets.Init();
+            PrayerAmulet.Init();
+            LockOnGun.Add();
 
             Ophanaim.Init();
             Fungannon.Init();
@@ -247,6 +255,10 @@ namespace Planetside
             WowBullet.Init();
             TurboBullet.Init();
             SpcreatBullet.Init();
+            
+            GoldenRevolverBullet.Init();
+            NotSoAIBullet.Init();
+
             BulletBankMan.Init();
 
             Shellrax.Init();
@@ -271,12 +283,16 @@ namespace Planetside
 
             //TestShaderItem.Init();
 
+            FlowInjectionInitialiser.InitialiseFlows();
+
             RoomReader.Init();
             QuestWanderer.Add();
             DungeonHooks.OnPostDungeonGeneration += this.PlaceHellShrines;
             DungeonHooks.OnPostDungeonGeneration += this.PlaceOtherHellShrines;
+            DungeonHooks.OnPostDungeonGeneration += this.PlaceBrokenChamberShrine;
 
-            TestActiveItem.Init();
+
+            //TestActiveItem.Init();
 
             //AdvancedLogging.Log($"{MOD_NAME} v{VERSION} started successfully.", new Color(144, 6, 255, 255), false, true, null);
             PlanetsideModule.Log($"{MOD_NAME} v{VERSION} started successfully.", TEXT_COLOR);
@@ -344,7 +360,11 @@ namespace Planetside
                 "nice",
                 "Powered By AudioBuilder!",
                 "Powered By BeamBuilder!",
-                "Powered By Friendship!"
+                "Powered By Friendship!",
+                "YOUR PAST IS DEAD",
+                "LEAD IS FUEL",
+                "BULLET HELL IS FULL",
+                "bzaazzz"
             };
             Random r = new Random();
             int index = r.Next(RandomFunnys.Count);
@@ -368,6 +388,11 @@ namespace Planetside
             string color1 = "9006FF";
             OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g +h+i+j+k, color1);
             OtherTools.Init();
+
+            ETGModConsole.Commands.GetGroup("psog").AddUnit("dumpPlayerSprites", delegate (string[] args)
+            {
+                OtherTools.DumpCollection(GameManager.Instance.PrimaryPlayer.sprite.Collection);
+            });
         }
 
 
@@ -527,7 +552,7 @@ namespace Planetside
                     {
                         RoomHandler roomHandler = GameManager.Instance.Dungeon.data.rooms[list2[i]];
                         string name = roomHandler.GetRoomName();
-                        bool flag3 = roomHandler.IsStandardRoom && name != "Hell Entrance" && name != "Boss Foyer" && name != "LichRoom1" && name != "LichRoom2" && name != "LichRoom3" && name != "BigDumbIdiotBossRoom1";
+                        bool flag3 = roomHandler.IsStandardRoom && name != "Hell Entrance" && name != "Boss Foyer" && name != "LichRoom1" && name != "LichRoom2" && name != "LichRoom3" && name != "BigDumbIdiotBossRoom1.room";
                         if (flag3)
                         {
                             IntVector2 randomVisibleClearSpot = roomHandler.GetRandomVisibleClearSpot(6, 6);
@@ -565,7 +590,145 @@ namespace Planetside
             }
         }
 
+        private void PlaceBrokenChamberShrine()
+        {
+            /*
+            List<int> piss = Enumerable.Range(0, GameManager.Instance.Dungeon.data.rooms.Count).ToList<int>();
+            for (int i = 0; i < piss.Count; i++)
+            {
+                RoomHandler roomHandler = GameManager.Instance.Dungeon.data.rooms[piss[i]];
+                string name = roomHandler.GetRoomName();
+                if (name != null)
+                {
+                    ETGModConsole.Log(name);
+                }
+            }
+            */
+                bool flag = GameManager.Instance.Dungeon.tileIndices.tilesetId == GlobalDungeonData.ValidTilesets.CASTLEGEON;
+            if (flag)
+            {
+                try
+                {
+                    List<int> list = Enumerable.Range(0, GameManager.Instance.Dungeon.data.rooms.Count).ToList<int>();
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        RoomHandler roomHandler = GameManager.Instance.Dungeon.data.rooms[list[i]];
+                        string name = roomHandler.GetRoomName();
+                        //if (name != null)
+                        //{
+                            //ETGModConsole.Log(name);
+                        //}
+                        bool flag3 = name == "BrokenChamberRoom.room" && roomHandler.IsSecretRoom;
+                        if (flag3)
+                        {
+                            IntVector2 randomVisibleClearSpot = roomHandler.GetCenterCell();
+                            bool flag4 = randomVisibleClearSpot != IntVector2.Zero;
+                            if (flag4)
+                            {
+                                GameObject original;
+                                OldShrineFactory.builtShrines.TryGetValue("psog:brokenchambershrine", out original);
+                                GameObject gObj = UnityEngine.Object.Instantiate<GameObject>(original, new Vector3((float)randomVisibleClearSpot.x, (float)randomVisibleClearSpot.y), Quaternion.identity);
+
+                                BrokenChamberShrineController broken = gObj.gameObject.AddComponent<BrokenChamberShrineController>();
+                                broken.obj = gObj;
+
+                                IPlayerInteractable[] interfaces = gObj.GetInterfaces<IPlayerInteractable>();
+                                IPlaceConfigurable[] interfaces2 = gObj.GetInterfaces<IPlaceConfigurable>();
+                                RoomHandler roomHandler2 = roomHandler;
+                                for (int j = 0; j < interfaces.Length; j++)
+                                {
+                                    roomHandler2.RegisterInteractable(interfaces[j]);
+                                }
+                                for (int k = 0; k < interfaces2.Length; k++)
+                                {
+                                    interfaces2[k].ConfigureOnPlacement(roomHandler2);
+                                }
+                                Minimap.Instance.RegisterRoomIcon(roomHandler, (GameObject)BraveResources.Load("Global Prefabs/Minimap_Shrine_Icon", ".prefab"), false);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    ETGModConsole.Log("Catastrophic Failure In Placing Broken Chamber Shrine! Send A Screenshot of this and associated error in F3 Console.");
+                }
+            }
+        }
+
+
         private GameObject m_instanceMinimapIcon;
+
+        public class BrokenChamberShrineController : BraveBehaviour
+        {
+
+            public BrokenChamberShrineController()
+            {
+                obj = base.gameObject;
+            }
+            private int ID;
+            public GameObject obj;
+            public void Start()
+            {
+                ID = ItemAPI.SpriteBuilder.AddSpriteToCollection("Planetside/Resources/Shrines/EOEShrine", obj.GetComponent<tk2dBaseSprite>().Collection);
+                bool Shrine = SaveAPIManager.GetFlag(CustomDungeonFlags.BROKEN_CHAMBER_RUN_COMPLETED);
+                if (Shrine == true)
+                {
+                    tk2dSprite sprite = obj.GetComponent<tk2dSprite>();
+                    sprite.GetComponent<tk2dBaseSprite>().SetSprite(ID);
+                    try
+                    {
+                        SimpleShrine shrine = obj.GetComponent<SimpleShrine>();
+                        shrine.text = "A shrine with 4 engravings carved onto it. Although the engravings shift, you can slightly make out what they are...";
+                        shrine.OnAccept = Accept;
+                        shrine.OnDecline = null;
+                        shrine.acceptText = "Kneel.";
+                        shrine.declineText = "Leave.";
+                        //shrine.CanUse = CanUse;
+                    }
+                    catch
+                    {
+                        ETGModConsole.Log("Failure in modifying shrines (1)");
+                    }
+                }
+            }
+            public static void Accept(PlayerController player, GameObject shrine)
+            {
+                Gun gun = PickupObjectDatabase.GetByEncounterName(InitialiseGTEE.GunIDForEOE) as Gun;
+                int StoredGunID = gun.PickupObjectId;
+
+                //PickupObject Item1 = PickupObjectDatabase.GetByName(InitialiseGTEE.HOneToFireIt);
+                int Item1ID = Game.Items[InitialiseGTEE.HOneToFireIt].PickupObjectId;
+                int Item2ID = Game.Items[InitialiseGTEE.HOneToPrimeIt].PickupObjectId;
+                int Item3ID = Game.Items[InitialiseGTEE.HOneToHoldIt].PickupObjectId;
+
+                string encounterNameOrDisplayName1 = (PickupObjectDatabase.GetById(StoredGunID) as Gun).EncounterNameOrDisplayName;
+                string encounterNameOrDisplayName2 = (PickupObjectDatabase.GetById(Item1ID)).EncounterNameOrDisplayName;
+                string encounterNameOrDisplayName3 = (PickupObjectDatabase.GetById(Item2ID)).EncounterNameOrDisplayName;
+                string encounterNameOrDisplayName4 = (PickupObjectDatabase.GetById(Item3ID)).EncounterNameOrDisplayName;
+
+                string header;
+                string text;
+
+                header = encounterNameOrDisplayName1 + " / " + encounterNameOrDisplayName2;
+                text = "Filler.";
+                BrokenChamberShrineController.Notify(header, text);
+
+
+                header = encounterNameOrDisplayName3 + " / " + encounterNameOrDisplayName4;
+                text = "Filler.";
+                BrokenChamberShrineController.Notify(header, text);
+
+
+                shrine.GetComponent<OldShrineFactory.CustomShrineController>().numUses++;
+                shrine.GetComponent<OldShrineFactory.CustomShrineController>().GetRidOfMinimapIcon();
+            }
+            private static void Notify(string header, string text)
+            {
+                tk2dSpriteCollectionData encounterIconCollection = AmmonomiconController.Instance.EncounterIconCollection;
+                int spriteIdByName = encounterIconCollection.GetSpriteIdByName("Planetside/Resources/shellheart");
+                GameUIRoot.Instance.notificationController.DoCustomNotification(header, text, null, spriteIdByName, UINotificationController.NotificationColor.PURPLE, true, true);
+            }
+        }
 
         public class PurityShrineController : BraveBehaviour
         {
@@ -831,13 +994,9 @@ namespace Planetside
         public static void ReloadBreachShrinesPSOG(Action<Foyer> orig, Foyer self1)
         {
             orig(self1);
-            bool flag = PlanetsideModule.hasInitialized;
-            if (!flag)
+            if (!PlanetsideModule.hasInitialized)
             {
-                OuroborousShrine.Add();
-                {
-                    ShrineFactory.PlaceBreachShrines();
-                }
+                ShrineFactory.PlaceBreachShrines();
                 PlanetsideModule.hasInitialized = true;
             }
             ShrineFactory.PlaceBreachShrines();
@@ -944,3 +1103,8 @@ public class AngerGodsScript : Script
 
     }
 }
+
+
+
+
+

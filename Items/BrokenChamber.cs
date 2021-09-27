@@ -36,9 +36,12 @@ namespace Planetside
 		}
 		protected override void OnDestroy()
 		{
-			PlayerController player = base.Owner;
-			BrokenChamberComponent Values = player.gameObject.GetComponent<BrokenChamberComponent>();
-			Destroy(Values);
+			if (base.Owner != null)
+            {
+				PlayerController player = base.Owner;
+				BrokenChamberComponent Values = player.gameObject.GetComponent<BrokenChamberComponent>();
+				Destroy(Values);
+			}
 			base.OnDestroy();
 		}
 		public override DebrisObject Drop(PlayerController player)
@@ -49,22 +52,16 @@ namespace Planetside
 		protected override void Update()
 		{
 			base.Update();
+			/*
 			bool flag = base.Owner != null && this.OnCooldown;
 			if (flag)
 			{
 				PlayerController player = base.Owner;
 				this.OnCooldown = false;
-				//base.StartCoroutine(this.BasicBoolDown());
-				/*
-				GameObject dragunBoulder = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec").GetComponent<DraGunController>().skyBoulder;
-				GameObject dragunRocket = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec").GetComponent<DraGunController>().skyRocket;
-				//GameObject gatlingGullRocket = EnemyDatabase.GetOrLoadByGuid("ec6b674e0acd4553b47ee94493d66422").behaviorSpeculator.FindAttackBehaviors<GatlingGullRocketBehavior>()[0].Rocket;
-				Vector2 goalPos = base.Owner.sprite.WorldCenter;
-				this.FireRocket(dragunBoulder, player.sprite.WorldCenter);
-                */
 			}
+			*/
 		}
-		private bool OnCooldown = true;
+		//private bool OnCooldown = true;
 		public IEnumerator BasicBoolDown()
 		{
 			PlayerController player = base.Owner;
@@ -77,9 +74,10 @@ namespace Planetside
 			this.FireRocket(dragunBoulder, player.sprite.WorldCenter);
 			yield return new WaitForSeconds(0.5f);
 			this.FireRocket(dragunBoulder, vector2);
-			this.OnCooldown = true;
+			//this.OnCooldown = true;
 			yield break;
 		}
+
 		private void FireRocket(GameObject skyRocket, Vector2 target)
 		{
 			PlayerController player = base.Owner;

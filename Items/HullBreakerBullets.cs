@@ -112,7 +112,10 @@ namespace Planetside
 		}
 		protected override void OnDestroy()
 		{
-			base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
+			if (base.Owner != null)
+            {
+				base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
+			}
 			base.OnDestroy();
 		}
 	}

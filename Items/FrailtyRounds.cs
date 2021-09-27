@@ -54,15 +54,43 @@ namespace Planetside
 				ETGModConsole.Log(ex.Message, false);
 			}
 		}
+
+		private void PostProcessBeamTick(BeamController beam, SpeculativeRigidbody hitRigidBody, float tickrate)
+		{
+			float procChance = 0.75f; //Chance per second or some shit idk
+			GameActor gameActor = hitRigidBody.gameActor;
+			if (!gameActor)
+			{
+				return;
+			}
+			if (UnityEngine.Random.value < BraveMathCollege.SliceProbability(procChance, tickrate))
+			{
+				hitRigidBody.gameActor.ApplyEffect(DebuffLibrary.Frailty);
+			}
+		}
+
 		public override void Pickup(PlayerController player)
 		{
 			base.Pickup(player);
 			player.PostProcessProjectile += this.PostProcessProjectile;
+			player.PostProcessBeamTick += this.PostProcessBeamTick;
+		}
+		public override DebrisObject Drop(PlayerController player)
+		{
+			DebrisObject result = base.Drop(player);
+			player.PostProcessProjectile -= this.PostProcessProjectile;
+			player.PostProcessBeamTick -= this.PostProcessBeamTick;
+
+			return result;
 		}
 
 		protected override void OnDestroy()
 		{
-			base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
+			if (base.Owner != null)
+            {
+				base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
+				base.Owner.PostProcessBeamTick -= this.PostProcessBeamTick;
+			}
 			base.OnDestroy();
 		}
 	}

@@ -339,7 +339,7 @@ namespace Planetside
 
 		public override void PostProcessProjectile(Projectile proj)
 		{
-			ETGModConsole.Log("AAAAAAAA");
+			//ETGModConsole.Log("AAAAAAAA");
 		}
 		public LaserChainsaw()
 		{

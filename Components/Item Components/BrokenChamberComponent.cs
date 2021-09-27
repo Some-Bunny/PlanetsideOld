@@ -66,7 +66,7 @@ namespace Planetside
 			{
 				this.m_player = base.GetComponent<PlayerController>();
 			}
-			if (!GameManager.Instance.IsPaused || !GameManager.Instance.IsLoadingLevel)
+			if (!GameManager.Instance.IsPaused | !GameManager.Instance.IsLoadingLevel)
             {
 				this.elapsed += BraveTime.DeltaTime;
 			}

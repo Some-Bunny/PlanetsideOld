@@ -466,17 +466,17 @@ namespace Planetside
                 {
 					Ouroborous yes = new Ouroborous();
 					bool bankName = (UnityEngine.Random.value > 0.50f) ? true : false;
-					if (bankName == true)
+					if (bankName == true && self != null)
                     {
 						yes.DoPoisonGoop(self.transform.position);
 					}
-					if (bankName == false)
-                    {
+					if (bankName == false && self != null)
+					{
 						yes.DoFireGoop(self.transform.position);
 					}
 				}
 				bool flag = !self.name.ToLower().Contains("pot");
-				if (!flag)
+				if (!flag && self != null)
 				{
 					if (Loop == 75 | Loop >= 75)
 					{

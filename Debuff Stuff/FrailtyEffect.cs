@@ -56,11 +56,11 @@ namespace Planetside
 			
 			if (this.AffectsEnemies && actor is AIActor && !actor.healthHaver.IsBoss)
 			{
-				actor.healthHaver.SetHealthMaximum(actor.healthHaver.GetMaxHealth() * 1 - (0.89f*BraveTime.DeltaTime));
+				actor.healthHaver.SetHealthMaximum(actor.healthHaver.GetMaxHealth() * 1 - (0.80f*BraveTime.DeltaTime));
 			}
 			if (this.AffectsEnemies && actor is AIActor && actor.healthHaver.IsBoss)
 			{
-				actor.healthHaver.ApplyDamage(7f * BraveTime.DeltaTime, Vector2.zero, "oooo spoooooky", CoreDamageTypes.Void, DamageCategory.Normal, false, null, false);
+				actor.healthHaver.ApplyDamage(18f * BraveTime.DeltaTime, Vector2.zero, "oooo spoooooky", CoreDamageTypes.Void, DamageCategory.Normal, false, null, false);
 			}
 		}
 

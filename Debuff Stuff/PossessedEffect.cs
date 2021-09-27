@@ -64,7 +64,7 @@ namespace Planetside
 					bool ae = Vector2.Distance(aiactor.CenterPosition, centerPosition) < 5 && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
 					if (ae)
 					{
-						aiactor.healthHaver.ApplyDamage(2* BraveTime.DeltaTime, Vector2.zero, "oooo spoooooky", CoreDamageTypes.Void, DamageCategory.Normal, false, null, false);
+						aiactor.healthHaver.ApplyDamage(3.75f* BraveTime.DeltaTime, Vector2.zero, "oooo spoooooky", CoreDamageTypes.Void, DamageCategory.Normal, false, null, false);
 					}
 				}
 			}

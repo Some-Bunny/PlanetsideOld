@@ -81,7 +81,6 @@ namespace Planetside
 				DamnedGuonStone.orbitalPrefab.orbitRadius = 3f;
 				DamnedGuonStone.orbitalPrefab.orbitDegreesPerSecond = 90f;
 				DamnedGuonStone.orbitalPrefab.SetOrbitalTier(0);
-				//gameObject.AddComponent<DamnedGuonComponent>();
 				ImprovedAfterImage yeah = gameObject.AddComponent<ImprovedAfterImage>();
 				yeah.dashColor = Color.black;
 				yeah.spawnShadows = true;
@@ -119,9 +118,12 @@ namespace Planetside
 		// Token: 0x060007AB RID: 1963 RVA: 0x000439C0 File Offset: 0x00041BC0
 		protected override void OnDestroy()
 		{
-			PlayerController owner = base.Owner;
-			owner.OnHitByProjectile = (Action<Projectile, PlayerController>)Delegate.Remove(owner.OnHitByProjectile, new Action<Projectile, PlayerController>(this.OwnerHitByProjectile));
-			base.Owner.OnReceivedDamage -= this.OnOwnerTookDamage;
+			if (base.Owner != null)
+            {
+				PlayerController owner = base.Owner;
+				owner.OnHitByProjectile = (Action<Projectile, PlayerController>)Delegate.Remove(owner.OnHitByProjectile, new Action<Projectile, PlayerController>(this.OwnerHitByProjectile));
+				base.Owner.OnReceivedDamage -= this.OnOwnerTookDamage;
+			}
 			DamnedGuonStone.guonHook.Dispose();
 			DamnedGuonStone.speedUp = false;
 			base.OnDestroy();

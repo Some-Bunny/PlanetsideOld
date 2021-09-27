@@ -22,11 +22,14 @@ namespace Planetside
 		public static GameObject shootpoint;
 		private static tk2dSpriteCollectionData ShamberCollection;
 
+		public static Texture2D ShamberParticleTexture;
 
 
 		public static void Init()
 		{
 			Shamber.BuildPrefab();
+			ShamberParticleTexture = ResourceExtractor.GetTextureFromResource("Planetside/Resources2/ParticleTextures/shamberparticles.png");
+
 		}
 		public static void BuildPrefab()
 		{
@@ -35,6 +38,8 @@ namespace Planetside
 			bool flag2 = flag;
 			if (!flag2)
 			{
+
+
 				prefab = EnemyBuilder.BuildPrefab("Shamber", guid, "Planetside/Resources/Enemies/Shamber/shamber_idle_001.png", new IntVector2(0, 0), new IntVector2(0, 0), false, true);
 				var enemy = prefab.AddComponent<EnemyBehavior>();
 				prefab.AddComponent<ShamberController>();
@@ -286,6 +291,15 @@ namespace Planetside
 					}, "die_left", tk2dSpriteAnimationClip.WrapMode.Once).fps = 9f;
 
 				}
+
+				var intro = prefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("waprin");
+				intro.frames[1].eventInfo = "turnontrail";
+				intro.frames[1].triggerEvent = true;
+
+				var clip1 = prefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("warpout");
+				clip1.frames[8].eventInfo = "turnofftrail";
+				clip1.frames[8].triggerEvent = true;
+
 				prefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("warpout").frames[3].eventAudio = "Play_VO_gorgun_laugh_01";
 				prefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("warpout").frames[3].triggerEvent = true;
 				prefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("die_right").frames[1].eventAudio = "Play_BOSS_doormimic_vanish_01";

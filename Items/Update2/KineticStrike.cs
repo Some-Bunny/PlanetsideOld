@@ -315,8 +315,8 @@ namespace Planetside
         public static GameObject StarNuke;
 
         
-        private Vector2 aimpoint;
         private Vector2 aimpointCanBeUsed;
+        private Vector2 aimpoint;
         private float maxDistance = 15;
         private float m_currentAngle;
         private float m_currentDistance;

@@ -447,7 +447,10 @@ namespace Planetside
 
 		void OnDestroy()
 		{
-			UnityEngine.Object.Destroy(nameLabel.gameObject);
+			if (nameLabel.gameObject != null)
+            {
+				UnityEngine.Object.Destroy(nameLabel.gameObject);
+			}
 		}
 	}
 }

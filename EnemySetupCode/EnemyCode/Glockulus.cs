@@ -292,21 +292,21 @@ namespace Planetside
 
 
 				},
-				new DashBehavior()
+				new CustomDashBehavior()
 				{
 					//dashAnim = "wail",
 					ShootPoint = m_CachedGunAttachPoint,
-					dashDistance = 5f,
+					dashDistance = 7f,
 					dashTime = 0.33f,
-					doubleDashChance = 0,
+					AmountOfDashes = 1,
 					enableShadowTrail = true,
-					Cooldown = 3,
+					Cooldown = 1,
 					dashDirection = DashBehavior.DashDirection.Random,
 					warpDashAnimLength = true,
 					hideShadow = true,
 					fireAtDashStart = true,
 					InitialCooldown = 1f,
-
+					AttackCooldown = 3,
 					bulletScript = new CustomBulletScriptSelector(typeof(DashAttack)),
 					//BulletScript = new CustomBulletScriptSelector(typeof(Wail)),
 					//LeadAmount = 0f,

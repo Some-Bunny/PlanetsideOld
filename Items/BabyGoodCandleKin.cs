@@ -413,7 +413,7 @@ namespace Planetside
 								bool flag7 = flag6;
 								if (flag7)
 								{
-									component.baseData.damage = 10f;
+									component.baseData.damage = 40f;
 									component.Owner = Owner;
 									component.baseData.range = 30f;
 									component.baseData.damage = 15f;

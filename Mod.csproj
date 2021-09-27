@@ -94,19 +94,27 @@
     <Compile Include="Components\Item Components\MaintainDPSOnPierce.cs" />
     <Compile Include="Components\Item Components\TemplateMovementModule.cs" />
     <Compile Include="Components\Item Components\DerpyMovementModule.cs" />
+    <Compile Include="DungeonGenStuff\Unrelated DungeonGen Stuff\FlowInjectionInitialiser.cs" />
     <Compile Include="DungeonPlaceables\RainPlaceable.cs" />
+    <Compile Include="EnemySetupCode\EnemyCode\ModderBullets\GoldenRevolverBullet.cs" />
+    <Compile Include="EnemySetupCode\EnemyCode\ModderBullets\NotSoAIBullet.cs" />
     <Compile Include="EnemySetupCode\EnemyCode\ModderBullets\TurboBullet.cs" />
+    <Compile Include="EnemySetupCode\EnemyRelatedStuff\Behavior Stuff\CustomDashBehavior.cs" />
     <Compile Include="EnemySetupCode\EnemyRelatedStuff\Behavior Stuff\TimeStopBehavior.cs" />
     <Compile Include="EnemySetupCode\ProjectileStuff\UndodgeableBulletsCode.cs" />
     <Compile Include="Guns\LaserChainsawProjectile.cs" />
+    <Compile Include="Guns\Update3\LockOnGunProjectile.cs" />
+    <Compile Include="Guns\Update3\LockOnGun.cs" />
     <Compile Include="Guns\Update3\PlanetBladeProjectile.cs" />
     <Compile Include="Guns\Update3\PlanetBlade.cs" />
     <Compile Include="Guns\Update3\ChargerGunProjectile.cs" />
     <Compile Include="Guns\Update3\ChargerGun.cs" />
     <Compile Include="ItemIDs.cs" />
+    <Compile Include="Items\Update3\PrayerAmulet.cs" />
     <Compile Include="Items\Test Items\TestShaderBullets.cs" />
     <Compile Include="Items\Test Items\TestShaderItem.cs" />
     <Compile Include="Items\Update3\DerpyBullets.cs" />
+    <Compile Include="Misc Stuff\StaticExplosions.cs" />
     <Compile Include="Misc Stuff\SlashBehavior.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedLogging.cs" />
     <Compile Include="Strings Setup And Logging\AdvancedStrings1.cs" />
@@ -359,6 +367,7 @@
     <Compile Include="APIs\ItemAPI\GunTools.cs" />
     <Compile Include="Items\Update2\DamnedGuonStone.cs" />
     <Compile Include="Toolboxes\BeamToolbox.cs" />
+    <Compile Include="Toolboxes\DungeonGenToolbox.cs" />
     <Compile Include="Toolboxes\OtherTools.cs" />
     <Compile Include="Toolboxes\ItemTools.cs" />
     <Compile Include="Items\EcholocationAmmolet.cs" />
@@ -1804,18 +1813,18 @@
     <EmbeddedResource Include="Resources\VFX\Debuffs\heatstrokeicon.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_001.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_002.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_003.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_004.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_005.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_006.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_007.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_008.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_009.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_010.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_011.png" />
-    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_012.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_1.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_2.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_3.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_4.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_5.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_6.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_7.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_8.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_9.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_10.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_11.png" />
+    <EmbeddedResource Include="Resources\VFX\Sun\sunflare_chargeup_12.png" />
     <EmbeddedResource Include="Resources\VFX\Sun\sunflare_fire_001.png" />
     <EmbeddedResource Include="Resources\VFX\Sun\sunflare_fire_002.png" />
     <EmbeddedResource Include="Resources\VFX\Sun\sunflare_fire_003.png" />
@@ -2168,6 +2177,98 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\derpybullets.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ShrineRooms\PrayerRooms\PrayerRoomKeep.room" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\prayeramulet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources2\ParticleTextures\shamberparticles.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ShrineRooms\PrayerRooms\PrayerRoomAbbey.room" />
+    <EmbeddedResource Include="Resources\ShrineRooms\PrayerRooms\PrayerRoomForge.room" />
+    <EmbeddedResource Include="Resources\ShrineRooms\PrayerRooms\PrayerRoomHell.room" />
+    <EmbeddedResource Include="Resources\ShrineRooms\PrayerRooms\PrayerRoomHollow.room" />
+    <EmbeddedResource Include="Resources\ShrineRooms\PrayerRooms\PrayerRoomMines.room" />
+    <EmbeddedResource Include="Resources\ShrineRooms\PrayerRooms\PrayerRoomOubliette.room" />
+    <EmbeddedResource Include="Resources\ShrineRooms\PrayerRooms\PrayerRoomProper.room" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_016.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_017.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_018.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_019.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_020.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_021.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_022.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_023.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_024.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_025.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_026.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_027.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_028.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_029.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_030.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_031.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_032.png" />
+    <EmbeddedResource Include="Resources\AnnihiChamber\annihichamber_death_033.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources2\ParticleTextures\bloodster.png" />
+    <EmbeddedResource Include="Resources2\ParticleTextures\breakcasts.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources2\ParticleTextures\shellraxeye.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_chargeeye_001.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_chargeeye_002.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_chargeeye_003.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_chargeeye_004.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_chargeeye_005.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_chargeeye_006.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_fireeye_001.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_fireeye_002.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_fireeye_003.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\goldenrevolver\grbullet_die_001.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\goldenrevolver\grbullet_die_002.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\goldenrevolver\grbullet_die_003.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\goldenrevolver\grbullet_die_004.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\goldenrevolver\grbullet_die_005.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\goldenrevolver\grbullet_idle_001.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\goldenrevolver\grbullet_idle_002.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\goldenrevolver\grbullet_idle_003.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\goldenrevolver\grbullet_idle_004.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\notsoai\aibullet_die_001.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\notsoai\aibullet_die_002.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\notsoai\aibullet_die_003.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\notsoai\aibullet_die_004.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\notsoai\aibullet_die_005.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\notsoai\aibullet_idle_001.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\notsoai\aibullet_idle_002.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\notsoai\aibullet_idle_003.png" />
+    <EmbeddedResource Include="Resources\Enemies\ModderBullets\notsoai\aibullet_idle_004.png" />
+    <Content Include="Resources\Shellrax\shellrax_intro_019.png" />
+    <EmbeddedResource Include="Resources\VFX\LockOnVFX\lockonvfx1.png" />
+    <EmbeddedResource Include="Resources\VFX\LockOnVFX\lockonvfx2.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_intro_020.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_intro_021.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_intro_022.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_intro_023.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_intro_024.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_intro_025.png" />
+    <EmbeddedResource Include="Resources\Shellrax\shellrax_intro_026.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources2\balls.room" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ShrineRooms\BigDumbIdiotBossRoom1.room" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

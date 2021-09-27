@@ -110,7 +110,6 @@ namespace Planetside
 			this.actor.PreventFallingInPitsEver = true;
 
 			this.player = base.GetComponent<PlayerController>();
-
 		}
 
 		public void Start()

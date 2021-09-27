@@ -12,8 +12,13 @@ using Brave.BulletScript;
 
 public class ShamberController : BraveBehaviour
 {
+
+	private ParticleSystem particle;
 	public void Start()
 	{
+
+		base.aiActor.spriteAnimator.AnimationEventTriggered += this.AnimationEventTriggered;
+
 		base.aiActor.bulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("reversible"));
 		BulletsEaten = 0;
 		Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
@@ -23,38 +28,128 @@ public class ShamberController : BraveBehaviour
 		mat.SetFloat("_EmissiveThresholdSensitivity", 1f);
 		mat.SetFloat("_EmissiveColorPower", 2f);
 
+
+		var pso = new GameObject("shamebr fart");
+		pso.transform.position = base.aiActor.CenterPosition + new Vector2(0, -0.5f);
+		pso.transform.localRotation = Quaternion.Euler(0f, 0f, 0);
+		pso.transform.parent = base.aiActor.gameObject.transform;
+		
+
+		ParticleSystem yes = pso.gameObject.AddComponent<ParticleSystem>();
+		//yes.CopyFrom<ParticleSystem>(particle);
+		yes.Play();
+		yes.name = "Shamber Particles";
+		yes.transform.position = base.aiActor.sprite.WorldCenter;
+
+		particle = yes;
+
+		var main = yes.main;
+		main.maxParticles = 10000;
+		main.playOnAwake = false;
+		main.duration = 1;
+		main.loop = true;
+		main.startLifetime = new ParticleSystem.MinMaxCurve(0.33f, 1.2f);
+		main.startSpeed = new ParticleSystem.MinMaxCurve(1f, 4f);
+		main.startSize = new ParticleSystem.MinMaxCurve(0.1f, 0.3f);
+		main.startColor = new ParticleSystem.MinMaxGradient(new Color32(255, 255, 255, 255), new Color32(255, 255, 255, 255));
+		main.simulationSpace = ParticleSystemSimulationSpace.World;
+		main.startRotation = new ParticleSystem.MinMaxCurve(-45, 45);
+		main.randomizeRotationDirection = 2;
+		main.gravityModifier = -1.2f;
+		
+
+		var emm = yes.emission;
+		emm.rateOverTime = 28;
+
+		var colorOverLifetime =  yes.colorOverLifetime;
+		colorOverLifetime.enabled = true;
+		var brightness = UnityEngine.Random.Range(0.2f, 1);
+		var gradient = new Gradient();
+		gradient.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 0.9f) }, new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 1f) });
+		colorOverLifetime.color = new ParticleSystem.MinMaxGradient(gradient);
+
+		var vOL = yes.velocityOverLifetime;
+		vOL.enabled = true;
+		vOL.speedModifier = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0f)));
+
+		var sc = yes.shape;
+		sc.shapeType = ParticleSystemShapeType.Circle;
+		sc.radius = 0.1f;
+
+		var tsa = yes.textureSheetAnimation;
+		tsa.animation = ParticleSystemAnimationType.SingleRow;
+		tsa.numTilesX = 5;
+		tsa.numTilesY = 1;
+		tsa.enabled = true;
+		tsa.cycleCount = 1;
+		tsa.frameOverTimeMultiplier = 1.3f;
+
+		var vel = yes.inheritVelocity;
+
+		vel.mode = ParticleSystemInheritVelocityMode.Initial;
+		vel.curveMultiplier = 0.9f;
+
+		var sizeOverLifetime = yes.sizeOverLifetime;
+		sizeOverLifetime.enabled = true;
+		sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0.4f, 1f), new Keyframe(1f, 0f)));
+
+
+		var sbs =  yes.sizeBySpeed;
+		sbs.separateAxes = false;
+		sbs.sizeMultiplier = 0.9f;
+		sbs.size = new ParticleSystem.MinMaxCurve(1, 0);
+
+		var particleRenderer = yes.gameObject.GetComponent<ParticleSystemRenderer>();
+		//particleRenderer.material = new Material(Shader.Find("Sprites/Default"));
+		particleRenderer.material.mainTexture = Shamber.ShamberParticleTexture;
+
+		Material sharedMaterial = particleRenderer.sharedMaterial;
+		//particleRenderer.usesOverrideMaterial = true;
+		Material material = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
+		material.SetTexture("_MainTex", sharedMaterial.GetTexture("_MainTex"));
+		material.SetColor("_EmissiveColor", new Color32(255, 255, 255, 255));
+		material.SetFloat("_EmissiveColorPower", 5f);
+		material.SetFloat("_EmissivePower", 25f);
+		particleRenderer.material = material;
+
 		base.sprite.renderer.material = mat;
 		CanSucc = true;
 		base.healthHaver.OnPreDeath += this.OnPreDeath;
 	}
 
+	private void AnimationEventTriggered(tk2dSpriteAnimator animator, tk2dSpriteAnimationClip clip, int frameIdx)
+	{
+		if (clip.GetFrame(frameIdx).eventInfo == "turnofftrail")
+		{
+			if (particle != null)
+			{
+				particle.Stop();
+			}
+		}
+		if (clip.GetFrame(frameIdx).eventInfo == "turnontrail")
+		{
+			if (particle != null)
+			{
+				particle.Play();
+			}
+		}
+	}
 
 	protected override void OnDestroy()
 	{
 		if (base.healthHaver)
 		{
 			base.healthHaver.OnPreDeath -= this.OnPreDeath;
+			if (particle != null)
+            {
+				particle.Stop();
+            }
 		}
 		base.OnDestroy();
 	}
 
 	protected void Update()
 	{
-		Vector3 vector = base.sprite.WorldBottomLeft.ToVector3ZisY(0f);
-		Vector3 vector2 = base.sprite.WorldTopRight.ToVector3ZisY(0f);
-		Vector3 a = vector2 - vector;
-		vector += a * 0.25f;
-		vector2 -= a * 0.25f;
-		float num = (vector2.y - vector.y) * (vector2.x - vector.x);
-		int num2 = Mathf.CeilToInt(40f * num);
-		int num3 = num2;
-		Vector3 minPosition = vector;
-		Vector3 maxPosition = vector2;
-		Vector3 direction = Vector3.up / 1.11f;
-		float angleVariance = 120f;
-		float magnitudeVariance = 0.1f;
-		float? startLifetime = new float?(UnityEngine.Random.Range(0.1f, 2f));
-		GlobalSparksDoer.DoRandomParticleBurst(num3, minPosition, maxPosition, direction, angleVariance, magnitudeVariance, null, startLifetime, null, GlobalSparksDoer.SparksType.FLOATY_CHAFF);
 		if (CanSucc == true)
         {
 			ReadOnlyCollection<Projectile> allProjectiles = StaticReferenceManager.AllProjectiles;
@@ -78,7 +173,7 @@ public class ShamberController : BraveBehaviour
         {
 			this.BulletsEaten += 1;
 		}
-		//ETGModConsole.Log(BulletsEaten.ToString());
+		
 		Transform copySprite = this.CreateEmptySprite(target);
 		Destroy(target.gameObject);
 		Vector3 startPosition = copySprite.transform.position;
@@ -128,6 +223,10 @@ public class ShamberController : BraveBehaviour
 	private void OnPreDeath(Vector2 obj)
 	{
 		CanSucc = false;
+		if (particle != null)
+		{
+			particle.Stop();
+		}
 		for (int j = 0; j < BulletsEaten; j++)
 		{
 			GameObject gameObject = new GameObject();

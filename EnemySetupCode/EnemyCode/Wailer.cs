@@ -705,6 +705,69 @@ namespace Planetside
 			}
 		}
 
+
+
+		public class Shoot : Script
+		{
+			protected override IEnumerator Top()
+			{
+
+
+				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("383175a55879441d90933b5c4e60cf6f").bulletBank.GetBullet("bigBullet"));
+				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5").bulletBank.GetBullet("default"));
+				//Adds the Bullet type into the scripts bullet bank. imprtant to have because if you dont have the bullet it will break the script
+
+				//For ints used to create multiple bullets, but instead of starting at 0, i start at -1 to make the script fire from the correct angles much easier
+				for (int k = -1; k < 2; k++)
+				{
+					//Direction adds an additional angle to where-ever it initially fires
+					//DirectionType is used to control where the bullet will aim at, and *tehn* add the angle given by direction, so this script will fire bullets towards the player with an anglular offset of -30, 0  and 30
+					base.Fire(new Direction(30 * k, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(4f, SpeedType.Absolute), new Shoot.BigBullet());
+					//The "new Ballin.TootthBullet());" lets you choose what bullet behavior oyu want to use for more advanced stuff by adding additional code to the new Bullet you created, such as making them last a certain amount of time by a given value, or by making them undodgeable
+				}
+				//Same principle applies as above, only with a check to make it not fire the bullet at the 10 * 0 angle, also the bullet type this party uses is of the UndodgeableBullert set up below
+				for (int k = -2; k < 3; k++)
+				{
+					if (k != 0)
+					{
+						base.Fire(new Direction(10 * k, Brave.BulletScript.DirectionType.Aim, -1f), new Speed(4f, SpeedType.Absolute), new Shoot.UndodgeableBullert());
+					}
+				}
+				yield break;
+			}
+			public class BigBullet : Bullet
+			{
+				//The string with the bullert names are imprtant, if you dont have the bullet you need, it will break
+				public BigBullet() : base("bigBullet", false, false, false)
+				{
+
+				}
+				protected override IEnumerator Top()
+				{
+					//You can leave this empty as this bullet has no special properties needed
+					yield break;
+				}
+			}
+			public class UndodgeableBullert : Bullet
+			{
+				public UndodgeableBullert() : base("default", false, false, false)
+				{
+
+				}
+				protected override IEnumerator Top()
+				{
+					if (this.Projectile.gameObject.GetComponent<Projectile>() != null)
+					{
+						OtherTools.CopyFields<UndodgeableProjectile>(this.Projectile.gameObject.GetComponent<Projectile>());
+					}
+					else
+					{
+						ETGModConsole.Log("HOW");
+					}
+					yield break;
+				}
+			}
+		}
 		public class SkellBullet : Bullet
 		{
 			public SkellBullet() : base("sweep", false, false, false)

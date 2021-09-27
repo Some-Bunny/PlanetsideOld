@@ -42,7 +42,14 @@ namespace Planetside
             testActive.SetCooldownType(ItemBuilder.CooldownType.Timed, 1f);
             testActive.consumable = false;
             testActive.quality = PickupObject.ItemQuality.EXCLUDED;
+            particle = AdvancedDragunPrefab.GetComponentInChildren<ParticleSystem>();
+
+            particleTexture = ResourceExtractor.GetTextureFromResource("Planetside/Resources/blashshower.png");
+
         }
+        public static Texture2D particleTexture;
+
+
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);
@@ -55,6 +62,10 @@ namespace Planetside
         private static AssetBundle bundle = ResourceManager.LoadAssetBundle("enemies_base_001");
         private GameObject ShipPrefab = bundle.LoadAsset("assets/data/enemies/bosses/bossfinalrogue.prefab") as GameObject;
         //private BasicBeamController mean = LaserReticle.get
+
+        private static GameObject AdvancedDragunPrefab = bundle.LoadAsset("assets/data/enemies/bosses/dragun.prefab") as GameObject;
+        private static ParticleSystem particle;
+
 
         //WORKS
         //            material.shader = ShaderCache.Acquire("Brave/Internal/HologramShader");
@@ -69,21 +80,95 @@ namespace Planetside
 
             base.DoEffect(user);
 
+            //GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(TrailRenderer.gameObject, user.specRigidbody.UnitCenter, Quaternion.identity);
+            //CustomTrailRenderer yes = gameObject.GetComponent<CustomTrailRenderer>();
+            //yes.gameObject.transform.position = user.transform.position;
+            //CustomTrailRenderer red =  user.gameObject.AddComponent<CustomTrailRenderer>();
+            //red.CopyFrom<CustomTrailRenderer>(TrailRendererobj);
+
             var enemy = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec");
             if (!enemy)
             {
                 ETGModConsole.Log("enemy null");
             }
 
-            Projectile beam = null;
+            //GameObject obj = AdvancedDragunPrefab.GetComponentInChildren<CustomTrailRenderer>().gameObject;
+            //user.gameObject.AddComponent<TrailRendereryeah>();
+
+            //Projectile beam = null;
+            //ParticleSystem yes = user.gameObject.AddComponent<ParticleSystem>();
+            //yes.CopyFrom<ParticleSystem>(particle);
+            //yes.Play();
+            //yes.SetCustomParticleData(new List<Vector4> { }, ParticleSystemCustomData.Custom1);
+            //yes.SetFields(particle, true, true);
+            //yes.name = "fucka you lol";
+
+            ParticleSystem yes = user.gameObject.AddComponent<ParticleSystem>();
+            //yes.CopyFrom<ParticleSystem>(particle);
+            yes.Play();
+            yes.name = "fucka you lol";
+            var sc = yes.shape;
+            sc.shapeType = ParticleSystemShapeType.Circle;
+            sc.radius = 0.1f;
+
+            var tsa = yes.textureSheetAnimation;
+            tsa.animation = ParticleSystemAnimationType.SingleRow;
+            tsa.numTilesX = 4;
+            tsa.numTilesY = 1;
+            tsa.enabled = true;
+            tsa.cycleCount = 10;
+            tsa.frameOverTimeMultiplier = 1.3f;
+            
+
+
+            var particleRenderer = yes.gameObject.GetComponent<ParticleSystemRenderer>();
+            particleRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            particleRenderer.material.mainTexture = particleTexture;
+           //particleRenderer.material.shader = ShaderCache.Acquire("Brave/Internal/RainbowChestShader");
+            
+            /*
             foreach (Component item in enemy.GetComponentsInChildren(typeof(Component)))
             {
-                ETGModConsole.Log("====");
-                ETGModConsole.Log(item.name);
-                ETGModConsole.Log(item.GetType().Name.ToString());
-            }
 
-            Fire(beam);
+
+                if (item is ParticleSystemRenderer laser)
+                {
+                    if (laser.name == "VFX_Gold_Dragun_Eye_Fire_Exhaust")
+                    {
+                        //ParticleSystem yes = user.gameObject.AddComponent<ParticleSystem>();
+                        ParticleSystemRenderer yes = user.gameObject.AddComponent<ParticleSystemRenderer>();
+                        yes.CopyFrom<ParticleSystemRenderer>(laser);
+                        
+                        break;
+                    }
+                }
+                if (item is ParticleSystem particle)
+                {
+                    if (particle.name == "VFX_Gold_Dragun_Eye_Fire_Exhaust")
+                    {
+                        ParticleSystem yes = user.gameObject.AddComponent<ParticleSystem>();
+                        //yes.CopyFrom<ParticleSystem>(particle);
+                        yes.Play();
+                        yes.name = "fucka you lol";
+                        var sc = yes.shape;//.shapeType = ParticleSystemShapeType.Circle;
+                        sc.shapeType = ParticleSystemShapeType.Circle;
+                        sc.radius = 0.1f;
+                        //var ts = yes.textureSheetAnimation;
+                        
+
+                        var particleRenderer = yes.gameObject.GetComponent<ParticleSystemRenderer>();
+                        particleRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                        particleRenderer.material.mainTexture = particleTexture;
+                        break;
+                    }
+                }
+                
+                //ETGModConsole.Log("====");
+                //ETGModConsole.Log(item.name);
+                //ETGModConsole.Log(item.GetType().Name.ToString());
+            }
+            */
+            //Fire(beam);
 
             /*
             float RNG = UnityEngine.Random.Range(5.5f, 15f);

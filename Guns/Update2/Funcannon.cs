@@ -130,7 +130,6 @@ namespace Planetside
 				playerController.DoPostProcessProjectile(component);
 				component.AdditionalScaleMultiplier = 0.8f;
 				component.baseData.range = 100f;
-				//component.SetProjectileSpriteRight("funcannon_projectile_002", 5, 5, false, tk2dBaseSprite.Anchor.MiddleCenter, 5, 5);
 				component.AdditionalScaleMultiplier *= UnityEngine.Random.Range(0.5f, 1.5f);
 				component.StartCoroutine(this.Speed(component, UnityEngine.Random.Range(8,30), UnityEngine.Random.Range(4, 20), UnityEngine.Random.Range(0.03f, 0.1f)));
 				HomingModifier homing = component.gameObject.AddComponent<HomingModifier>();

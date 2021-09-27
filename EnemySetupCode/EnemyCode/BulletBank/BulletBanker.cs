@@ -748,7 +748,11 @@ namespace Planetside
 						"apache_bullet",
 						"kyle_bullet",
 						"wow_bullet",
-						"spcreat_bullet"
+						"spcreat_bullet",
+						"gr_bullet",
+						 "spapi_bullet",
+
+
 						};
 							string guid = BraveUtility.RandomElement<string>(advanced);
 							var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
@@ -774,7 +778,7 @@ namespace Planetside
 					   "panda_bullet",
 					   "retrash_bullet",
 					   "skilotar_bullet",
-					   "spapi_bullet",
+					   "notsoai_bullet"
 						};
 							string guid = BraveUtility.RandomElement<string>(basic);
 							var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
@@ -866,7 +870,10 @@ namespace Planetside
 						"apache_bullet",
 						"kyle_bullet",
 						"wow_bullet",
-						"spcreat_bullet"
+						"spcreat_bullet",
+						"gr_bullet",
+						"spapi_bullet",
+
 						};
 							string guid = BraveUtility.RandomElement<string>(advanced);
 							var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
@@ -892,7 +899,7 @@ namespace Planetside
 					   "panda_bullet",
 					   "retrash_bullet",
 					   "skilotar_bullet",
-					   "spapi_bullet",
+					   "notsoai_bullet",
 					    };
 							string guid = BraveUtility.RandomElement<string>(basic);
 							var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
@@ -1110,9 +1117,19 @@ namespace Planetside
 			{
 				if (!base.aiActor.IsBlackPhantom)
                 {
-					/*
+					
 					if (base.aiActor.sprite && base.aiActor.sprite.renderer)
 					{
+
+						Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
+						mat.mainTexture = base.aiActor.sprite.renderer.material.mainTexture;
+						mat.SetColor("_EmissiveColor", new Color32(255, 255, 255, 255));
+						mat.SetFloat("_EmissiveColorPower", 1.55f);
+						mat.SetFloat("_EmissivePower", 30);
+						mat.SetFloat("_EmissiveThresholdSensitivity", 0.6f);
+
+						base.aiActor.sprite.renderer.material = mat;
+						/*
 						Material sharedMaterial = base.aiActor.sprite.renderer.sharedMaterial;
 						base.aiActor.sprite.usesOverrideMaterial = true;
 						Material material = new Material(ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive"));
@@ -1122,8 +1139,9 @@ namespace Planetside
 						material.SetFloat("_EmissiveColorPower", 80f);
 						material.SetColor("_EmissiveColor", Color.white);
 						base.aiActor.sprite.renderer.material = material;
+						*/
 					}
-					*/
+					
 				}
 				else
 				{

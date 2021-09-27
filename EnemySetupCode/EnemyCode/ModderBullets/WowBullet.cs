@@ -339,7 +339,24 @@ namespace Planetside
 				fireaa.damageType = CoreDamageTypes.Fire;
 				base.aiActor.healthHaver.damageTypeModifiers.Add(fireaa);
 				m_StartRoom = aiActor.GetAbsoluteParentRoom();
-				//base.aiActor.HasBeenEngaged = true;
+				if (base.aiActor != null && !base.aiActor.IsBlackPhantom)
+				{
+					/*
+					Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
+					mat.mainTexture = base.aiActor.sprite.renderer.material.mainTexture;
+					mat.SetColor("_EmissiveColor", new Color32(255, 255, 255, 255));
+					mat.SetFloat("_EmissiveColorPower", 1.55f);
+					mat.SetFloat("_EmissivePower", 30);
+					mat.SetFloat("_EmissiveThresholdSensitivity", 0.6f);
+					*/
+					//base.aiActor.sprite.renderer.material = mat;
+					base.aiActor.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+					base.aiActor.sprite.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+					base.aiActor.sprite.renderer.material.SetFloat("_EmissivePower", 40);
+					base.aiActor.sprite.renderer.material.SetFloat("_EmissiveColorPower", 1.2f);
+					base.aiActor.sprite.renderer.material.SetColor("_EmissiveColor", Color.white);
+
+				}
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
 				{
 					AkSoundEngine.PostEvent("Play_ENM_highpriest_blast_01", base.aiActor.gameObject);

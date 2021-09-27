@@ -288,11 +288,11 @@ namespace Planetside
 							pick.IsHalfHeart = true;
 							if (user.PlayerHasActiveSynergy("More To Hearts"))
 							{
-								pick.HitsBeforeDeath = 18;
+								pick.HitsBeforeDeath = 54;
 							}
 							else
 							{
-								pick.HitsBeforeDeath = 15;
+								pick.HitsBeforeDeath = 45;
 							}
 							UnityEngine.Object.Destroy(component5.gameObject);
 						}
@@ -307,11 +307,11 @@ namespace Planetside
 								pick.IsHeart = true;
 								if (user.PlayerHasActiveSynergy("More To Hearts"))
 								{
-									pick.HitsBeforeDeath = 36;
+									pick.HitsBeforeDeath = 108;
 								}
 								else
 								{
-									pick.HitsBeforeDeath = 30;
+									pick.HitsBeforeDeath = 90;
 								}
 								UnityEngine.Object.Destroy(component5.gameObject);
 							}
@@ -326,11 +326,11 @@ namespace Planetside
 									pick.IsArmor = true;
 									if (user.PlayerHasActiveSynergy("More To Armor"))
 									{
-										pick.HitsBeforeDeath = 60;
+										pick.HitsBeforeDeath = 180;
 									}
 									else
 									{
-										pick.HitsBeforeDeath = 50;
+										pick.HitsBeforeDeath = 150;
 									}
 									UnityEngine.Object.Destroy(component5.gameObject);
 								}
@@ -351,11 +351,11 @@ namespace Planetside
 
 								if (user.PlayerHasActiveSynergy("More To Ammo"))
 								{
-									pick.HitsBeforeDeath = 30;
+									pick.HitsBeforeDeath = 90;
 								}
 								else
 								{
-									pick.HitsBeforeDeath = 25;
+									pick.HitsBeforeDeath = 75;
 								}
 
 								UnityEngine.Object.Destroy(component6.gameObject);
@@ -368,11 +368,11 @@ namespace Planetside
 								pick.IsHalfAmmo = true;
 								if (user.PlayerHasActiveSynergy("More To Ammo"))
 								{
-									pick.HitsBeforeDeath = 30;
+									pick.HitsBeforeDeath = 90;
 								}
 								else
 								{
-									pick.HitsBeforeDeath = 25;
+									pick.HitsBeforeDeath = 75;
 								}
 								UnityEngine.Object.Destroy(component6.gameObject);
 							}
@@ -388,11 +388,11 @@ namespace Planetside
 								PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
 								if (user.PlayerHasActiveSynergy("More To Keys"))
 								{
-									pick.HitsBeforeDeath = 24;
+									pick.HitsBeforeDeath = 144;
 								}
 								else
 								{
-									pick.HitsBeforeDeath = 20;
+									pick.HitsBeforeDeath = 120;
 								}
 								UnityEngine.Object.Destroy(component7.gameObject);
 							}
@@ -407,11 +407,11 @@ namespace Planetside
 									pick.IsBlank = true;
 									if (user.PlayerHasActiveSynergy("More To Blanks"))
 									{
-										pick.HitsBeforeDeath = 36;
+										pick.HitsBeforeDeath = 120;
 									}
 									else
 									{
-										pick.HitsBeforeDeath = 30;
+										pick.HitsBeforeDeath = 100;
 									}
 									UnityEngine.Object.Destroy(component8.gameObject);
 								}

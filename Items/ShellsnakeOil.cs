@@ -69,7 +69,6 @@ namespace Planetside
         }
         private void HandlePreCollision(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
         {
-
             string text;
             if (otherRigidbody == null)
             {

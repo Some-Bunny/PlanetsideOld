@@ -50,7 +50,7 @@ namespace Planetside
                 yes.spawnShadows = true;
                 yes.shadowLifetime = (UnityEngine.Random.Range(0.15f, 0.5f));
                 yes.shadowTimeDelay = 0.001f;
-                yes.dashColor = new Color(1,0,0 , 0.3f);
+                yes.dashColor = new Color(1,0,0 , 0.05f);
                 yes.name = "Gun Trail";
             }
         }

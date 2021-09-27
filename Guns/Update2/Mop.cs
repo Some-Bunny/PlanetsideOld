@@ -26,11 +26,9 @@ namespace Planetside
 			gun.SetLongDescription("A mop thats been left inside of a chest. Surely the goops found around the Gungeon could be mopped up to some benefit?");
 			gun.SetupSprite(null, "mopgun_idle_001", 11);
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 15);
-			GunExt.SetAnimationFPS(gun, gun.reloadAnimation, 7);
+			GunExt.SetAnimationFPS(gun, gun.reloadAnimation, 10);
 			GunExt.SetAnimationFPS(gun, gun.idleAnimation, 2);
 			gun.gunSwitchGroup = (PickupObjectDatabase.GetById(33) as Gun).gunSwitchGroup;
-
-
 
 			for (int i = 0; i < 3; i++)
 			{
@@ -125,6 +123,38 @@ namespace Planetside
 
 
 			ItemIDs.AddToList(gun.PickupObjectId);
+
+			tk2dSpriteAnimationClip fireClip = gun.sprite.spriteAnimator.GetClipByName(gun.shootAnimation);
+			float[] offsetsX = new float[] { 1.25f, -1f, -0.875f, -0.6875f, -0.375f, -0.125f,  };
+			float[] offsetsY = new float[] { 0.5f, -1.25f, -1f, -0.75f, -0.5f, -0.25f };
+			for (int i = 0; i < offsetsX.Length && i < offsetsY.Length && i < fireClip.frames.Length; i++)
+			{
+				int id = fireClip.frames[i].spriteId;
+				fireClip.frames[i].spriteCollection.spriteDefinitions[id].position0.x += offsetsX[i];
+				fireClip.frames[i].spriteCollection.spriteDefinitions[id].position0.y += offsetsY[i];
+				fireClip.frames[i].spriteCollection.spriteDefinitions[id].position1.x += offsetsX[i];
+				fireClip.frames[i].spriteCollection.spriteDefinitions[id].position1.y += offsetsY[i];
+				fireClip.frames[i].spriteCollection.spriteDefinitions[id].position2.x += offsetsX[i];
+				fireClip.frames[i].spriteCollection.spriteDefinitions[id].position2.y += offsetsY[i];
+				fireClip.frames[i].spriteCollection.spriteDefinitions[id].position3.x += offsetsX[i];
+				fireClip.frames[i].spriteCollection.spriteDefinitions[id].position3.y += offsetsY[i];
+			}
+
+			tk2dSpriteAnimationClip fireClip2 = gun.sprite.spriteAnimator.GetClipByName(gun.reloadAnimation);
+			float[] offsetsX2 = new float[] { 0.25f , 0.375f, 0.875f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1, 0.625f, 0.25f};
+			float[] offsetsY2 = new float[] { 0f , -0.5f, -0.75f, -0.875f, -0.875f, -0.875f, -0.875f, -0.875f, -0.875f, -0.875f, -0.875f, -0.875f, -0.875f, -0.875f, -0.6825f, -0.4375f, 0};
+			for (int i = 0; i < offsetsX2.Length && i < offsetsY2.Length && i < fireClip2.frames.Length; i++)
+			{
+				int id = fireClip2.frames[i].spriteId;
+				fireClip2.frames[i].spriteCollection.spriteDefinitions[id].position0.x += offsetsX2[i];
+				fireClip2.frames[i].spriteCollection.spriteDefinitions[id].position0.y += offsetsY2[i];
+				fireClip2.frames[i].spriteCollection.spriteDefinitions[id].position1.x += offsetsX2[i];
+				fireClip2.frames[i].spriteCollection.spriteDefinitions[id].position1.y += offsetsY2[i];
+				fireClip2.frames[i].spriteCollection.spriteDefinitions[id].position2.x += offsetsX2[i];
+				fireClip2.frames[i].spriteCollection.spriteDefinitions[id].position2.y += offsetsY2[i];
+				fireClip2.frames[i].spriteCollection.spriteDefinitions[id].position3.x += offsetsX2[i];
+				fireClip2.frames[i].spriteCollection.spriteDefinitions[id].position3.y += offsetsY2[i];
+			}
 		}
 		public static int MopID;
 		public override void OnPostFired(PlayerController player, Gun bruhgun)
@@ -165,134 +195,14 @@ namespace Planetside
 			IsPoop = false;
 			IsPossessive = false;
 			IsFrail = false;
-			var FireaAnim = gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation);
-			FireaAnim.frames[0].eventInfo = "frame1";
-			FireaAnim.frames[0].triggerEvent = true;
-			FireaAnim.frames[1].eventInfo = "frame2";
-			FireaAnim.frames[1].triggerEvent = true;
-			FireaAnim.frames[2].eventInfo = "frame3";
-			FireaAnim.frames[2].triggerEvent = true;
-			FireaAnim.frames[3].eventInfo = "frame4";
-			FireaAnim.frames[3].triggerEvent = true;
-			FireaAnim.frames[4].eventInfo = "frame5";
-			FireaAnim.frames[4].triggerEvent = true;
-			FireaAnim.frames[5].eventInfo = "frame6";
-			FireaAnim.frames[5].triggerEvent = true;
-
-			var IdleAnim = gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.idleAnimation);
-
-			IdleAnim.frames[0].eventInfo = "idle";
-			IdleAnim.frames[0].triggerEvent = true;
-			IdleAnim.frames[1].eventInfo = "idle";
-			IdleAnim.frames[1].triggerEvent = true;
-			IdleAnim.frames[2].eventInfo = "idle";
-			IdleAnim.frames[2].triggerEvent = true;
-			IdleAnim.frames[3].eventInfo = "idle";
-			IdleAnim.frames[3].triggerEvent = true;
-
-			var RelAAnim = gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.reloadAnimation);
-			RelAAnim.frames[0].eventInfo = "reload1";
-			RelAAnim.frames[0].triggerEvent = true;
-			RelAAnim.frames[1].eventInfo = "reload2";
-			RelAAnim.frames[1].triggerEvent = true;
-			RelAAnim.frames[2].eventInfo = "reload3";
-			RelAAnim.frames[2].triggerEvent = true;
-			RelAAnim.frames[3].eventInfo = "reload4";
-			RelAAnim.frames[3].triggerEvent = true;
-
-			RelAAnim.frames[13].eventInfo = "unreload1";
-			RelAAnim.frames[13].triggerEvent = true;
-			RelAAnim.frames[14].eventInfo = "unreload2";
-			RelAAnim.frames[14].triggerEvent = true;
-			RelAAnim.frames[15].eventInfo = "unreload3";
-			RelAAnim.frames[15].triggerEvent = true;
-
-			gun.spriteAnimator.AnimationEventTriggered += AnimationEventTriggered;
 			base.OnPickup(player);
 		}
 
 		protected override void OnPostDrop(PlayerController player)
 		{
-			gun.spriteAnimator.AnimationEventTriggered -= AnimationEventTriggered;
 			base.OnPostDrop(player);
 		}
 
-		private void AnimationEventTriggered(tk2dSpriteAnimator animator, tk2dSpriteAnimationClip clip, int frameIdx)
-		{
-
-			if (clip.GetFrame(frameIdx).eventInfo == "fard")
-			{
-				ETGModConsole.Log("fard");
-			}
-
-			if (clip.GetFrame(frameIdx).eventInfo == "reload1")
-			{
-				this.gun.carryPixelOffset = new IntVector2(1, 0);
-			}
-
-			if (clip.GetFrame(frameIdx).eventInfo == "reload2")
-			{
-				this.gun.carryPixelOffset = new IntVector2(1, -5);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "reload3")
-			{
-				this.gun.carryPixelOffset = new IntVector2(2, -7);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "reload4")
-			{
-				this.gun.carryPixelOffset = new IntVector2(3, -8);
-			}
-
-			if (clip.GetFrame(frameIdx).eventInfo == "reload1")
-			{
-				this.gun.carryPixelOffset = new IntVector2(1, 0);
-			}
-
-			if (clip.GetFrame(frameIdx).eventInfo == "unreload1")
-			{
-				this.gun.carryPixelOffset = new IntVector2(3, -8);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "unreload2")
-			{
-				this.gun.carryPixelOffset = new IntVector2(2, -7);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "unreload3")
-			{
-				this.gun.carryPixelOffset = new IntVector2(1, -5);
-			}
-
-
-
-
-			if (clip.GetFrame(frameIdx).eventInfo == "idle")
-			{
-				this.gun.carryPixelOffset = new IntVector2((int)2.5f, (int)-0.5f);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "frame1")
-			{
-				this.gun.carryPixelOffset = new IntVector2((int)2.5f, (int)2.5f);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "frame2")
-			{
-				this.gun.carryPixelOffset = new IntVector2(8, -30);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "frame3")
-			{
-				this.gun.carryPixelOffset = new IntVector2(10, -27);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "frame4")
-			{
-				this.gun.carryPixelOffset = new IntVector2(5, -22);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "frame5")
-			{
-				this.gun.carryPixelOffset = new IntVector2(4, -14);
-			}
-			if (clip.GetFrame(frameIdx).eventInfo == "frame6")
-			{
-				this.gun.carryPixelOffset = new IntVector2(2, -4);
-			}
-		}
 		public override void OnReloadPressed(PlayerController player, Gun bruhgun, bool bSOMETHING)
 		{
 			

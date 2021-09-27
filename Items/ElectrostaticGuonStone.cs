@@ -117,7 +117,10 @@ namespace Planetside
 
         protected override void OnDestroy()
         {
-            SpawnManager.Despawn(extantLink.gameObject);
+            if (extantLink.gameObject != null)
+            {
+                SpawnManager.Despawn(extantLink.gameObject);
+            }
             ElectrostaticGuonStone.guonHook.Dispose();
             bool flag = base.Owner && base.Owner.GetComponent<ElectrostaticGuonStone.ElectricGuonbehavior>() != null;
             bool flag2 = flag;

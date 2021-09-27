@@ -11,7 +11,7 @@ using System.Linq;
 using Brave.BulletScript;
 using GungeonAPI;
 using SaveAPI;
-
+using System.Text.RegularExpressions;
 
 namespace Planetside
 {
@@ -32,8 +32,15 @@ namespace Planetside
 
 		private static Texture2D BossCardTexture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside/Resources/BossCards/annihichamber_bosscard.png");
 		public static string TargetVFX;
+
+		public static Texture2D BloodParticleTexture;
+		public static Texture2D CastTexture;
+
+
 		public static void Init()
 		{
+			BloodParticleTexture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside/Resources2/ParticleTextures/bloodster.png");
+			CastTexture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside/Resources2/ParticleTextures/breakcasts.png");
 
 			AnnihiChamber.BuildPrefab();
 		}
@@ -60,7 +67,6 @@ namespace Planetside
 				companion.aiActor.healthHaver.ForceSetCurrentHealth(450f);
 				companion.aiActor.healthHaver.SetHealthMaximum(450f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
-				companion.aiActor.procedurallyOutlined = false;
 				companion.aiActor.CanTargetPlayers = true;
 				companion.aiActor.procedurallyOutlined = true;
 				companion.aiActor.gameObject.AddComponent<AfterImageTrailController>().spawnShadows = false;
@@ -69,7 +75,10 @@ namespace Planetside
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("4db03291a12144d69fe940d5a01de376").ShadowObject;
 				companion.aiActor.HasShadow = true;
 
+				//companion.aiActor.sprite.allowDefaultLayer = false;
+				//companion.aiActor.gameObject.layer = 28;
 
+				//companion.gameObject.GetComponent<tk2dBaseSprite>().SortingOrder = 0;
 				fuckyouprefab.name = companion.aiActor.OverrideDisplayName;
 
 				/*
@@ -580,7 +589,7 @@ namespace Planetside
 					9,
 					9,
 					10,
-					}, "dashprime", tk2dSpriteAnimationClip.WrapMode.Once).fps = 8f;
+					}, "dashprime", tk2dSpriteAnimationClip.WrapMode.Once).fps = 5f;
 					SpriteBuilder.AddAnimation(companion.spriteAnimator, AnnihichamberCollection, new List<int>
 					{
 					7,
@@ -845,7 +854,24 @@ namespace Planetside
 				81,
 				82,
 				82,
-				82
+				84,
+				85,
+				86,
+				87,
+				88,
+				89,
+				90,
+				91,
+				92,
+				93,
+				94,
+				95,
+				96,
+				97,
+				98,
+				99,
+				100,
+				101
 
 					}, "death", tk2dSpriteAnimationClip.WrapMode.Once).fps = 10f;
 
@@ -877,6 +903,20 @@ namespace Planetside
 				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("vomit").frames[0].eventAudio = "Play_BOSS_doormimic_vomit_01";
 				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("vomit").frames[0].triggerEvent = true;
 
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[4].eventAudio = "Play_CHR_shadow_curse_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[4].triggerEvent = true;
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[5].eventAudio = "Play_CHR_shadow_curse_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[5].triggerEvent = true;
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[6].eventAudio = "Play_CHR_shadow_curse_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[6].triggerEvent = true;
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[7].eventAudio = "Play_CHR_shadow_curse_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[7].triggerEvent = true;
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[8].eventAudio = "Play_CHR_shadow_curse_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[8].triggerEvent = true;
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[9].eventAudio = "Play_CHR_shadow_curse_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[9].triggerEvent = true;
+
+
 				var intro = companion.aiActor.GetComponent<tk2dSpriteAnimator>().GetClipByName("intro");
 				intro.frames[17].eventInfo = "lolwhat";
 				intro.frames[17].triggerEvent = true;
@@ -889,6 +929,11 @@ namespace Planetside
 				clip2.frames[0].eventInfo = "tempgaintrail2";
 				clip2.frames[0].triggerEvent = true;
 
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[28].eventAudio = "Play_BOSS_DragunGold_Baby_Death_01";
+				fuckyouprefab.GetComponent<tk2dSpriteAnimator>().GetClipByName("death").frames[28].triggerEvent = true;
+
+				var clip3 = companion.aiActor.GetComponent<tk2dSpriteAnimator>().GetClipByName("death");
+				/*
 				var clip3 = companion.aiActor.GetComponent<tk2dSpriteAnimator>().GetClipByName("death");
 				clip3.frames[3].eventInfo = "deathboom";
 				clip3.frames[3].triggerEvent = true;
@@ -898,9 +943,28 @@ namespace Planetside
 				clip3.frames[7].triggerEvent = true;
 				clip3.frames[11].eventInfo = "deathboom";
 				clip3.frames[11].triggerEvent = true;
+				*/
+				clip3.frames[13].eventInfo = "crecj1";
+				clip3.frames[13].triggerEvent = true;
 
-				clip3.frames[14].eventInfo = "eat dicks";
-				clip3.frames[14].triggerEvent = true;
+				clip3.frames[15].eventInfo = "crecj2";
+				clip3.frames[15].triggerEvent = true;
+
+				clip3.frames[17].eventInfo = "crecj3";
+				clip3.frames[17].triggerEvent = true;
+
+				clip3.frames[19].eventInfo = "crecj4";
+				clip3.frames[19].triggerEvent = true;
+
+				clip3.frames[21].eventInfo = "crecj5";
+				clip3.frames[21].triggerEvent = true;
+
+				clip3.frames[23].eventInfo = "crecj6";
+				clip3.frames[23].triggerEvent = true;
+
+
+				clip3.frames[33].eventInfo = "eat dicks";
+				clip3.frames[33].triggerEvent = true;
 
 				var bs = fuckyouprefab.GetComponent<BehaviorSpeculator>();
 				BehaviorSpeculator behaviorSpeculator = EnemyDatabase.GetOrLoadByGuid("01972dee89fc4404a5c408d50007dad5").behaviorSpeculator;
@@ -976,53 +1040,53 @@ namespace Planetside
 
 
 				AIBeamShooter2 bholsterbeam1 = companion.gameObject.AddComponent<AIBeamShooter2>();
-				bholsterbeam1.beamTransform = m_CachedGunAttachPoint.transform;
+				bholsterbeam1.beamTransform = LaserOne.transform;
 				bholsterbeam1.beamModule = beholsterbeam.beamModule;
 				bholsterbeam1.beamProjectile = beholsterbeam.projectile;
 				bholsterbeam1.firingEllipseCenter = LaserOne.transform.position;
 				bholsterbeam1.name = "240";
-				bholsterbeam1.northAngleTolerance = 240 + 30;
+				bholsterbeam1.northAngleTolerance = 0;
 				
 
 				AIBeamShooter2 bholsterbeam2 = companion.gameObject.AddComponent<AIBeamShooter2>();
-				bholsterbeam2.beamTransform = m_CachedGunAttachPoint.transform;
+				bholsterbeam2.beamTransform = LaserTwo.transform;
 				bholsterbeam2.beamModule = beholsterbeam.beamModule;
 				bholsterbeam2.beamProjectile = beholsterbeam.projectile;
 				bholsterbeam2.firingEllipseCenter = LaserTwo.transform.position;
 				bholsterbeam2.name = "300";
-				bholsterbeam2.northAngleTolerance = 300 + 30;
+				bholsterbeam2.northAngleTolerance = 0;
 
 				AIBeamShooter2 bholsterbeam3 = companion.gameObject.AddComponent<AIBeamShooter2>();
-				bholsterbeam3.beamTransform = m_CachedGunAttachPoint.transform;
+				bholsterbeam3.beamTransform = LaserThree.transform;
 				bholsterbeam3.beamModule = beholsterbeam.beamModule;
 				bholsterbeam3.beamProjectile = beholsterbeam.projectile;
 				bholsterbeam3.firingEllipseCenter = LaserThree.transform.position;
 				bholsterbeam3.name = "0";
-				bholsterbeam3.northAngleTolerance = 0 + 30;
+				bholsterbeam3.northAngleTolerance = 0;
 
 				AIBeamShooter2 bholsterbeam4 = companion.gameObject.AddComponent<AIBeamShooter2>();
-				bholsterbeam4.beamTransform = m_CachedGunAttachPoint.transform;
+				bholsterbeam4.beamTransform = LaserFour.transform;
 				bholsterbeam4.beamModule = beholsterbeam.beamModule;
 				bholsterbeam4.beamProjectile = beholsterbeam.projectile;
 				bholsterbeam4.firingEllipseCenter = LaserFour.transform.position;
 				bholsterbeam4.name = "180";
-				bholsterbeam4.northAngleTolerance = 180 + 30;
+				bholsterbeam4.northAngleTolerance = 0;
 
 				AIBeamShooter2 bholsterbeam5 = companion.gameObject.AddComponent<AIBeamShooter2>();
-				bholsterbeam5.beamTransform = m_CachedGunAttachPoint.transform;
+				bholsterbeam5.beamTransform = LaserFive.transform;
 				bholsterbeam5.beamModule = beholsterbeam.beamModule;
 				bholsterbeam5.beamProjectile = beholsterbeam.projectile;
 				bholsterbeam5.firingEllipseCenter = LaserFive.transform.position;
 				bholsterbeam5.name = "60";
-				bholsterbeam5.northAngleTolerance = 60 + 30;
+				bholsterbeam5.northAngleTolerance = 0;
 
 				AIBeamShooter2 bholsterbeam6 = companion.gameObject.AddComponent<AIBeamShooter2>();
-				bholsterbeam6.beamTransform = m_CachedGunAttachPoint.transform;
+				bholsterbeam6.beamTransform = LaserSix.transform;
 				bholsterbeam6.beamModule = beholsterbeam.beamModule;
 				bholsterbeam6.beamProjectile = beholsterbeam.projectile;
 				bholsterbeam6.firingEllipseCenter = LaserSix.transform.position;
 				bholsterbeam6.name = "120";
-				bholsterbeam6.northAngleTolerance = 120 + 30;
+				bholsterbeam6.northAngleTolerance = 0;
 
 
 				bs.TargetBehaviors = new List<TargetBehaviorBase>
@@ -1067,13 +1131,15 @@ namespace Planetside
 					new AttackBehaviorGroup.AttackGroupItem()
 					{
 
-					Probability = 1f,
-					Behavior = new DashBehavior{
+					Probability = 1.5f,
+					Behavior = new CustomDashBehavior{
 					//dashAnim = "wail",
 					ShootPoint = Centre,
-					dashDistance = 6f,
-					dashTime = 0.25f,
-					doubleDashChance = 0.33f,
+					dashDistance = 20f,
+					dashTime = 0.66f,
+					AmountOfDashes = 4,
+					WaitTimeBetweenDashes = 0f,
+
 					enableShadowTrail = false,
 					Cooldown = 3,
 					dashDirection = DashBehavior.DashDirection.PerpendicularToTarget,
@@ -1081,7 +1147,7 @@ namespace Planetside
 					hideShadow = true,
 					fireAtDashStart = true,
 					InitialCooldown = 1f,
-					AttackCooldown = 1,
+					AttackCooldown = 0f,
 					bulletScript = new CustomBulletScriptSelector(typeof(DashAttack)),
 					//BulletScript = new CustomBulletScriptSelector(typeof(Wail)),
 					//LeadAmount = 0f,
@@ -1100,7 +1166,7 @@ namespace Planetside
 					},
 					new AttackBehaviorGroup.AttackGroupItem()
 					{
-					Probability = 1f,
+					Probability = 0.9f,
 					Behavior = new CustomBeholsterLaserBehavior{
 					//UsesBeamProjectileWithoutModule = fa,
 					InitialCooldown = 8f,
@@ -1110,7 +1176,7 @@ namespace Planetside
 					RequiresLineOfSight = false,
 					//beamSelection = ShootBeamBehavior.BeamSelection.All,
 					FiresDirectlyTowardsPlayer = true,
-					UsesCustomAngle = true,
+					UsesCustomAngle = false,
 
 					chargeTime = 1.5f,
 					UsesBaseSounds = true,
@@ -1119,23 +1185,38 @@ namespace Planetside
 					//ChargeAnimation = "charge1",
 					//FireAnimation = "attack1",
 					//PostFireAnimation = "uncharge1",
+					//UsesBaseSounds = false,
+					LaserFiringSound = "Play_ENM_deathray_shot_01",
+					StopLaserFiringSound = "Stop_ENM_deathray_loop_01",
+					ChargeAnimation = "charge",
+					FireAnimation = "shootlaser",
+					PostFireAnimation = "finishlaser",
 					beamSelection = ShootBeamBehavior.BeamSelection.All,
-					trackingType = CustomBeholsterLaserBehavior.TrackingType.ConstantTurn,
-					//initialAimType = CustomShootBeamBehavior.InitialAimType.Aim,
-					BulletScript = new CustomBulletScriptSelector(typeof(BigBall)),
-					ShootPoint = Centre.transform,
-					maxTurnRate = 10,
-					turnRateAcceleration = 10,
-					LockInPlaceWhileAttacking = false,
+					trackingType = CustomBeholsterLaserBehavior.TrackingType.Follow,
+				//initialAimType = CustomShootBeamBehavior.InitialAimType.Aim,
+				BulletScript = new CustomBulletScriptSelector(typeof(BigBall)),
+				ShootPoint = shootpoint.transform,
+					unitCatchUpSpeed = 1.8f,
+					maxTurnRate = 1.8f,
+					turnRateAcceleration = 1.8f,
+					useDegreeCatchUp = companion.transform,
+					minDegreesForCatchUp = 1.8f,
+					degreeCatchUpSpeed = 180,
+					useUnitCatchUp = true,
+					minUnitForCatchUp = 2,
+					maxUnitForCatchUp = 2,
 					useUnitOvershoot = true,
 					minUnitForOvershoot = 1,
+
+					unitOvershootTime = 0.25f,
+					unitOvershootSpeed = 2,
 
 					},
 					NickName = "LASERZ"
 					},
 					new AttackBehaviorGroup.AttackGroupItem()
 					{
-					Probability = 1f,
+					Probability = 1,
 					Behavior = new ChargeBehavior{
 						InitialCooldown = 1,
 						chargeAcceleration = -1,
@@ -1153,13 +1234,14 @@ namespace Planetside
 						stoppedByProjectiles = false,
 						wallRecoilForce = 50,
 						AttackCooldown = 1.5f,
+						Cooldown = 3,
 						
 					},
 					NickName = "Phase 1 CHrge"
 					},
 					new AttackBehaviorGroup.AttackGroupItem()
 					{
-					Probability = 1f,
+					Probability = 0.9f,
 					Behavior = new ShootBehavior()
 					{
 							TellAnimation = "vomitprime",
@@ -1208,8 +1290,8 @@ namespace Planetside
 					AvoidWalls = true,
 					GoneTime = 0.5f,
 					OnlyTeleportIfPlayerUnreachable = false,
-					MinDistanceFromPlayer = 10f,
-					MaxDistanceFromPlayer = 5f,
+					MinDistanceFromPlayer = 5f,
+					MaxDistanceFromPlayer = 10f,
 					teleportInAnim = "TeleportIn",
 					teleportOutAnim = "TeleportOut",
 					AttackCooldown = 0.25f,
@@ -1218,7 +1300,7 @@ namespace Planetside
 					roomMax = new Vector2(0,0),
 					roomMin = new Vector2(0,0),
 					//teleportInBulletScript = new CustomBulletScriptSelector(typeof(ShellRaxDropCursedAreas)),
-					//teleportOutBulletScript = new CustomBulletScriptSelector(typeof(ShellRaxDropCursedAreas)),
+					teleportInBulletScript = new CustomBulletScriptSelector(typeof(TeleportOut)),
 					GlobalCooldown = 0f,
 					Cooldown = 0.5f,
 					
@@ -1262,7 +1344,8 @@ namespace Planetside
 						Cooldown = 1f,
 						AttackCooldown = 0.25f,
 						wallRecoilForce = 50,
-						
+						Range = 10,
+
 					},
 					NickName = "Phase 2 CHrge"
 					},
@@ -1292,6 +1375,7 @@ namespace Planetside
 					//InitialCooldown = 4f,
 					//TellAnimation = "wail",
 					//FireAnimation = "wail",
+					Range = 10,
 					RequiresLineOfSight = false,
 					//Uninterruptible = true,
 					//FireVfx = ,
@@ -1444,10 +1528,14 @@ namespace Planetside
 				//Important for not breaking basegame stuff!
 				StaticReferenceManager.AllHealthHavers.Remove(companion.aiActor.healthHaver);
 				//==================
+				
 			}
 
 
 		}
+		public static Texture2D annihichambepatircles;
+		public static ParticleSystem BloodParticle;
+
 		private static GameObject ConfusedPrefab;
 
 
@@ -1502,18 +1590,6 @@ namespace Planetside
 					//c.castingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 					//ETGModConsole.Log(c.name);
 				}
-
-				if (!base.aiActor.IsBlackPhantom)
-				{
-					Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
-					mat.mainTexture = base.aiActor.sprite.renderer.material.mainTexture;
-					mat.SetColor("_EmissiveColor", new Color32(255, 255, 255, 255));
-					mat.SetFloat("_EmissiveColorPower", 1.55f);
-					mat.SetFloat("_EmissivePower", 100);
-					mat.SetFloat("_EmissiveThresholdSensitivity", 0.05f);
-
-					base.aiActor.sprite.renderer.material = mat;
-				}
 				for (int j = 0; j < base.aiActor.behaviorSpeculator.AttackBehaviors.Count; j++)
 				{
 					if (base.behaviorSpeculator.AttackBehaviors[j] is AttackBehaviorGroup && base.behaviorSpeculator.AttackBehaviors[j] != null)
@@ -1564,6 +1640,19 @@ namespace Planetside
 			public Material PitCausticsMaterial;
 			private void Start()
 			{
+				//ETGModConsole.Log(base.aiActor.sprite.HeightOffGround.ToString());
+
+				if (!base.aiActor.IsBlackPhantom)
+				{
+					Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
+					mat.mainTexture = base.aiActor.sprite.renderer.material.mainTexture;
+					mat.SetColor("_EmissiveColor", new Color32(255, 255, 255, 255));
+					mat.SetFloat("_EmissiveColorPower", 1.55f);
+					mat.SetFloat("_EmissivePower", 100);
+					mat.SetFloat("_EmissiveThresholdSensitivity", 0.05f);
+
+					base.aiActor.sprite.renderer.material = mat;
+				}
 				float maxHealth = base.aiActor.healthHaver.GetMaxHealth();
 				float num = maxHealth * 0.35f;
 				base.healthHaver.minimumHealth = num;
@@ -1634,6 +1723,8 @@ namespace Planetside
 					yes.shadowTimeDelay = 0.001f;
 					yes.dashColor = Color.clear;
 					yes.name = "Temp Trail";
+					yes.sprite.HeightOffGround = 2;
+
 					GameManager.Instance.StartCoroutine(WaitForTrail(base.aiActor));
 				}
 				if (clip.GetFrame(frameIdx).eventInfo == "tempgaintrail2")
@@ -1644,21 +1735,137 @@ namespace Planetside
 					yes.shadowTimeDelay = 0f;
 					yes.dashColor = Color.white;
 					yes.name = "Temp Trail2";
+					yes.sprite.HeightOffGround = 2;
+
 					GameManager.Instance.StartCoroutine(WaitForTrail(base.aiActor));
 				}
 				if (clip.GetFrame(frameIdx).eventInfo == "deathboom")
                 {
 					AkSoundEngine.PostEvent("Play_BigSlam", base.gameObject);
 				}
+
+
+
+				Vector2[] positions = new Vector2[] { new Vector2(0,0), new Vector2(0.6875f, 3.0625f), new Vector2(2.0625f, 3.8125f), new Vector2(3.5625f, 3.0625f), new Vector2(3.5625f, 1.5625f), new Vector2(2.0625f, 0.8125f), new Vector2(0.6875f, 1.5625f) };
+
+				string eventInfo = clip.GetFrame(frameIdx).eventInfo;
+				Regex reg = new Regex(@"^(crecj)[1-6]+$");
+				if (reg.IsMatch(eventInfo))
+				{
+					int index = int.Parse(eventInfo.Substring(5));
+
+					AkSoundEngine.PostEvent("Play_OBJ_cursepot_shatter_01", base.gameObject);
+					MakeParticleSystem(base.aiActor.gameObject, positions[index]);
+				}
+
+
+
 				if (clip.GetFrame(frameIdx).eventInfo == "eat dicks")
                 {
+
 					AkSoundEngine.PostEvent("Play_BOSS_lichB_grab_01", gameObject);
+
+					AkSoundEngine.PostEvent("Play_BOSS_blobulord_burst_01", gameObject);
 					GameObject hand = UnityEngine.Object.Instantiate<GameObject>(PlanetsideModule.hellDrag.HellDragVFX);
 					tk2dBaseSprite component1 = hand.GetComponent<tk2dBaseSprite>();
 					component1.usesOverrideMaterial = true;
-					component1.PlaceAtLocalPositionByAnchor(base.aiActor.specRigidbody.UnitCenter, tk2dBaseSprite.Anchor.LowerCenter);
+					component1.PlaceAtLocalPositionByAnchor(base.aiActor.specRigidbody.UnitBottomCenter, tk2dBaseSprite.Anchor.LowerCenter);
 					component1.renderer.material.shader = ShaderCache.Acquire("Brave/Effects/StencilMasked");
-					base.aiActor.sprite.renderer.enabled = false;
+
+					var pso = new GameObject("NANOMACHINES");
+					pso.transform.position = hand.transform.position + new Vector3(8, 2f);
+					pso.transform.localRotation = Quaternion.Euler(0f, 0f, 0);
+					pso.transform.parent = hand.gameObject.transform;
+
+					TeleporterPrototypeItem teleporter = PickupObjectDatabase.GetById(449).GetComponent<TeleporterPrototypeItem>();
+					UnityEngine.Object.Instantiate<GameObject>(teleporter.TelefragVFXPrefab, base.aiActor.sprite.WorldCenter, Quaternion.identity);
+
+					ParticleSystem yes = pso.gameObject.GetOrAddComponent<ParticleSystem>();
+					//yes.CopyFrom<ParticleSystem>(particle);
+
+
+					yes.name = "BloodPlatter Particles";
+					//yes.transform.position = hand.gameObject.transform.position;
+
+					var main = yes.main;
+					main.maxParticles = 10000;
+					main.playOnAwake = false;
+					main.duration = 0.1f;
+					main.loop = false;
+					main.startLifetime = new ParticleSystem.MinMaxCurve(0.1f, 2f);
+					main.startSpeed = new ParticleSystem.MinMaxCurve(2f, 9f);
+					main.startSize = new ParticleSystem.MinMaxCurve(0.02f, 0.2f);
+					main.startColor = new ParticleSystem.MinMaxGradient(new Color32(255, 255, 255, 255), new Color32(255, 255, 255, 255));
+					main.simulationSpace = ParticleSystemSimulationSpace.World;
+					main.startRotation = new ParticleSystem.MinMaxCurve(-180, 180);
+					main.randomizeRotationDirection = 2;
+					main.gravityModifier = 0.05f;
+
+
+					var emm = yes.emission;
+					emm.rateOverTime = 5000;
+
+					var colorOverLifetime = yes.colorOverLifetime;
+					colorOverLifetime.enabled = true;
+					var brightness = UnityEngine.Random.Range(0.2f, 1);
+					var gradient = new Gradient();
+					//gradient.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 0.9f) }, new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 1f) });
+					//colorOverLifetime.color = new ParticleSystem.MinMaxGradient(gradient);
+
+					var vOL = yes.velocityOverLifetime;
+					vOL.enabled = true;
+					vOL.speedModifier = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0.4f, 1f), new Keyframe(1f, 0f)));
+
+					var sc = yes.shape;
+					sc.shapeType = ParticleSystemShapeType.Circle;
+					sc.radius = 0.1f;
+
+					var tsa = yes.textureSheetAnimation;
+					tsa.animation = ParticleSystemAnimationType.SingleRow;
+					tsa.numTilesX = 3;
+					tsa.numTilesY = 1;
+					tsa.enabled = true;
+					tsa.cycleCount = 1;
+					tsa.frameOverTimeMultiplier = 4f;
+
+
+					var vel = yes.inheritVelocity;
+
+					vel.mode = ParticleSystemInheritVelocityMode.Initial;
+					vel.curveMultiplier = 0.9f;
+
+					var sizeOverLifetime = yes.sizeOverLifetime;
+					sizeOverLifetime.enabled = true;
+					sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0.4f, 1f), new Keyframe(1f, 0f)));
+
+
+					var sbs = yes.sizeBySpeed;
+					sbs.separateAxes = false;
+					sbs.sizeMultiplier = 100f;
+					sbs.size = new ParticleSystem.MinMaxCurve(1, 0);
+
+					var particleRenderer = yes.GetComponent<ParticleSystemRenderer>();
+
+					yes.Play();
+					//annihichambepatircles = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside/Resources2/ParticleTextures/bloodster.png");
+					particleRenderer.material = new Material(Shader.Find("Sprites/Default"));
+
+					particleRenderer.material.mainTexture = AnnihiChamber.BloodParticleTexture;
+					if (particleRenderer.material.mainTexture == null)
+					{
+						particleRenderer.material.mainTexture = AnnihiChamber.BloodParticleTexture;
+					}
+					if (particleRenderer.material.mainTexture == null)
+					{
+						ETGModConsole.Log("DSDA");
+					}
+					SelfDestructComponent dest = yes.gameObject.AddComponent<SelfDestructComponent>();
+					dest.PoofVFX = false;
+					dest.maxDuration = 5;
+
+
+
+					//base.aiActor.sprite.renderer.enabled = false;
 				}
 			}
 			private IEnumerator WaitForTrail(AIActor actor)
@@ -1699,8 +1906,102 @@ namespace Planetside
 				}
 				yield break;
 			}
+			public static GameObject MakeParticleSystem(GameObject transform, Vector3 vector3)
+			{
+				var pso = new GameObject("CeramicParticles");
+				pso.transform.position = transform.transform.position + vector3;
+				pso.transform.localRotation = Quaternion.Euler(0f, 0f, 0);
+				pso.transform.parent = transform.transform;
+
+
+				ParticleSystem yes = pso.gameObject.GetOrAddComponent<ParticleSystem>();
+				//yes.CopyFrom<ParticleSystem>(particle);
+
+
+				yes.name = "ceramicParticles";
+				//yes.transform.position = hand.gameObject.transform.position;
+
+				var main = yes.main;
+				main.maxParticles = 10000;
+				main.playOnAwake = false;
+				main.duration = 0.1f;
+				main.loop = false;
+				main.startLifetime = new ParticleSystem.MinMaxCurve(0.3f, 2f);
+				main.startSpeed = new ParticleSystem.MinMaxCurve(4f, 7f);
+				main.startSize = new ParticleSystem.MinMaxCurve(0.05f, 0.3f);
+				main.startColor = new ParticleSystem.MinMaxGradient(new Color32(255, 255, 255, 255), new Color32(255, 255, 255, 255));
+				main.simulationSpace = ParticleSystemSimulationSpace.World;
+				main.startRotation = new ParticleSystem.MinMaxCurve(-180, 180);
+				main.randomizeRotationDirection = 2;
+				main.gravityModifier = 0.075f;
+
+
+				var emm = yes.emission;
+				emm.rateOverTime = 2000;
+
+				var colorOverLifetime = yes.colorOverLifetime;
+				colorOverLifetime.enabled = true;
+				var brightness = UnityEngine.Random.Range(0.2f, 1);
+				var gradient = new Gradient();
+				//gradient.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 0.9f) }, new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 1f) });
+				//colorOverLifetime.color = new ParticleSystem.MinMaxGradient(gradient);
+
+				var vOL = yes.velocityOverLifetime;
+				vOL.enabled = true;
+				vOL.speedModifier = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0.4f, 1f), new Keyframe(1f, 0f)));
+
+				var sc = yes.shape;
+				sc.shapeType = ParticleSystemShapeType.Circle;
+				sc.radius = 0.1f;
+
+				var tsa = yes.textureSheetAnimation;
+				tsa.animation = ParticleSystemAnimationType.SingleRow;
+				tsa.numTilesX = 5;
+				tsa.numTilesY = 1;
+				tsa.enabled = true;
+				tsa.cycleCount = 1;
+				tsa.frameOverTimeMultiplier = 4f;
+
+
+				var vel = yes.inheritVelocity;
+
+				vel.mode = ParticleSystemInheritVelocityMode.Initial;
+				vel.curveMultiplier = 0.9f;
+
+				var sizeOverLifetime = yes.sizeOverLifetime;
+				sizeOverLifetime.enabled = true;
+				sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0.4f, 1f), new Keyframe(1f, 0f)));
+
+
+				var sbs = yes.sizeBySpeed;
+				sbs.separateAxes = false;
+				sbs.sizeMultiplier = 100f;
+				sbs.size = new ParticleSystem.MinMaxCurve(1, 0);
+
+				var particleRenderer = yes.GetComponent<ParticleSystemRenderer>();
+
+				yes.Play();
+				particleRenderer.material = new Material(Shader.Find("Sprites/Default"));
+
+				particleRenderer.material.mainTexture = AnnihiChamber.CastTexture;
+				if (particleRenderer.material.mainTexture == null)
+				{
+					particleRenderer.material.mainTexture = AnnihiChamber.CastTexture;
+				}
+				if (particleRenderer.material.mainTexture == null)
+				{
+					ETGModConsole.Log("DSDA");
+				}
+				SelfDestructComponent dest = yes.gameObject.AddComponent<SelfDestructComponent>();
+				dest.PoofVFX = false;
+				dest.maxDuration = 5;
+
+				return pso.gameObject;
+			}
 			public static bool Phase2AnnihiChamberCheck;
 		}
+
+		
 
 
 
@@ -1803,81 +2104,123 @@ namespace Planetside
 
 			"Planetside/Resources/AnnihiChamber/annihichamber_charge_001.png",
 
-			
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_016.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_017.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_018.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_019.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_020.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_021.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_022.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_023.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_024.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_025.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_026.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_027.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_028.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_029.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_030.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_031.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_032.png",
+			"Planetside/Resources/AnnihiChamber/annihichamber_death_033.png",
+
+
+
 
 		};
+
+		public class Ballin : Script
+        {
+			protected override IEnumerator Top()
+			{
+
+
+				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").bulletBank.GetBullet("teeth_football"));
+				//Adds the Bullet type into the scripts bullet bank. imprtant to have because if you dont have the bullet it will break the script
+
+				//For ints used to create multiple bullets, but instead of starting at 0, i start at -1 to make the script fire from the correct angles much easier
+				for (int k = -1; k < 2; k++)
+				{
+					//Direction adds an additional angle to where-ever it initially fires
+					//DirectionType is used to control where the bullet will aim at, and *tehn* add the angle given by direction, so this script will fire bullets towards the player with an anglular offset of -30, 0  and 30
+					base.Fire(new Direction(30 * k, DirectionType.Aim, -1f), new Speed(10f, SpeedType.Absolute), new Ballin.TootthBullet());
+					//The "new Ballin.TootthBullet());" lets you choose what bullet behavior oyu want to use for more advanced stuff by adding additional code to the new Bullet you created, such as making them last a certain amount of time by a given value, or by making them undodgeable
+				}
+				//Same principle applies as above, only with a check to make it not fire the bullet at the 10 * 0 angle, also the bullet type this party uses is of the UndodgeableBullert set up below
+				for (int k = -2; k < 3; k++)
+				{
+					if (k!=0)
+                    {
+						base.Fire(new Direction(10 * k, DirectionType.Aim, -1f), new Speed(10f, SpeedType.Absolute), new Ballin.UndodgeableBullert());
+					}
+				}
+				yield break;
+			}
+			public class TootthBullet : Bullet
+			{
+				//The string with the bullert names are imprtant, if you dont have the bullet you need, it will break
+				public TootthBullet() : base("teeth_football", false, false, false)
+				{
+
+				}
+				protected override IEnumerator Top()
+				{
+					//You can leave this empty as this bullet has no special properties needed
+					yield break;
+				}
+			}
+			public class UndodgeableBullert : Bullet
+			{
+				public UndodgeableBullert() : base("teeth_football", false, false, false)
+				{
+
+				}
+				protected override IEnumerator Top()
+				{
+					//Add Undodgeable Bullet Code here
+					yield break;
+				}
+			}
+		}
+
 		public class DashAttack : Script
 		{
 			protected override IEnumerator Top()
 			{
-				float Dir = UnityEngine.Random.Range(-180, 180);
-				Vector2 targetPos = base.GetPredictedTargetPosition(0.72f, 10);
-				bool shouldHome = true;
-				for (int k = 0; k < 3; k++)
+
+				float floatDirection = base.AimDirection + UnityEngine.Random.Range(25f, -25f);
+				Vector2 floatVelocity = BraveMathCollege.DegreesToVector(floatDirection, 5f);
+				base.PostWwiseEvent("Play_BOSS_doormimic_vomit_01", null);
+
+				for (int j = 0; j < 10; j++)
 				{
-					for (int u = 0; u < 6; u++)
-					{
-						base.Fire(new Direction((120 * k) + Dir, DirectionType.Aim, -1f), new Speed(7f, SpeedType.Absolute), new Spit(u * 3, targetPos, shouldHome));
-					}
-					Dir = UnityEngine.Random.Range(-180, 180);
-					for (int u = 0; u < 3; u++)
-					{
-						base.Fire(new Direction(Dir, DirectionType.Aim, -1f), new Speed(6f, SpeedType.Absolute), new Spit(u * 4, targetPos, shouldHome));
-					}
-					yield return this.Wait(1);
+					this.Fire(new Direction(this.SubdivideCircle(0, 10, j, 1f, false), DirectionType.Aim, -1f), new Speed(6f, SpeedType.Absolute), new DashAttack.BurstBullet(floatVelocity));
 				}
-				this.FireSpinningLine(new Vector2(-0.75f, 0f), new Vector2(0.75f, 0f), 3);
-				this.FireSpinningLine(new Vector2(0f, -0.75f), new Vector2(0f, 0.75f), 3);
+
+			
 				yield break;
 			}
-			private void FireSpinningLine(Vector2 start, Vector2 end, int numBullets)
+			public class BurstBullet : Bullet
 			{
-				start *= 0.5f;
-				end *= 0.5f;
-				float direction = (this.BulletManager.PlayerPosition() - base.Position).ToAngle();
-				for (int i = 0; i < numBullets; i++)
+				public BurstBullet(Vector2 additionalVelocity) : base("gross", true, false, false)
 				{
-					Vector2 b = Vector2.Lerp(start, end, (float)i / ((float)numBullets - 1f));
-					base.Fire(new Direction(direction, DirectionType.Absolute, -1f), new DashAttack.SpinningBullet(base.Position, base.Position + b));
-				}
-			}
-			public class SpinningBullet : Bullet
-			{
-				public SpinningBullet(Vector2 origin, Vector2 startPos) : base("gross", false, false, false)
-				{
-					this.m_origin = origin;
-					this.m_startPos = startPos;
-					base.SuppressVfx = true;
+					this.m_addtionalVelocity = additionalVelocity;
 				}
 
 				protected override IEnumerator Top()
 				{
-					base.ManualControl = true;
-					Vector2 delta = (this.m_startPos - base.Position) / 45f;
-					for (int i = 0; i < 45; i++)
+					this.ManualControl = true;
+					for (int i = 0; i < 300; i++)
 					{
-						base.Position += delta;
-						yield return base.Wait(1);
+						this.UpdateVelocity();
+						this.Velocity += this.m_addtionalVelocity * Mathf.Min(10f, (float)i / 50f);
+						this.UpdatePosition();
+						yield return this.Wait(1);
 					}
-					this.Speed = 10f;
-					float angle = 0f;
-					Vector2 centerOfMass = this.m_origin;
-					Vector2 centerOfMassOffset = this.m_origin - base.Position;
-					for (int j = 0; j < 120; j++)
-					{
-						this.Direction = Mathf.MoveTowardsAngle(this.Direction, (this.BulletManager.PlayerPosition() - centerOfMass).ToAngle(), 1.5f);
-						base.UpdateVelocity();
-						centerOfMass += this.Velocity / 60f;
-						angle += 2f;
-						base.Position = centerOfMass + (Quaternion.Euler(0f, 0f, angle) * centerOfMassOffset).XY();
-						yield return base.Wait(1);
-					}
-					base.Vanish(false);
+					this.Vanish(false);
 					yield break;
 				}
-				private const float RotationSpeed = 6f;
-				private Vector2 m_origin;
-				private Vector2 m_startPos;
+
+				private Vector2 m_addtionalVelocity;
 			}
 		}
 
@@ -1918,106 +2261,59 @@ namespace Planetside
 		{
 			protected override IEnumerator Top()
 			{
-				float startAngle = base.RandomAngle();
-				for (int i = 0; i < 8; i++)
-				{
-					float delta = 60f;
-					for (int A = 0; A < 6; A++)
-					{
-						float num = startAngle + (float)A * delta;
-						for (int E = 0; E < 6; E++)
-						{
-							this.Fire(new Direction((num) + 30*i, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(7f, SpeedType.Relative), new Break(4 * E, base.Position, false, num, 0.15f));
-						}
-					}
-					for (int A = 0; A < 6; A++)
-					{
-						float num = startAngle + (float)A * delta;
-						for (int E = 0; E < 6; E++)
-						{
-							this.Fire(new Direction((num) + 30 * i, Brave.BulletScript.DirectionType.Absolute, -1f), new Speed(7f, SpeedType.Relative), new Break(4 * E, base.Position, true, num, 0.15f));
-						}
-					}
+				float fard = base.AimDirection;
 
-					yield return base.Wait(45);
+				for (int i = 0; i < 90; i++)
+                {
+					for (int e = 0; e < 6; e++)
+					{
+						Vector2 Point2 = MathToolbox.GetUnitOnCircle(fard + (60 * e), UnityEngine.Random.Range(0.1f, 0.4f));
+						base.Fire(new Offset(Point2), new Direction(fard + ((12 * i)+(e*2))+(i*8), DirectionType.Absolute, -1f), new Speed(11-(i/30), SpeedType.Absolute), new BigBall.Break());
+					}
+					yield return base.Wait(4);
 				}
 				yield break;
 			}
 			
 			public class Break : Bullet
 			{
-				public Break(int delay, Vector2 centerPoint, bool speeen, float startAngle, float spinspeed) : base("gross", false, false, false)
+				public Break() : base("firehose", false, false, false)
 				{
-					this.centerPoint = centerPoint;
-					this.yesToSpeenOneWay = speeen;
-					this.startAngle = startAngle;
-					this.SpinSpeed = spinspeed;
-					this.m_delay = delay;
+
 				}
 				protected override IEnumerator Top()
 				{
-					base.ManualControl = true;
-					yield return base.Wait(this.m_delay);
-					float radius = Vector2.Distance(this.centerPoint, base.Position);
-					float speed = this.Speed;
-					float spinAngle = this.startAngle;
-					float spinSpeed = 0f;
-					for (int i = 0; i < 300; i++)
-					{
-						if (i >= 10)
-						{
-							radius += speed / 60f;
-							if (yesToSpeenOneWay == true)
-							{
-								spinSpeed -= SpinSpeed;
-							}
-							else
-							{
-								spinSpeed += SpinSpeed;
 
-							}
-							spinAngle += spinSpeed / 60f;
-						}
-						base.Position = this.centerPoint + BraveMathCollege.DegreesToVector(spinAngle, radius);
-						yield return base.Wait(1);
-					}
-					base.Vanish(false);
 					yield break;
 				}
 				public Vector2 centerPoint;
 				public bool yesToSpeenOneWay;
 				public float startAngle;
 				public float SpinSpeed;
-				private int m_delay;
 			}
 		}
 		public class ChargeAttack1Attack : Script
 		{
-
 			protected override IEnumerator Top()
 			{
+				float fard = base.AimDirection;
 				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").bulletBank.GetBullet("teeth_football"));
-				this.FireCluster(this.Direction);
-				for (int i = 0; i < 25; i++)
+				int i = 0;
+				for (; ; )
 				{
-					float num = -45f + (float)i * 3.75f;
-					base.Fire(new Offset(0.5f, 0f, this.Direction + num, string.Empty, DirectionType.Aim), new Direction(num, DirectionType.Aim, -1f), new Speed(11f, SpeedType.Absolute), null);
+					if (i % 5 == 1)
+					{
+						Vector2 Point1 = MathToolbox.GetUnitOnCircle(fard+90, 1.7f);
+						Vector2 Point2 = MathToolbox.GetUnitOnCircle(fard-90, 1.7f);
+
+						base.Fire(new Offset(Point1), new Direction(fard + 90, DirectionType.Absolute, -1f), new Speed(0, SpeedType.Absolute), new ChargeAttack1Attack.TootthBullet());
+						base.Fire(new Offset(Point2), new Direction(fard - 90, DirectionType.Absolute, -1f), new Speed(0, SpeedType.Absolute), new ChargeAttack1Attack.TootthBullet());
+					}
+					yield return base.Wait(1);
+					i++;
 				}
-				this.FireCluster(this.Direction - 45f);
-				this.FireCluster(this.Direction + 45f);
-				this.FireCluster(this.Direction);
-				//base.Fire(new Direction(-12f - (i * 1.33f), DirectionType.Aim, -1f), new Speed(12 - (i / 6f), SpeedType.Absolute), new ChargeAttack1Attack.CrossBullet(new Vector2(0.2f * i, 0f), 0, 5 * i));
-				//base.Fire(new Direction(12f + (i * 1.33f), DirectionType.Aim, -1f), new Speed(12 - (i / 6f), SpeedType.Absolute), new ChargeAttack1Attack.CrossBullet(new Vector2(0.2f * i, 0f), 0, 5 * i));
-				yield break;
 			}
-			private void FireCluster(float direction)
-			{
-				base.Fire(new Offset(-0.5f, 0f, direction, string.Empty, DirectionType.Aim), new Direction(direction, DirectionType.Aim, -1f), new Speed(13f, SpeedType.Absolute), new ChargeAttack1Attack.TootthBullet());
-				base.Fire(new Offset(-0.275f, 0.25f, direction, string.Empty, DirectionType.Aim), new Direction(direction, DirectionType.Aim, -1f), new Speed(13f, SpeedType.Absolute), new ChargeAttack1Attack.TootthBullet());
-				base.Fire(new Offset(-0.275f, -0.25f, direction, string.Empty, DirectionType.Aim), new Direction(direction, DirectionType.Aim, -1f), new Speed(13f, SpeedType.Absolute), new ChargeAttack1Attack.TootthBullet());
-				base.Fire(new Offset(0f, 0.4f, direction, string.Empty, DirectionType.Aim), new Direction(direction, DirectionType.Aim, -1f), new Speed(13f, SpeedType.Absolute), new ChargeAttack1Attack.TootthBullet());
-				base.Fire(new Offset(0f, -0.4f, direction, string.Empty, DirectionType.Aim), new Direction(direction, DirectionType.Aim, -1f), new Speed(13f, SpeedType.Absolute), new ChargeAttack1Attack.TootthBullet());
-			}
+
 
 			public class TootthBullet : Bullet
 			{
@@ -2025,36 +2321,11 @@ namespace Planetside
 				{
 
 				}
-			}
-			public class CrossBullet : Bullet
-			{
-				public CrossBullet(Vector2 offset, int setupDelay, int setupTime) : base("teeth_football", false, false, false)
-				{
-					this.m_offset = offset;
-					this.m_setupDelay = setupDelay;
-					this.m_setupTime = setupTime;
-				}
 				protected override IEnumerator Top()
 				{
-					base.ManualControl = true;
-					this.m_offset = this.m_offset.Rotate(this.Direction);
-					for (int i = 0; i < 360; i++)
-					{
-						if (i > this.m_setupDelay && i < this.m_setupDelay + this.m_setupTime)
-						{
-							base.Position += this.m_offset / (float)this.m_setupTime;
-						}
-						float speed = base.Speed;
-						base.Position += BraveMathCollege.DegreesToVector(this.Direction, this.Speed / 60f);
-						yield return base.Wait(1);
-					}
-					base.Vanish(false);
+					base.ChangeSpeed(new Speed(15f, SpeedType.Absolute), 75);
 					yield break;
 				}
-
-				private Vector2 m_offset;
-				private int m_setupDelay;
-				private int m_setupTime;
 			}
 		}
 		public class VomitsGutsAndShit : Script
@@ -2070,11 +2341,11 @@ namespace Planetside
 					float t = Mathf.PingPong((float)i / 60f, 1f);
 					Bullet bullet;
 					bullet = new VomitsGutsAndShit.FirehoseBullet((float)((t >= 0.1f) ? 1 : -1));
-					base.Fire(new Offset(UnityEngine.Random.insideUnitCircle * 0.5f, 0f, string.Empty, DirectionType.Absolute), new Direction(aim + Mathf.SmoothStep(-80f, 80f, t), DirectionType.Absolute, -1f), new Speed(10f, SpeedType.Absolute), bullet);
+					base.Fire(new Offset(UnityEngine.Random.insideUnitCircle * 0.5f, 0f, string.Empty, DirectionType.Absolute), new Direction(aim + Mathf.SmoothStep(-60f, 60f, t), DirectionType.Absolute, -1f), new Speed(10f, SpeedType.Absolute), bullet);
 					if (i % 15 == 0)
 					{
 						float Dir = UnityEngine.Random.Range(-120, 120);
-						float fard = UnityEngine.Random.Range(1, 6);
+						float fard = UnityEngine.Random.Range(1, 4);
 						int BoneLength = UnityEngine.Random.Range(2, 5);
 						if (fard == 1)
                         {
@@ -2085,32 +2356,10 @@ namespace Planetside
 								base.Fire(new Direction(Dir, DirectionType.Aim, -1f), new Speed(10, SpeedType.Absolute), new VomitsGutsAndShit.HelixBullet(yeah, (6*e)+6, "link"));
 							}
 						}
-						else
-                        {
-							int Sped = UnityEngine.Random.Range(7, 10);
-
-							base.Fire(new Direction(Dir, DirectionType.Aim, -1f), new Speed(Sped, SpeedType.Absolute), new VomitsGutsAndShit.CrossBullet(new Vector2((0.5f * BoneLength), .5f), 20, 20));
-							base.Fire(new Direction(Dir, DirectionType.Aim, -1f), new Speed(Sped, SpeedType.Absolute), new VomitsGutsAndShit.CrossBullet(new Vector2((-0.5f * BoneLength), .5f), 20, 20));
-							base.Fire(new Direction(Dir, DirectionType.Aim, -1f), new Speed(Sped, SpeedType.Absolute), new VomitsGutsAndShit.CrossBullet(new Vector2((0.5f * BoneLength), -0.5f), 20, 20));
-							base.Fire(new Direction(Dir, DirectionType.Aim, -1f), new Speed(Sped, SpeedType.Absolute), new VomitsGutsAndShit.CrossBullet(new Vector2((-0.5f * BoneLength), -0.5f), 20, 20));
-							for (int e = 0; e < BoneLength; e++)
-							{
-								base.Fire(new Direction(Dir, DirectionType.Aim, -1f), new Speed(Sped, SpeedType.Absolute), new VomitsGutsAndShit.CrossBullet(new Vector2(0.5f * e, 0f), 10, 10));
-								base.Fire(new Direction(Dir, DirectionType.Aim, -1f), new Speed(Sped, SpeedType.Absolute), new VomitsGutsAndShit.CrossBullet(new Vector2(-0.5f * e, 0f), 10, 10));
-							}
-						}
+						
 					}
 					
 					yield return base.Wait(1);
-				}
-				float RNG = UnityEngine.Random.Range(1, 4);
-				if (RNG == 1)
-				{
-					for (int e = 0; e < 4; e++)
-					{
-						this.QuadShot(base.RandomAngle(), UnityEngine.Random.Range(0f, 1.5f), UnityEngine.Random.Range(7f, 11f));
-						yield return base.Wait(1);
-					}
 				}
 				yield break;
 			}
@@ -2294,12 +2543,6 @@ namespace Planetside
 				int i = 0;
 				for (; ; )
                 {
-					base.Fire(new Offset(0, 1.5f), new Direction(newAim, DirectionType.Absolute, -1f), new Speed(25, SpeedType.Absolute), new FakeOutCharge.Faker(this));
-					base.Fire(new Offset(0, -1.5f), new Direction(newAim, DirectionType.Absolute, -1f), new Speed(25, SpeedType.Absolute), new FakeOutCharge.Faker(this));
-					base.Fire(new Offset(-1.4375f, 0.75f), new Direction(newAim, DirectionType.Absolute, -1f), new Speed(25, SpeedType.Absolute), new FakeOutCharge.Faker(this));
-					base.Fire(new Offset(1.4375f, 0.75f), new Direction(newAim, DirectionType.Absolute, -1f), new Speed(25, SpeedType.Absolute), new FakeOutCharge.Faker(this));
-					base.Fire(new Offset(-1.4375f, -0.75f), new Direction(newAim, DirectionType.Absolute, -1f), new Speed(25, SpeedType.Absolute), new FakeOutCharge.Faker(this));
-					base.Fire(new Offset(1.4375f, -0.75f), new Direction(newAim, DirectionType.Absolute, -1f), new Speed(25, SpeedType.Absolute), new FakeOutCharge.Faker(this));
 				
 					if (i % 20 == 1)
 					{
@@ -2337,11 +2580,54 @@ namespace Planetside
 				}
 				protected override IEnumerator Top()
 				{
+					base.ChangeSpeed(new Speed(10f, SpeedType.Absolute), 120);
+					yield break;
+				}
+			}
+		}
+
+		public class TeleportOut : Script
+		{
+			protected override IEnumerator Top()
+			{
+				float fard = base.AimDirection;
+				base.Fire(new Offset(0, 1.5f), new Direction(fard, DirectionType.Absolute, -1f), new Speed(0, SpeedType.Absolute), new TeleportOut.LolOk());
+				base.Fire(new Offset(0, -1.5f), new Direction(fard, DirectionType.Absolute, -1f), new Speed(0, SpeedType.Absolute), new TeleportOut.LolOk());
+				base.Fire(new Offset(-1.4375f, 0.75f), new Direction(fard, DirectionType.Absolute, -1f), new Speed(0, SpeedType.Absolute), new TeleportOut.LolOk());
+				base.Fire(new Offset(1.4375f, 0.75f), new Direction(fard, DirectionType.Absolute, -1f), new Speed(0, SpeedType.Absolute), new TeleportOut.LolOk());
+				base.Fire(new Offset(-1.4375f, -0.75f), new Direction(fard, DirectionType.Absolute, -1f), new Speed(0, SpeedType.Absolute), new TeleportOut.LolOk());
+				base.Fire(new Offset(1.4375f, -0.75f), new Direction(fard, DirectionType.Absolute, -1f), new Speed(0, SpeedType.Absolute), new TeleportOut.LolOk());
+				yield break;
+
+			}
+			public float aimDirection;
+			public class Faker : Bullet
+			{
+				public Faker(FakeOutCharge parent) : base("spore2", false, false, false)
+				{
+					this.parent = parent;
+				}
+				protected override IEnumerator Top()
+				{
+					base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 60);
+					yield return base.Wait(150);
+					base.Vanish(false);
+				}
+				private FakeOutCharge parent;
+			}
+			public class LolOk : Bullet
+			{
+				public LolOk() : base("spore2", false, false, false)
+				{
+				}
+				protected override IEnumerator Top()
+				{
 					base.ChangeSpeed(new Speed(12f, SpeedType.Absolute), 120);
 					yield break;
 				}
 			}
 		}
+
 	}
 }
 
