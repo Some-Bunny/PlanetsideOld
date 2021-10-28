@@ -10,7 +10,6 @@ namespace Planetside
 {
 	public static class ItemTools
 	{
-		// Token: 0x06000172 RID: 370 RVA: 0x00013060 File Offset: 0x00011260
 		public static void Init()
 		{
 			AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");

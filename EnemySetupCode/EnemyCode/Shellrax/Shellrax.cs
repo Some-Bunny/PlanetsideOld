@@ -1575,15 +1575,11 @@ namespace Planetside
 	{
 		protected override IEnumerator Top()
 		{
-			base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("68a238ed6a82467ea85474c595c49c6e").bulletBank.GetBullet("poundSmall"));
 			base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("da797878d215453abba824ff902e21b4").bulletBank.GetBullet("snakeBullet"));
-			base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("383175a55879441d90933b5c4e60cf6f").bulletBank.GetBullet("bigBullet"));
-			base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("68a238ed6a82467ea85474c595c49c6e").bulletBank.GetBullet("frogger"));
 			base.PostWwiseEvent("Play_BOSS_lichB_spew_01", null);
 			Exploder.DoDistortionWave(base.BulletBank.sprite.WorldCenter, 2, 0.08f, 15, 1f);
-
-			base.PostWwiseEvent("Play_BOSS_RatMech_Stomp_01", null);
-			Exploder.DoDistortionWave(base.BulletBank.sprite.WorldCenter, 2, 0.05f, 10, 0.7f);
+			//base.PostWwiseEvent("Play_BOSS_RatMech_Stomp_01", null);
+			//Exploder.DoDistortionWave(base.BulletBank.sprite.WorldCenter, 2, 0.05f, 10, 0.7f);
 			if (!base.BulletBank.aiActor.healthHaver.IsDead && base.BulletBank.aiActor != null && base.BulletBank.aiActor.healthHaver.GetCurrentHealth() >= 1)
 			{
 				float i = 0;
@@ -1597,8 +1593,6 @@ namespace Planetside
 						basevalue = 10;
 
 					}
-
-
 					List<float> list = new List<float> { };
 					for (int e = 0; e < 30; e++)
 					{
@@ -1608,12 +1602,12 @@ namespace Planetside
 					for (int l = 0; l < 15; l++)
 					{
 						float yah = list[l];
-						base.Fire(new Direction(yah, DirectionType.Absolute, -1f), new Speed(9-(i/9), SpeedType.Absolute), new CirclesWithOpenings.Yees(basevalue));
+						base.Fire(new Direction(yah, DirectionType.Absolute, -1f), new Speed(9-(i/9), SpeedType.Absolute), new OMEGADEATHSCRIPTOFDOOM.DelayedBullet(basevalue));
 					}
 					for (int l = 15; l < 30; l++)
 					{
 						float yah = list[l];
-						base.Fire(new Direction(yah, DirectionType.Absolute, -1f), new Speed(9-(i / 9), SpeedType.Absolute), new CirclesWithOpenings.Yees(basevalue * 2));
+						base.Fire(new Direction(yah, DirectionType.Absolute, -1f), new Speed(9-(i / 9), SpeedType.Absolute), new OMEGADEATHSCRIPTOFDOOM.DelayedBullet(basevalue * 2));
 					}
 					yield return this.Wait(basevalue * 2.5f);
 
@@ -1622,106 +1616,23 @@ namespace Planetside
 			}
 			
 		}
-		public class HelixChainBullet : Bullet
+		public class DelayedBullet : Bullet
 		{
-			public HelixChainBullet() : base("bigBullet", false, false, false)
-			{
-			}
-			protected override IEnumerator Top()
-			{
-				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("68a238ed6a82467ea85474c595c49c6e").bulletBank.GetBullet("frogger"));
-				for (int a = 0; a < 1000; a++)
-				{
-					base.Fire(new Direction(-90f, DirectionType.Relative, -1f), new Speed(0f, SpeedType.Relative), new OMEGADEATHSCRIPTOFDOOM.SpeedUp());
-					base.Fire(new Direction(90f, DirectionType.Relative, -1f), new Speed(0f, SpeedType.Relative), new OMEGADEATHSCRIPTOFDOOM.SpeedUp());
-					yield return base.Wait(2);
-				}
-				yield break;
-			}
-		}
-		public class SpeedUp : Bullet
-		{
-			public SpeedUp() : base("frogger", false, false, false)
-			{
-			}
-			protected override IEnumerator Top()
-			{ 
-				yield return base.Wait(60);
-				base.ChangeSpeed(new Speed(.1f, SpeedType.Absolute), 0);
-				for (int a = 0; a < 10000; a++)
-				{
-					base.ChangeSpeed(new Speed(.1f * (a), SpeedType.Absolute), 0);
-					yield return base.Wait(1);
-
-				}
-				yield break;
-			}
-		}
-		public class Break : Bullet
-		{
-			public Break() : base("frogger", false, false, false)
-			{
-
-			}
-			protected override IEnumerator Top()
-			{
-
-				yield break;
-			}
-			public Vector2 centerPoint;
-			public bool yesToSpeenOneWay;
-			public float startAngle;
-			public float SpinSpeed;
-		}
-
-		public class WallBullet : Bullet
-		{
-			public WallBullet() : base("bigBullet", false, false, false)
-			{
-			}
-			protected override IEnumerator Top()
-			{
-				base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("68a238ed6a82467ea85474c595c49c6e").bulletBank.GetBullet("frogger"));
-				base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 60);
-				yield return base.Wait(UnityEngine.Random.Range(20, 60));
-				float aim = base.AimDirection;
-				this.Direction = aim;
-				base.PostWwiseEvent("Play_BOSS_RatMech_Whistle_01", null);
-				base.ChangeSpeed(new Speed(15f, SpeedType.Absolute), 30);
-				for (int e = 0; e < 300; e++)
-                {
-					base.Fire(new Direction(0, DirectionType.Absolute, -1f), new Speed(0f, SpeedType.Absolute), new OMEGADEATHSCRIPTOFDOOM.BabyShot());
-					yield return base.Wait(10);
-				}
-				yield break;
-			}
-		}
-		public class Yees : Bullet
-		{
-			public Yees() : base("poundSmall", false, false, false)
+			public DelayedBullet(float Wait) : base("snakeBullet", false, false, false)
 			{
 				base.SuppressVfx = true;
+				this.Waittime = Wait;
 			}
 			protected override IEnumerator Top()
 			{
-
+				float speed = base.Speed;
+				base.ChangeSpeed(new Speed(0f, SpeedType.Absolute), 30);
+				//this.Direction += 180f;
+				yield return this.Wait(Waittime);
+				base.ChangeSpeed(new Speed(speed*1.4f, SpeedType.Absolute), 45);
 				yield break;
 			}
-
-		}
-		public class BabyShot : Bullet
-		{
-			public BabyShot() : base("frogger", false, false, false)
-			{
-				base.SuppressVfx = true;
-
-			}
-			protected override IEnumerator Top()
-			{
-				yield return this.Wait(120);
-				base.Vanish(false);
-				yield break;
-			}
+			private float Waittime;
 
 		}
 

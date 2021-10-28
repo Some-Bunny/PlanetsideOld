@@ -25,7 +25,7 @@ namespace Planetside
             EnergyShield item = gameObject.AddComponent<EnergyShield>();
             ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
             string shortDesc = "Thunk";
-            string longDesc = "4 Plates of protective shields.\n\nOriginally banned by the Guneva Convention for its use in torture methods, until it was disguised as a defensive item, which it was discovered to work better as.";
+            string longDesc = "4 Plates of protective shields.\n\nOriginally banned by the Guneva Convention for its use in torture methods, it was disguised as a defensive item when being smuggled around the Hegemony. In a hilarious twist, it proved to function better as a defensive shield than a torture device.";
 
             ItemBuilder.SetupItem(item, shortDesc, longDesc, "psog");
 
@@ -57,7 +57,7 @@ namespace Planetside
                 EnergyShield.orbitalPrefab = gameObject.AddComponent<PlayerOrbital>();
                 EnergyShield.orbitalPrefab.motionStyle = PlayerOrbital.OrbitalMotionStyle.ORBIT_PLAYER_ALWAYS;
                 EnergyShield.orbitalPrefab.shouldRotate = false;
-                EnergyShield.orbitalPrefab.orbitRadius = 4.25f;
+                EnergyShield.orbitalPrefab.orbitRadius = 4f;
                 EnergyShield.orbitalPrefab.SetOrbitalTier(0);
                 EnergyShield.orbitalPrefab.orbitDegreesPerSecond = 0;
                 EnergyShield.orbitalPrefab.perfectOrbitalFactor = 1000f;
@@ -73,15 +73,31 @@ namespace Planetside
         public List<GameObject> EnergyOrbitals = new List<GameObject>();
         public override void Pickup(PlayerController player)
         {
-            for (int i = 0; i < 3; i++)
-            {
-                GameObject guon = PlayerOrbitalItem.CreateOrbital(player, EnergyShield.EnergyGuon, false);
-               EnergyOrbitals.Add(guon);
-            }
+
                 EnergyShield.guonHook = new Hook(typeof(PlayerOrbital).GetMethod("Initialize"), typeof(EnergyShield).GetMethod("GuonInit"));
            // player.gameObject.AddComponent<EnergyShield.ElectricGuonbehavior>();
             GameManager.Instance.OnNewLevelFullyLoaded += this.FixGuon;
             base.Pickup(player);
+        }
+
+        protected override void Update()
+        {
+            if (base.Owner != null)
+            {
+                foreach (GameObject obj in EnergyOrbitals)
+                {
+                    if (obj == null)
+                    {
+                        EnergyOrbitals.Remove(obj);
+                    }
+                }
+                if (EnergyOrbitals.Count != 3 && EnergyOrbitals.Count <=4)
+                {
+
+                    GameObject guon = PlayerOrbitalItem.CreateOrbital(base.Owner, EnergyShield.EnergyGuon, false);
+                    EnergyOrbitals.Add(guon);
+                }
+            }
         }
 
 
@@ -110,7 +126,8 @@ namespace Planetside
                     Destroy(guon.gameObject);
                 }
             }
-                //player.GetComponent<EnergyShield.ElectricGuonbehavior>().Destroy();
+            EnergyOrbitals.Clear();
+            //player.GetComponent<EnergyShield.ElectricGuonbehavior>().Destroy();
             EnergyShield.guonHook.Dispose();
             GameManager.Instance.OnNewLevelFullyLoaded -= this.FixGuon;
             return base.Drop(player);
@@ -118,35 +135,23 @@ namespace Planetside
 
         protected override void OnDestroy()
         {
-            foreach (GameObject guon in EnergyOrbitals)
+            if (base.Owner != null)
             {
-                if (guon != null)
+                foreach (GameObject guon in EnergyOrbitals)
                 {
-                    Destroy(guon.gameObject);
+                    if (guon != null)
+                    {
+                        Destroy(guon.gameObject);
+                    }
                 }
+                EnergyShield.guonHook.Dispose();
+                EnergyOrbitals.Clear();
+
+                GameManager.Instance.OnNewLevelFullyLoaded -= this.FixGuon;
+                base.OnDestroy();
             }
-            EnergyShield.guonHook.Dispose();
-            /*
-            bool flag = base.Owner && base.Owner.GetComponent<EnergyShield.ElectricGuonbehavior>() != null;
-            bool flag2 = flag;
-            bool flag3 = flag2;
-            if (flag3)
-            {
-                base.Owner.GetComponent<EnergyShield.ElectricGuonbehavior>().Destroy();
-            }
-            */
-            GameManager.Instance.OnNewLevelFullyLoaded -= this.FixGuon;
-            base.OnDestroy();
         }
 
-
-        protected override void Update()
-        {
-            base.Update();
-            
-                
-        }
-       
 
 
 
@@ -172,7 +177,6 @@ namespace Planetside
         public void Awake()
         {
             this.actor = base.GetComponent<PlayerOrbital>();
-            //this.player = base.GetComponent<PlayerController>();
         }
 
         public void Start()

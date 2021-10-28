@@ -26,10 +26,13 @@ namespace Planetside
 
 			//The BehaviorSpeculator is responsible for almost everything an enemy does, from shooting a gun to teleporting.
 			// Tip: To debug an enemy's BehaviorSpeculator, you can uncomment the line below. This will print all the behavior information to the console.
-			ToolsEnemy.DebugInformation(behaviorSpec);
+			//ToolsEnemy.DebugInformation(behaviorSpec);
+
+			//behaviorSpec.aiActor.CanTargetPlayers = true;
+			//behaviorSpec.aiActor.CanTargetEnemies = false;
 
 			// For this first change, we're just going to increase the lead amount of the bullet kin's ShootGunBehavior so its shots fire like veteran kin.
-			//ShootBehavior shootGunBehavior2 = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[0].Behavior as ShootBehavior;
+			//ShootGunBehavior shootGunBehavior = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[0].Behavior as ShootGunBehavior;
 			//ShootBehavior shootGunBehavior1 = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[1].Behavior as ShootBehavior;
 			//ShootBehavior shootGunBehavior = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[2].Behavior as ShootBehavior;
 			//ShootBehavior shootGunBehavior1 = behaviorSpec.AttackBehaviorGroup.AttackBehaviors[0].Behavior as ShootBehavior;
@@ -45,7 +48,7 @@ namespace Planetside
 
 			//shootGunBehavior.BulletScript = new CustomBulletScriptSelector(typeof(Bullettest));
 			//actor.bulletBank.Bullets.Add(BulletBuilder.GetBulletEntryByName("HammerOfTheMoon"));
-			
+
 
 
 			// Next, we're going to change another few things on the ShootGunBehavior so that it has a custom BulletScript.
@@ -70,7 +73,7 @@ namespace Planetside
 
 		public class SkellBullet : Bullet
 		{
-			public SkellBullet() : base("HammerOfTheMoon", false, false, false)
+			public SkellBullet() : base("big", false, false, false)
 			{
 
 			}
@@ -78,7 +81,7 @@ namespace Planetside
 			protected override IEnumerator Top()
 			{
 				
-				OtherTools.EasyTrailBullet yup = base.Projectile.gameObject.AddComponent<OtherTools.EasyTrailBullet>();
+				OtherTools.EasyTrailComponent yup = base.Projectile.gameObject.AddComponent<OtherTools.EasyTrailComponent>();
 				//yup.StartPositionX = 40;
 				//yup.StartPositionY = 23;
 				yup.LifeTime = 2.5f;

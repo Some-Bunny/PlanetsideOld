@@ -7,7 +7,7 @@ using UnityEngine;
 using AnimationType = ItemAPI.BossBuilder.AnimationType;
 using System.Collections;
 using Dungeonator;
-using System.Linq;
+using System.Linq;	
 using Brave.BulletScript;
 using GungeonAPI;
 using SaveAPI;
@@ -33,7 +33,6 @@ namespace Planetside
 
 		public static void BuildPrefab()
 		{
-			// source = EnemyDatabase.GetOrLoadByGuid("c50a862d19fc4d30baeba54795e8cb93");
 			bool flag = fuckyouprefab != null || BossBuilder.Dictionary.ContainsKey(guid);
 			bool flag2 = flag;
 			if (!flag2)
@@ -44,7 +43,6 @@ namespace Planetside
 				companion.aiActor.MovementSpeed = 3.2f;
 				companion.aiActor.healthHaver.PreventAllDamage = false;
 				companion.aiActor.CollisionDamage = 1f;
-				companion.aiActor.HasShadow = false;
 				companion.aiActor.IgnoreForRoomClear = false;
 				companion.aiActor.aiAnimator.HitReactChance = 0.05f;
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
@@ -57,13 +55,12 @@ namespace Planetside
 				companion.aiActor.procedurallyOutlined = true;
 				companion.aiActor.HasShadow = true;
 				companion.aiActor.SetIsFlying(true, "Gamemode: Creative");
-				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").ShadowObject;
-
+				//companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("6c43fddfd401456c916089fdd1c99b1c").ShadowObject;
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				companion.aiActor.gameObject.AddComponent<AfterImageTrailController>().spawnShadows = false;
 				companion.aiActor.gameObject.AddComponent<tk2dSpriteAttachPoint>();
 				companion.aiActor.gameObject.AddComponent<ObjectVisibilityManager>();
-				fuckyouprefab.name = companion.aiActor.OverrideDisplayName;
+				//fuckyouprefab.name = companion.aiActor.OverrideDisplayName;
 				companion.aiActor.ShadowObject = EnemyDatabase.GetOrLoadByGuid("4db03291a12144d69fe940d5a01de376").ShadowObject;
 				companion.aiActor.HasShadow = true;
 
@@ -1145,7 +1142,7 @@ namespace Planetside
 				}
 				else
 				{
-					TrailRenderer tr = base.aiActor.GetComponent<TrailRenderer>();
+					TrailRenderer tr = base.aiActor.gameObject.GetOrAddComponent<TrailRenderer>();
 					if (tr != null)
 					{
 						tr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -1167,11 +1164,10 @@ namespace Planetside
 				base.aiActor.healthHaver.OnPreDeath += (obj) =>
 				{
 					AkSoundEngine.PostEvent("Play_ENM_screamer_scream_01", base.gameObject);
-					//AkSoundEngine.PostEvent("Play_VO_bombshee_death_01", base.gameObject);
 				};
 				base.healthHaver.healthHaver.OnDeath += (obj) =>
 				{
-					float itemsToSpawn = UnityEngine.Random.Range(1, 4);
+					float itemsToSpawn = UnityEngine.Random.Range(2, 6);
 					float spewItemDir = 360 / itemsToSpawn;
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.BULLETBANK_DEFEATED, true);//Done
 					for (int i = 0; i < itemsToSpawn; i++)
@@ -1180,9 +1176,14 @@ namespace Planetside
 						LootEngine.SpawnItem(PickupObjectDatabase.GetById(id).gameObject, base.aiActor.sprite.WorldCenter, new Vector2(spewItemDir * itemsToSpawn, spewItemDir * itemsToSpawn), 2.2f, false, true, false);
 					}
 
-					Chest chest2 = GameManager.Instance.RewardManager.SpawnTotallyRandomChest(GameManager.Instance.PrimaryPlayer.CurrentRoom.GetRandomVisibleClearSpot(1, 1));
-					chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
-					chest2.IsLocked = false;
+
+					float value = UnityEngine.Random.Range(0.00f, 1.00f);
+					if (value <= 0.4f)
+					{
+						Chest chest2 = GameManager.Instance.RewardManager.SpawnTotallyRandomChest(GameManager.Instance.PrimaryPlayer.CurrentRoom.GetRandomVisibleClearSpot(1, 1));
+						chest2.IsLocked = false;
+						chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
+					}
 
 				}; ;
 				this.aiActor.knockbackDoer.SetImmobile(true, "nope.");

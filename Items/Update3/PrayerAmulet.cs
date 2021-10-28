@@ -97,7 +97,10 @@ namespace Planetside
 		}
 		protected override void OnDestroy()
 		{
-            PrayerAmulet.DecrementFlag(GameManager.Instance.PrimaryPlayer, typeof(PrayerAmulet));
+            if (base.Owner != null)
+            {
+                PrayerAmulet.DecrementFlag(GameManager.Instance.PrimaryPlayer, typeof(PrayerAmulet));
+            }
             base.OnDestroy();
 		}
 

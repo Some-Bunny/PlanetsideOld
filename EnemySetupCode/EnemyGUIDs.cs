@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// Token: 0x02000002 RID: 2
 public class EnemyGuidDatabase
 {
-	// Token: 0x17000001 RID: 1
-
 	public static Dictionary<string, string> Entries { get; set; } = new Dictionary<string, string>
 	{
 		{

@@ -56,7 +56,7 @@ namespace Planetside
 			replacementProjectile.baseData.speed *= 5f;
 
 
-			OtherTools.EasyTrailBullet trail = replacementProjectile.gameObject.AddComponent<OtherTools.EasyTrailBullet>();
+			OtherTools.EasyTrailComponent trail = replacementProjectile.gameObject.AddComponent<OtherTools.EasyTrailComponent>();
 			trail.TrailPos = replacementProjectile.transform.position;
 			trail.StartColor = Color.white;
 			trail.StartWidth = 0.1f;
@@ -90,9 +90,10 @@ namespace Planetside
 			gun.CanBeDropped = true;
 			Gun gun4 = PickupObjectDatabase.GetById(50) as Gun;
 			gun.muzzleFlashEffects = gun4.muzzleFlashEffects;
-			
+			gun.gunClass = GunClass.PISTOL;
 
-			
+
+
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]); projectile.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
@@ -170,10 +171,10 @@ namespace Planetside
 		protected override void Update()
 		{
 			base.Update();
-			if (gun.CurrentOwner)
+			if (gun.CurrentOwner as PlayerController)
 			{
 				PlayerController player = gun.CurrentOwner as PlayerController;
-				if (player.CurrentGun.GetComponent<BanditsRevolver>() != null && CanMark == true)
+				if (player.CurrentGun == gun && CanMark == true)
 				{
 					List<AIActor> activeEnemies = player.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 					if (activeEnemies != null)

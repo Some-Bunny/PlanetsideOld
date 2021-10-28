@@ -1565,14 +1565,19 @@ namespace Planetside
 				{
 					float maxHealth = base.aiActor.healthHaver.GetMaxHealth();
 					float num = maxHealth * 0.35f;
-					//float currentHealth = base.aiActor.healthHaver.GetCurrentHealth();
 					if (base.healthHaver.GetCurrentHealth() <= num && Phase2AnnihiChamberCheck == false)
 					{
 						ConvertToDark();
 					}
-
+					else if (Phase2AnnihiChamberCheck != true && LastStoredMaxHP != maxHealth)
+                    {
+						LastStoredMaxHP = maxHealth;
+						base.healthHaver.minimumHealth = num;
+					}
 				}
+				
 			}
+			private float LastStoredMaxHP;
 
 			private void ConvertToDark()
             {
@@ -1587,8 +1592,6 @@ namespace Planetside
 				foreach (OtherTools.EasyTrailOnEnemy c in base.aiActor.gameObject.GetComponents(typeof(OtherTools.EasyTrailOnEnemy)))
 				{
 					c.SetMode(UnityEngine.Rendering.ShadowCastingMode.On);
-					//c.castingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-					//ETGModConsole.Log(c.name);
 				}
 				for (int j = 0; j < base.aiActor.behaviorSpeculator.AttackBehaviors.Count; j++)
 				{
@@ -1640,8 +1643,6 @@ namespace Planetside
 			public Material PitCausticsMaterial;
 			private void Start()
 			{
-				//ETGModConsole.Log(base.aiActor.sprite.HeightOffGround.ToString());
-
 				if (!base.aiActor.IsBlackPhantom)
 				{
 					Material mat = new Material(EnemyDatabase.GetOrLoadByName("GunNut").sprite.renderer.material);
@@ -1653,9 +1654,12 @@ namespace Planetside
 
 					base.aiActor.sprite.renderer.material = mat;
 				}
+
 				float maxHealth = base.aiActor.healthHaver.GetMaxHealth();
+				LastStoredMaxHP = maxHealth;
 				float num = maxHealth * 0.35f;
 				base.healthHaver.minimumHealth = num;
+
 				//Important for not breaking basegame stuff!
 				StaticReferenceManager.AllHealthHavers.Remove(base.aiActor.healthHaver);
 
@@ -1684,9 +1688,13 @@ namespace Planetside
 						LootEngine.SpawnItem(PickupObjectDatabase.GetById(id).gameObject, base.aiActor.sprite.WorldCenter, new Vector2((spewItemDir * itemsToSpawn) * i, spewItemDir * itemsToSpawn), 2.2f, false, true, false);
 					}
 
-					Chest chest2 = GameManager.Instance.RewardManager.SpawnTotallyRandomChest(GameManager.Instance.PrimaryPlayer.CurrentRoom.GetRandomVisibleClearSpot(1, 1));
-					chest2.IsLocked = false;
-					chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
+					float value = UnityEngine.Random.Range(0.00f, 1.00f);
+					if (value <= 0.4f)
+                    {
+						Chest chest2 = GameManager.Instance.RewardManager.SpawnTotallyRandomChest(GameManager.Instance.PrimaryPlayer.CurrentRoom.GetRandomVisibleClearSpot(1, 1));
+						chest2.IsLocked = false;
+						chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
+					}
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER, true);
 
 
@@ -1781,8 +1789,6 @@ namespace Planetside
 					UnityEngine.Object.Instantiate<GameObject>(teleporter.TelefragVFXPrefab, base.aiActor.sprite.WorldCenter, Quaternion.identity);
 
 					ParticleSystem yes = pso.gameObject.GetOrAddComponent<ParticleSystem>();
-					//yes.CopyFrom<ParticleSystem>(particle);
-
 
 					yes.name = "BloodPlatter Particles";
 					//yes.transform.position = hand.gameObject.transform.position;

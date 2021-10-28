@@ -37,12 +37,72 @@ namespace Planetside
 }
 
 
-
 namespace Planetside
 {
 
     public static class OtherTools
     {
+
+
+
+        public static GameObject MakeLine(string spritePath, Vector2 colliderDimensions, Vector2 colliderOffsets, List<string> beamAnimationPaths = null, int beamFPS = -1)
+        {
+            try
+            {
+
+                GameObject line = new GameObject("line");
+
+                float convertedColliderX = colliderDimensions.x / 16f;
+                float convertedColliderY = colliderDimensions.y / 16f;
+                float convertedOffsetX = colliderOffsets.x / 16f;
+                float convertedOffsetY = colliderOffsets.y / 16f;
+
+                int spriteID = SpriteBuilder.AddSpriteToCollection(spritePath, ETGMod.Databases.Items.ProjectileCollection);
+                tk2dTiledSprite tiledSprite = line.GetOrAddComponent<tk2dTiledSprite>();
+
+                tiledSprite.SetSprite(ETGMod.Databases.Items.ProjectileCollection, spriteID);
+                tk2dSpriteDefinition def = tiledSprite.GetCurrentSpriteDef();
+                def.colliderVertices = new Vector3[]{
+                    new Vector3(convertedOffsetX, convertedOffsetY, 0f),
+                    new Vector3(convertedColliderX, convertedColliderY, 0f)
+                };
+
+                def.ConstructOffsetsFromAnchor(tk2dBaseSprite.Anchor.MiddleLeft);
+                /*
+                tk2dSpriteAnimator animator = line.GetOrAddComponent<tk2dSpriteAnimator>();
+                tk2dSpriteAnimation animation = line.GetOrAddComponent<tk2dSpriteAnimation>();
+                animation.clips = new tk2dSpriteAnimationClip[0];
+                animator.Library = animation;
+                animator.sprite.SetSprite(spriteID); 
+
+                if (beamAnimationPaths != null)
+                {
+                    tk2dSpriteAnimationClip clip = new tk2dSpriteAnimationClip() { name = "line_idle_thing", frames = new tk2dSpriteAnimationFrame[0], fps = beamFPS };
+                    List<string> spritePaths = beamAnimationPaths;
+
+                    List<tk2dSpriteAnimationFrame> frames = new List<tk2dSpriteAnimationFrame>();
+                    foreach (string path in spritePaths)
+                    {
+                        tk2dSpriteCollectionData collection = ETGMod.Databases.Items.ProjectileCollection;
+                        int frameSpriteId = SpriteBuilder.AddSpriteToCollection(path, collection);
+                        tk2dSpriteDefinition frameDef = collection.spriteDefinitions[frameSpriteId];
+                        frameDef.ConstructOffsetsFromAnchor(tk2dBaseSprite.Anchor.MiddleLeft);
+                        frameDef.colliderVertices = def.colliderVertices;
+                        frames.Add(new tk2dSpriteAnimationFrame { spriteId = frameSpriteId, spriteCollection = collection });
+                    }
+                    clip.frames = frames.ToArray();
+                    animation.clips = animation.clips.Concat(new tk2dSpriteAnimationClip[] { clip }).ToArray();
+                }
+                */
+                return line;
+            }
+            catch (Exception e)
+            {
+                ETGModConsole.Log(e.ToString());
+                return null;
+            }
+        }
+
 
         public static T CopyFields<T>(Projectile sample2) where T : Projectile
         {
@@ -735,9 +795,9 @@ namespace Planetside
             newBank.FixedPlayerRigidbody = bank.FixedPlayerRigidbody;
             return newBank;
         }
-        public class EasyTrailBullet: BraveBehaviour //----------------------------------------------------------------------------------------------
+        public class EasyTrailComponent: BraveBehaviour //----------------------------------------------------------------------------------------------
         {
-            public EasyTrailBullet()
+            public EasyTrailComponent()
             {
                 //=====
                 this.TrailPos = new Vector3(0, 0, 0);
@@ -764,11 +824,11 @@ namespace Planetside
             /// <param name="EndWidth">The Ending Width of your Trail. Not sure why youd want it to be something other than 0, but the options there.</param>
             public void Start()
             {
-                proj = base.projectile;
+                obj = base.gameObject;
                 {
                     TrailRenderer tr;
-                    var tro = base.projectile.gameObject.AddChild("trail object");
-                    tro.transform.position = base.projectile.transform.position;
+                    var tro = obj.AddChild("trail object");
+                    tro.transform.position = obj.transform.position;
                     tro.transform.localPosition = TrailPos;
 
                     tr = tro.AddComponent<TrailRenderer>();
@@ -794,7 +854,7 @@ namespace Planetside
             }
 
             public Texture _gradTexture;
-            private Projectile proj;
+            private GameObject obj;
 
             public Vector2 TrailPos;
             public Color BaseColor;

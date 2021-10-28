@@ -46,11 +46,11 @@ namespace Planetside
 				companion.aiActor.specRigidbody.CollideWithOthers = true;
 				companion.aiActor.specRigidbody.CollideWithTileMap = true;
 				companion.aiActor.PreventFallingInPitsEver = true;
-				companion.aiActor.healthHaver.ForceSetCurrentHealth(21f);
+				companion.aiActor.healthHaver.ForceSetCurrentHealth(42f);
 				companion.aiActor.CollisionKnockbackStrength = 0f;
 				companion.aiActor.procedurallyOutlined = true;
 				companion.aiActor.CanTargetPlayers = true;
-				companion.aiActor.healthHaver.SetHealthMaximum(26f, null, false);
+				companion.aiActor.healthHaver.SetHealthMaximum(42f, null, false);
 				companion.aiActor.specRigidbody.PixelColliders.Clear();
 				AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid("4d37ce3d666b4ddda8039929225b7ede");
 				ExplodeOnDeath explodeOnDeath = companion.gameObject.AddComponent<ExplodeOnDeath>();
@@ -373,9 +373,9 @@ namespace Planetside
 				new CustomBeholsterLaserBehavior() {
 					//ShootPoint = m_CachedGunAttachPoint,
 
-					InitialCooldown = 2f,
+					InitialCooldown = 1.5f,
 					firingTime = 3f,
-					AttackCooldown = 2f,
+					AttackCooldown = 3.5f,
 					RequiresLineOfSight = true,
 					//beamSelection = ShootBeamBehavior.BeamSelection.All,
 					//FiresDirectlyTowardsPlayer = true,

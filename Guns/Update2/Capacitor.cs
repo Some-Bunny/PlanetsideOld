@@ -44,7 +44,6 @@ namespace Planetside
 			gun.quality = PickupObject.ItemQuality.B;
 			gun.DefaultModule.angleVariance = 11f;
 			gun.DefaultModule.burstShotCount = 1;
-			gun.DefaultModule.ammoType = GameUIAmmoType.AmmoType.MEDIUM_BLASTER;
 			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
 			projectile.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
@@ -56,10 +55,27 @@ namespace Planetside
 			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
 			projectile.PenetratesInternalWalls = true;
+
+			/*
+			tk2dTiledSprite tiledSprite = projectile.gameObject.GetComponentInChildren<tk2dTiledSprite>();
+			tiledSprite.sprite.usesOverrideMaterial = true;
+			Material material = new Material(ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive"));
+			Material sharedMaterial = tiledSprite.sprite.renderer.sharedMaterial;
+			material.SetTexture("_MainTex", sharedMaterial.GetTexture("_MainTex"));
+			material.SetColor("_OverrideColor", new Color(1f, 0f, 0f, 1f));
+			material.SetFloat("_EmissivePower", 4);
+			material.SetFloat("_EmissiveColorPower", 2f);
+
+			tiledSprite.sprite.renderer.material = material;
+			*/
 			PierceProjModifier spook = projectile.gameObject.AddComponent<PierceProjModifier>();
 			spook.penetration = 3;
 			spook.penetratesBreakables = true;
 			CapacitorProjectile yah = projectile.gameObject.AddComponent<CapacitorProjectile>();
+			gun.gunClass = GunClass.NONE;
+
+			gun.DefaultModule.ammoType = GameUIAmmoType.AmmoType.CUSTOM;
+			gun.DefaultModule.customAmmoType = CustomClipAmmoTypeToolbox.AddCustomAmmoType("Battery", "Planetside/Resources/GunClips/Capacitor/capacitirfull", "Planetside/Resources/GunClips/Capacitor/capacitirempty");
 
 			gun.encounterTrackable.EncounterGuid = "https://www.youtube.com/watch?v=_VF7G8T1Ajs";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
@@ -108,6 +124,18 @@ namespace Planetside
 		public static List<int> spriteIds = new List<int>();
 		public override void PostProcessProjectile(Projectile projectile)
 		{
+
+
+
+			//projectile.DefaultTintColor = new Color32(255, 0, 0, 255);
+
+			/*
+			foreach (Component item in projectile.GetComponentsInChildren(typeof(Component)))
+			{
+				ETGModConsole.Log(item.name+"\n"+item.GetType().ToString()+"\n======");
+
+			}
+			*/
 
 		}
 

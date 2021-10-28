@@ -229,6 +229,8 @@ public class ShamberController : BraveBehaviour
 		}
 		for (int j = 0; j < BulletsEaten; j++)
 		{
+			SpawnManager.SpawnBulletScript(base.aiActor.gameActor, new CustomBulletScriptSelector(typeof(BLLLARGH)));
+			/*
 			GameObject gameObject = new GameObject();
 			gameObject.transform.position = base.sprite.WorldCenter;
 			BulletScriptSource source = gameObject.GetOrAddComponent<BulletScriptSource>();
@@ -241,6 +243,7 @@ public class ShamberController : BraveBehaviour
 			source.BulletManager = bulletBank;
 			source.BulletScript = bulletScriptSelected;
 			source.Initialize();//to fire the script once
+			*/
 			//Destroy(gameObject);
 		}
 
@@ -270,7 +273,7 @@ public class BLLLARGH : Script
 	{
 		float fuckYOUYOUPIECEOFfuckINGSHITIHOPEYOUROTINAfuckINGFREEZER = UnityEngine.Random.Range(-180, 180);
 		base.BulletBank.Bullets.Add(EnemyDatabase.GetOrLoadByGuid("1bc2a07ef87741be90c37096910843ab").bulletBank.GetBullet("reversible"));
-		base.Fire(new Direction(fuckYOUYOUPIECEOFfuckINGSHITIHOPEYOUROTINAfuckINGFREEZER), new Speed(UnityEngine.Random.Range(4f, 5.5f), SpeedType.Absolute), new BurstBullet());
+		base.Fire(new Direction(fuckYOUYOUPIECEOFfuckINGSHITIHOPEYOUROTINAfuckINGFREEZER), new Speed(UnityEngine.Random.Range(2f, 5.5f), SpeedType.Absolute), new BurstBullet());
 		yield break;
 	}
 	public class BurstBullet : Bullet
@@ -281,7 +284,7 @@ public class BLLLARGH : Script
 		protected override IEnumerator Top()
 		{
 			float speed = base.Speed;
-			base.ChangeSpeed(new Speed(speed * 3.6f, SpeedType.Absolute), 90);
+			base.ChangeSpeed(new Speed(speed * 3.6f, SpeedType.Absolute), 120);
 			yield break;
 		}
 	}

@@ -24,7 +24,7 @@ namespace Planetside
     public class PlanetsideModule : ETGModule
     {
         public static readonly string MOD_NAME = "Planetside Of Gunymede";
-        public static readonly string VERSION = "1.1+";
+        public static readonly string VERSION = "1.2";
         public static readonly string TEXT_COLOR = "#9006FF";
 
         public static string ZipFilePath;
@@ -39,6 +39,10 @@ namespace Planetside
 
         public override void Start()
         {
+
+ 
+
+
             var forgeDungeon = DungeonDatabase.GetOrLoadByName("Base_Forge");
             PlanetsideModule.hellDrag = forgeDungeon.PatternSettings.flows[0].AllNodes.Where(node => node.overrideExactRoom != null && node.overrideExactRoom.name.Contains("EndTimes")).First().overrideExactRoom.placedObjects.Where(ppod => ppod != null && ppod.nonenemyBehaviour != null).First().nonenemyBehaviour.gameObject.GetComponentsInChildren<HellDragZoneController>()[0];
             forgeDungeon = null;
@@ -59,17 +63,20 @@ namespace Planetside
             DungeonHandler.Init();
 
 
-
-            EnemyHooks.Init();
-            ToolsEnemy.Init();
             Hooks.Init();
+
+            //EnemyHooks.Init();
+            //ToolsEnemy.Init();
+
             EasyGoopDefinitions.DefineDefaultGoops();
             PlanetsideModule.Strings = new AdvancedStringDB();
             AudioResourceLoader.InitAudio();
 
             MultiActiveReloadManager.SetupHooks();
+            
             Tools.Init();
 
+            
             ETGModConsole.Commands.AddUnit("planetsideflow", (args) =>
             {
                 DungeonHandler.debugFlow = !DungeonHandler.debugFlow;
@@ -77,24 +84,31 @@ namespace Planetside
                 string color = DungeonHandler.debugFlow ? "00FF00" : "FF0000";
                 ETGModConsole.Log($"Planetside flow {status}", false);
             });
+            
 
             RandomPiecesOfStuffToInitialise.BuildPrefab();
 
-            BulletBuilder.Init();
-            CustomEnemyBulletsInitialiser.Init();
+            SomethingWickedEnemy.Init();
+
+            //BulletBuilder.Init();
+            //CustomEnemyBulletsInitialiser.Init();
+
             ShrineFakePrefabHooks.Init();
             ShrineFactory.Init();
             OldShrineFactory.Init();
+
             EnemyBuilder.Init();
-            FakePrefabHooks.Init();
             BossBuilder.Init();
 
+            FakePrefabHooks.Init();
+
+            CustomClipAmmoTypeToolbox.Init();
 
 
             GunOrbitShrine.Add();
             NullShrine.Add();
             HolyChamberShrine.Add();
-
+            TooLate.Add();
 
             Unstabullets.Init();
             HullBreakerBullets.Init();
@@ -186,6 +200,9 @@ namespace Planetside
             NullPickupInteractable.Init();
 
             //=================
+
+
+            
             KineticStrike.Init();
             ShellsOfTheMountain.Init();
             InjectorRounds.Init();
@@ -210,13 +227,28 @@ namespace Planetside
             Colossus.Add();
             PerfectedColossus.Add();
             ResourceGuonMaker.Init();
+            
 
+            
+            
             ChargerGun.Add();
-            PlanetBlade.Add();
-            TestShaderBullets.Init();
+
+            //FIX THIS SWORD TO NOT CAUSE MASSIVE EXCEPTIONS WITH EXPAND ON LOAD
+            //PlanetBlade.Add();
+
+            //TestShaderBullets.Init();
+            
             DerpyBullets.Init();
+            
             PrayerAmulet.Init();
             LockOnGun.Add();
+            CoinTosser.Init();
+            DivineLight.Add();
+            HellLight.Add();
+            KnuckleBlaster.Init();
+            Preigniter.Init();
+            AttractorBeam.Add();
+            LilPew.Add();
 
             Ophanaim.Init();
             Fungannon.Init();
@@ -265,14 +297,17 @@ namespace Planetside
             Wailer.Init();
 
             CelBullet.Init();
-            Grenadier.Init();
-
-
+            
+            //Grenadier.Init();
+            
+            
             InitialiseSynergies.DoInitialisation();
             SynergyFormInitialiser.AddSynergyForms();
             InitialiseGTEE.DoInitialisation();
             HoveringGunsAdder.AddHovers();
+            
 
+            
             BrokenChamberShrine.Add();
             //ShrineOfEvil.Add();
             ShrineOfDarkness.Add();
@@ -281,18 +316,31 @@ namespace Planetside
             ShrineOfSomething.Add();
             ShrineOfPurity.Add();
 
+            SWMinesShrine.Add();
+            BlueShrine.Add();
+            RedShrine.Add();
+
             //TestShaderItem.Init();
 
-            FlowInjectionInitialiser.InitialiseFlows();
 
             RoomReader.Init();
             QuestWanderer.Add();
             DungeonHooks.OnPostDungeonGeneration += this.PlaceHellShrines;
             DungeonHooks.OnPostDungeonGeneration += this.PlaceOtherHellShrines;
-            DungeonHooks.OnPostDungeonGeneration += this.PlaceBrokenChamberShrine;
 
 
             //TestActiveItem.Init();
+            OuroborousShrine.Add();
+
+            ShrineFactory.PlaceBreachShrines();
+            SomethingWickedEnemy.Init();
+            SomethingWickedEnemy.InitDummyEnemy();
+            Thing.Init();
+            RedThing.Init();
+
+            CustomLootTableInitialiser.InitialiseCustomLootTables();
+            CustomShopInitialiser.InitialiseCustomShops();
+            FlowInjectionInitialiser.InitialiseFlows();
 
             //AdvancedLogging.Log($"{MOD_NAME} v{VERSION} started successfully.", new Color(144, 6, 255, 255), false, true, null);
             PlanetsideModule.Log($"{MOD_NAME} v{VERSION} started successfully.", TEXT_COLOR);
@@ -301,7 +349,7 @@ namespace Planetside
                 "Powered by SaveAPI!",
                 "Now With 100% Less Nulls!",
                 "You Lost The Game.",
-                "UwU",
+                "WEAK.",
                 "Bullet Banks are not to rob!",
                 "Art By SirWow!",
                 "*Don't* Download Some Bunnys Content Pack",
@@ -364,7 +412,9 @@ namespace Planetside
                 "YOUR PAST IS DEAD",
                 "LEAD IS FUEL",
                 "BULLET HELL IS FULL",
-                "bzaazzz"
+                "bzaazzz",
+                "What the dog doin'",
+                "Powered by like 7 different APIs"
             };
             Random r = new Random();
             int index = r.Next(RandomFunnys.Count);
@@ -384,15 +434,18 @@ namespace Planetside
             string i = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_OPHANAIM) ? " Done!\n" : " -Defeat The Eternal Eye Of The Abbey.\n";
             string j = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER) ? " Done!\n" : " -Defeat A Ravenous, Violent Chamber.\n";
             string k = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK) ? " Done!\n" : " -Remove Each Hell-Bound Curse At Least Once.\n";
+            string l = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.HAS_COMPLETED_SOMETHING_WICKED) ? " Done!\n" : " -Survive An Encounter With Something Wicked.\n";
 
             string color1 = "9006FF";
-            OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g +h+i+j+k, color1);
+            OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g +h+i+j+k+l, color1);
             OtherTools.Init();
 
+            /*
             ETGModConsole.Commands.GetGroup("psog").AddUnit("dumpPlayerSprites", delegate (string[] args)
             {
                 OtherTools.DumpCollection(GameManager.Instance.PrimaryPlayer.sprite.Collection);
             });
+            */
         }
 
 
@@ -994,14 +1047,17 @@ namespace Planetside
         public static void ReloadBreachShrinesPSOG(Action<Foyer> orig, Foyer self1)
         {
             orig(self1);
+            /*
             if (!PlanetsideModule.hasInitialized)
             {
+                OuroborousShrine.Add();
                 ShrineFactory.PlaceBreachShrines();
                 PlanetsideModule.hasInitialized = true;
             }
             ShrineFactory.PlaceBreachShrines();
+            */
         }
-        private static bool hasInitialized;
+        //private static bool hasInitialized;
     }
 }
 

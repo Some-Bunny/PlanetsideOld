@@ -13,7 +13,6 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 	public override void Start()
 	{
 		base.Start();
-		//this.m_beholsterController = this.m_aiActor.GetComponent<AddBeholsterBeamComponent>();
 		this.m_aiActor.healthHaver.OnDeath += (obj) =>
 		{
 			if (this.m_laserBeam != null)

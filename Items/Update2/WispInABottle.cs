@@ -138,7 +138,7 @@ namespace Planetside
         public static int WispInABottleID;
 
         public static GameObject SunPrefab;
-        public static List<int> spriteIds = new List<int>();
+        //public static List<int> spriteIds = new List<int>();
         public override void Pickup(PlayerController player)
         {
             base.Pickup(player);

@@ -68,6 +68,12 @@ namespace ItemAPI
                 }),
                 typeof(FakePrefabHooks).GetMethod("InstantiateOPRP")
             );
+            Hook instantiateE = new Hook(
+                typeof(Object).GetMethod("orig_Instantiate", new Type[]{
+                typeof(Object),
+                }),
+                typeof(FakePrefabHooks).GetMethod("InstantiateO")
+            );
         }
 
         public static void AcquirePassiveItemPrefabDirectly(Action<PlayerController, PassiveItem> orig, PlayerController self, PassiveItem item)

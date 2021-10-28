@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using Dungeonator;
 using ItemAPI;
+using Planetside;
 
 namespace GungeonAPI
 {
@@ -24,6 +25,7 @@ namespace GungeonAPI
             { "sewer", "Sewer_RoomTable" },
             { "cathedral", "Cathedral_RoomTable" },
             { "bullethell", "BulletHell_RoomTable" },
+            { "resourcefulrat", "Resourceful Rat Maze Rooms" },
 
             //{ "unknown", "SecretHelpers_RoomTable" },
         };
@@ -89,7 +91,9 @@ namespace GungeonAPI
             "base_sewer",
             "base_cathedral",
             "base_bullethell",
+            "base_resourcefulrat"
         };
+
 
         public static void Init()
         {
@@ -121,6 +125,10 @@ namespace GungeonAPI
                 try
                 {
                     var table = DungeonDatabase.GetOrLoadByName($"base_{entry.Key}").PatternSettings.flows[0].fallbackRoomTable;
+                    if (entry.Key.Contains("resourcefulrat"))
+                    {
+                        table = GungeonAPI.OfficialFlows.GetDungeonPrefab("base_resourcefulrat").PatternSettings.flows[0].AllNodes[18].overrideRoomTable; 
+                    }
                     RoomTables.Add(entry.Key, table);
                 }
                 catch (Exception e)
@@ -201,8 +209,9 @@ namespace GungeonAPI
                 case GlobalDungeonData.ValidTilesets.CATHEDRALGEON:
                     return RoomTables["cathedral"];
                 case GlobalDungeonData.ValidTilesets.RATGEON:
-                    ETGModConsole.Log("CANNOT ADD TO RAT FLOOR. DEFAULTING TO GUNGEON PROPER");
-                    return RoomTables["gungeon"];
+                    //ETGModConsole.Log("CANNOT ADD TO RAT FLOOR. DEFAULTING TO GUNGEON PROPER");
+                    //return RoomTables["gungeon"];
+                    return RoomTables["resourcefulrat"];
                 case GlobalDungeonData.ValidTilesets.HELLGEON:
                     return RoomTables["bullethell"];
                 default:

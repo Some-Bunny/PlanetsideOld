@@ -114,6 +114,32 @@ namespace Planetside
 							return false;
 						}
 					}
+					if (advancedAdvancedPrerequisiteType == AdvancedAdvancedPrerequisiteType.SPEEDRUN_TIMER_BEFORE)
+					{
+						if (GameStatsManager.Instance.GetSessionStatValue(TrackedStats.TIME_PLAYED) <= BeforeTimeInSeconds)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					}
+					if (advancedAdvancedPrerequisiteType == AdvancedAdvancedPrerequisiteType.UNLOCK)
+					{
+						if (SaveAPIManager.GetFlag(UnlockFlag) == UnlockRequirement)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					}
+					if (advancedAdvancedPrerequisiteType == AdvancedAdvancedPrerequisiteType.SPEEDRUN_TIMER_AFTER)
+                    {
+
+                    }
 				}
 				else
 				{
@@ -122,12 +148,20 @@ namespace Planetside
 				return false;
 			}
 
+			public float BeforeTimeInSeconds;
+			public float AfterTimeInSeconds;
+			public bool UnlockRequirement;
+			public CustomDungeonFlags UnlockFlag;
+
 			public AdvancedAdvancedPrerequisiteType advancedAdvancedPrerequisiteType;
+
 			public enum AdvancedAdvancedPrerequisiteType
 			{
 				NONE,
 				PASSIVE_ITEM_FLAG,
-				
+				SPEEDRUN_TIMER_BEFORE,
+				SPEEDRUN_TIMER_AFTER,
+				UNLOCK
 			}
 		}
 

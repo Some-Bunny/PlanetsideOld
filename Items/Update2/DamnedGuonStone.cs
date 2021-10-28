@@ -95,8 +95,8 @@ namespace Planetside
 
 		public override void Pickup(PlayerController player)
 		{
-			player.OnHitByProjectile = (Action<Projectile, PlayerController>)Delegate.Combine(player.OnHitByProjectile, new Action<Projectile, PlayerController>(this.OwnerHitByProjectile));
-			player.OnReceivedDamage += this.OnOwnerTookDamage;
+			//player.OnHitByProjectile = (Action<Projectile, PlayerController>)Delegate.Combine(player.OnHitByProjectile, new Action<Projectile, PlayerController>(this.OwnerHitByProjectile));
+			//player.OnReceivedDamage += this.OnOwnerTookDamage;
 			DamnedGuonStone.guonHook = new Hook(typeof(PlayerOrbital).GetMethod("Initialize"), typeof(DamnedGuonStone).GetMethod("GuonInit"));
 			base.Pickup(player);
 			//base.Invoke("breakThis", 15f);
@@ -108,8 +108,8 @@ namespace Planetside
 
 		public override DebrisObject Drop(PlayerController player)
 		{
-			player.OnHitByProjectile = (Action<Projectile, PlayerController>)Delegate.Remove(player.OnHitByProjectile, new Action<Projectile, PlayerController>(this.OwnerHitByProjectile));
-			player.OnReceivedDamage -= this.OnOwnerTookDamage;
+			//player.OnHitByProjectile = (Action<Projectile, PlayerController>)Delegate.Remove(player.OnHitByProjectile, new Action<Projectile, PlayerController>(this.OwnerHitByProjectile));
+			//player.OnReceivedDamage -= this.OnOwnerTookDamage;
 			DamnedGuonStone.guonHook.Dispose();
 			DamnedGuonStone.speedUp = false;
 			return base.Drop(player);
@@ -120,13 +120,13 @@ namespace Planetside
 		{
 			if (base.Owner != null)
             {
-				PlayerController owner = base.Owner;
-				owner.OnHitByProjectile = (Action<Projectile, PlayerController>)Delegate.Remove(owner.OnHitByProjectile, new Action<Projectile, PlayerController>(this.OwnerHitByProjectile));
+				//PlayerController owner = base.Owner;
+				//owner.OnHitByProjectile = (Action<Projectile, PlayerController>)Delegate.Remove(owner.OnHitByProjectile, new Action<Projectile, PlayerController>(this.OwnerHitByProjectile));
 				base.Owner.OnReceivedDamage -= this.OnOwnerTookDamage;
+				DamnedGuonStone.guonHook.Dispose();
+				DamnedGuonStone.speedUp = false;
+				base.OnDestroy();
 			}
-			DamnedGuonStone.guonHook.Dispose();
-			DamnedGuonStone.speedUp = false;
-			base.OnDestroy();
 		}
 
 		// Token: 0x060007AC RID: 1964 RVA: 0x00043A25 File Offset: 0x00041C25

@@ -56,8 +56,6 @@ namespace Planetside
 		{
 			SimpleShrine simple = shrine.gameObject.GetComponent<SimpleShrine>();
 			simple.text = "The spirits that have once inhabited the shrine have departed.";
-
-
 			LootEngine.DoDefaultPurplePoof(player.specRigidbody.UnitBottomCenter, false);
 			OtherTools.Notify("You Obtained The", "Curse Of Darkness.", "Planetside/Resources/ShrineIcons/DarknessIcon");
 			AkSoundEngine.PostEvent("Play_ENM_darken_world_01", shrine);
@@ -73,20 +71,20 @@ namespace Planetside
 			}
 			public void Start()
 			{
-				this.Microwave = base.GetComponent<RoomHandler>();
-				//this.playeroue = base.GetComponent<PlayerController>();
-				{
-					//PlayerController player = GameManager.Instance.PrimaryPlayer;
-					playeroue.OnRoomClearEvent += this.RoomCleared;
-					playeroue.OnEnteredCombat += this.EnteredCombat;
-
-				}
-
+				playeroue.OnRoomClearEvent += this.RoomCleared;
+				playeroue.OnEnteredCombat += this.EnteredCombat;
+			}
+			public void RemoveSelf()
+			{
+				Destroy(this);
 			}
 			protected override void OnDestroy()
 			{
-				playeroue.OnRoomClearEvent -= this.RoomCleared;
-				playeroue.OnEnteredCombat -= this.EnteredCombat;
+				if (playeroue != null)
+				{
+					playeroue.OnRoomClearEvent -= this.RoomCleared;
+					playeroue.OnEnteredCombat -= this.EnteredCombat;
+				}
 				base.OnDestroy();
 			}
 			private void EnteredCombat()
@@ -108,11 +106,6 @@ namespace Planetside
 					IsDark = false;
                 }
 			}
-
-			public void Update()
-			{
-
-			}
 			private void RoomCleared(PlayerController obj)
 			{
 				RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
@@ -129,7 +122,6 @@ namespace Planetside
 				}
 			}
 			bool IsDark;
-			private RoomHandler Microwave;
 			public PlayerController playeroue;
 
 		}

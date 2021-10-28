@@ -32,7 +32,7 @@ namespace Planetside
 			this.AreaIncreasesWithProjectileSizeStat = false;
 			this.DamageValuesAlsoScalesWithDamageStat = false;
 			this.HeatStrokeSynergy = false;
-			//This component will run and make the projectile deal aoe damage as long as its alive
+			this.EffectProcChance = 0.1f;
 		}
 
 		private void Awake()
@@ -87,49 +87,64 @@ namespace Planetside
 								aiactor.healthHaver.ApplyDamage(DamageperDamageEvent*dmg, Vector2.zero, "fuckigjmnkbjnbbnjbnjnjbnjbnjbnjbjn", CoreDamageTypes.Electric, DamageCategory.Normal, false, null, false);
 							}
 						}
+
 						if (InflictsFreeze == true)
 						{
-							BulletStatusEffectItem Freezzecomponent = PickupObjectDatabase.GetById(278).GetComponent<BulletStatusEffectItem>();
-							GameActorFreezeEffect gameActorFreeze = Freezzecomponent.FreezeModifierEffect;
-							bool peep = Vector2.Distance(aiactor.CenterPosition, centerPosition) < Radius * num && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
-							if (peep)
-							{
-								aiactor.ApplyEffect(gameActorFreeze, 0.5f, null);
+							float RNG = UnityEngine.Random.Range(0.00f, 1.00f);
+							if (RNG <= EffectProcChance)
+                            {
+								BulletStatusEffectItem Freezzecomponent = PickupObjectDatabase.GetById(278).GetComponent<BulletStatusEffectItem>();
+								GameActorFreezeEffect gameActorFreeze = Freezzecomponent.FreezeModifierEffect;
+								bool peep = Vector2.Distance(aiactor.CenterPosition, centerPosition) < Radius * num && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
+								if (peep)
+								{
+									aiactor.ApplyEffect(gameActorFreeze, 0.5f, null);
+								}
 							}
 						}
 						if (InflictsPoison == true)
 						{
-							BulletStatusEffectItem Poisoncomponent = PickupObjectDatabase.GetById(204).GetComponent<BulletStatusEffectItem>();
-							GameActorHealthEffect gameActorPoison = Poisoncomponent.HealthModifierEffect;
-							bool kenki = Vector2.Distance(aiactor.CenterPosition, centerPosition) < Radius * num && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
-							if (kenki)
-							{
-								aiactor.ApplyEffect(gameActorPoison, 1f, null);
+							float RNG = UnityEngine.Random.Range(0.00f, 1.00f);
+							if (RNG <= EffectProcChance)
+                            {
+								BulletStatusEffectItem Poisoncomponent = PickupObjectDatabase.GetById(204).GetComponent<BulletStatusEffectItem>();
+								GameActorHealthEffect gameActorPoison = Poisoncomponent.HealthModifierEffect;
+								bool kenki = Vector2.Distance(aiactor.CenterPosition, centerPosition) < Radius * num && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
+								if (kenki)
+								{
+									aiactor.ApplyEffect(gameActorPoison, 1f, null);
 
+								}
 							}
+								
 						}
 						if (InflictsFire == true)
 						{
-							BulletStatusEffectItem Firecomponent = PickupObjectDatabase.GetById(295).GetComponent<BulletStatusEffectItem>();
-							GameActorFireEffect gameActorFire = Firecomponent.FireModifierEffect;
-							bool banko = Vector2.Distance(aiactor.CenterPosition, centerPosition) < Radius * num && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
-							if (banko)
-							{
-								aiactor.ApplyEffect(gameActorFire, 1f, null);
-								if (HeatStrokeSynergy == true)
-                                {
-									bool flagA = player.PlayerHasActiveSynergy("Praise The Gun!");
-									if (flagA)
+							float RNG = UnityEngine.Random.Range(0.00f, 1.00f);
+							if (RNG <= EffectProcChance)
+                            {
+								BulletStatusEffectItem Firecomponent = PickupObjectDatabase.GetById(295).GetComponent<BulletStatusEffectItem>();
+								GameActorFireEffect gameActorFire = Firecomponent.FireModifierEffect;
+								bool banko = Vector2.Distance(aiactor.CenterPosition, centerPosition) < Radius * num && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
+								if (banko)
+								{
+									aiactor.ApplyEffect(gameActorFire, 1f, null);
+									if (HeatStrokeSynergy == true)
 									{
-										var Frail = aiactor.transform.Find("heatStrokeVFX");
-										bool fra = Frail == null;
-										if (fra)
+										bool flagA = player.PlayerHasActiveSynergy("Praise The Gun!");
+										if (flagA)
 										{
-											aiactor.ApplyEffect(DebuffLibrary.HeatStroke, 1f, null);
+											var Frail = aiactor.transform.Find("heatStrokeVFX");
+											bool fra = Frail == null;
+											if (fra)
+											{
+												aiactor.ApplyEffect(DebuffLibrary.HeatStroke, 1f, null);
+											}
 										}
 									}
 								}
 							}
+								
 						}
 					}
 
@@ -150,6 +165,7 @@ namespace Planetside
 		public bool AreaIncreasesWithProjectileSizeStat;
 		public bool DamageValuesAlsoScalesWithDamageStat;
 		public bool HeatStrokeSynergy;
+		public float EffectProcChance;
 
 		private float elapsed;
 	}

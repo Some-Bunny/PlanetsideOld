@@ -39,7 +39,6 @@ namespace Planetside
 			gameObject.SetActive(false);
 		}
 
-		// Token: 0x060004AD RID: 1197 RVA: 0x0002FAAC File Offset: 0x0002DCAC
 		private static bool CanUse(PlayerController player, GameObject npc)
 		{
 			return true;
@@ -60,7 +59,6 @@ namespace Planetside
 			
 		}
 
-		// Token: 0x060004AF RID: 1199 RVA: 0x0002FAFB File Offset: 0x0002DCFB
 		public static void Decline(PlayerController player, GameObject npc)
 		{
 		}

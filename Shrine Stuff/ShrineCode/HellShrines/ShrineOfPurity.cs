@@ -27,8 +27,6 @@ namespace Planetside
 				modID = "psog",
 				text = "A shrine that purifies a hell-bound curse, at a cost.",
 				spritePath = "Planetside/Resources/Shrines/HellShrines/shrineofpurity.png",
-				//room = RoomFactory.BuildFromResource("Planetside/ShrineRooms/ShrineOfEvilShrineRoomHell.room").room,
-				//RoomWeight = 200f,
 				acceptText = "Cleanse a single, unspecified Curse.",
 				declineText = "Leave",
 				OnAccept = Accept,
@@ -75,8 +73,6 @@ namespace Planetside
 			for (int i = 0; i < 4; i++)
 			{
 				SpawnManager.SpawnVFX((PickupObjectDatabase.GetById(538) as SilverBulletsPassiveItem).SynergyPowerVFX, player.sprite.WorldCenter.ToVector3ZisY(0f) + new Vector3(UnityEngine.Random.Range(-0.25f, 0.25f), UnityEngine.Random.Range(-0.25f, 0.25f), 100), Quaternion.identity).GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(player.sprite.WorldCenter.ToVector3ZisY(0f), tk2dBaseSprite.Anchor.MiddleCenter);
-
-				//SpawnManager.SpawnVFX((PickupObjectDatabase.GetById(565) as PlayerOrbitalItem).BreakVFX, self.sprite.WorldCenter.ToVector3ZisY(0f) + new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f),100 ), Quaternion.identity);
 			}
 			List<string> list = new List<string> { };
 			if (player.gameActor.GetComponent<ShrineOfDarkness.DarknessTime>() != null)
@@ -101,35 +97,37 @@ namespace Planetside
 				if (ChosenCurse == "Darkness")
 				{
 					OtherTools.Notify("Curse Of Darkness chosen", "Prove you're worthy.", "Planetside/Resources/ShrineIcons/PurityIcon");
-					BraveBehaviour comp = player.GetComponent<ShrineOfDarkness.DarknessTime>();
-					BraveBehaviour.Destroy(comp);
-					player.gameObject.AddComponent<UltraDarkness>();
+					ShrineOfDarkness.DarknessTime comp = player.GetComponent<ShrineOfDarkness.DarknessTime>();
+					comp.RemoveSelf();
+					UltraDarkness darkness = player.gameObject.AddComponent<UltraDarkness>();
+					darkness.playeroue = player;
 				}
 				if (ChosenCurse == "Jam")
 				{
 					OtherTools.Notify("Curse Of Jamnation chosen", "Prove you're worthy.", "Planetside/Resources/ShrineIcons/PurityIcon");
-					BraveBehaviour comp = player.GetComponent<ShrineOfCurses.JamTime>();
-					BraveBehaviour.Destroy(comp);
-					player.gameObject.AddComponent<UltraJammed>();
-
+					ShrineOfCurses.JamTime comp = player.GetComponent<ShrineOfCurses.JamTime>();
+					comp.RemoveSelf();
+					UltraJammed jammed = player.gameObject.AddComponent<UltraJammed>();
+					jammed.playeroue = player;
 				}
 				if (ChosenCurse == "Petrify")
 				{
 					OtherTools.Notify("Curse Of Petrification chosen", "Prove you're worthy.", "Planetside/Resources/ShrineIcons/PurityIcon");
-					BraveBehaviour comp = player.GetComponent<ShrineOfPetrification.PetrifyTime>();
-					BraveBehaviour.Destroy(comp);
-					player.gameObject.AddComponent<UltraPetrify>();
+					ShrineOfPetrification.PetrifyTime comp = player.GetComponent<ShrineOfPetrification.PetrifyTime>();
+					comp.RemoveSelf();
+					UltraPetrify petrify = player.gameObject.AddComponent<UltraPetrify>();
+					petrify.playeroue = player;
 				}
 				if (ChosenCurse == "Bolster")
 				{
 					OtherTools.Notify("Curse Of Bolstering chosen", "Prove you're worthy.", "Planetside/Resources/ShrineIcons/PurityIcon");
-					BraveBehaviour comp = player.GetComponent<ShrineOfSomething.SomethingTime>();
-					BraveBehaviour.Destroy(comp);
-					player.gameObject.AddComponent<UltraBolster>();
-
+					ShrineOfSomething.SomethingTime comp = player.GetComponent<ShrineOfSomething.SomethingTime>();
+					comp.RemoveSelf();
+					UltraBolster bolster = player.gameObject.AddComponent<UltraBolster>();
+					bolster.playeroue = player;
 				}
 			}
-				shrine.GetComponent<CustomShrineController>().numUses++;
+			shrine.GetComponent<CustomShrineController>().numUses++;
 		}
 		public class UltraDarkness : BraveBehaviour
 		{
@@ -139,16 +137,23 @@ namespace Planetside
 			}
 			public void Start()
 			{
-				this.Microwave = base.GetComponent<RoomHandler>();
-				{
-					playeroue.OnRoomClearEvent += this.RoomCleared;
-					playeroue.OnEnteredCombat += this.EnteredCombat;
-				}
+				playeroue.OnRoomClearEvent += this.RoomCleared;
+				playeroue.OnEnteredCombat += this.EnteredCombat;
 			}
 			private void EnteredCombat()
             {
 				RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
 				absoluteRoom.BecomeTerrifyingDarkRoom(1f, 0.15f, 0.3f, "Play_ENM_darken_world_01");
+			}
+
+			protected override void OnDestroy()
+			{
+				if (playeroue != null)
+				{
+					playeroue.OnRoomClearEvent -= this.RoomCleared;
+					playeroue.OnEnteredCombat -= this.EnteredCombat;
+				}
+				base.OnDestroy();
 			}
 
 			private void RoomCleared(PlayerController obj)
@@ -176,8 +181,8 @@ namespace Planetside
 				{
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, true);
 				}
+				Destroy(this);
 			}
-			private RoomHandler Microwave;
 			public PlayerController playeroue;
 
 		}
@@ -190,16 +195,16 @@ namespace Planetside
 			}
 			public void Start()
 			{
-				this.Microwave = base.GetComponent<RoomHandler>();
-				{
-					playeroue.OnRoomClearEvent += this.RoomCleared;
-					ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
-				}
-
+				playeroue.OnRoomClearEvent += this.RoomCleared;
+				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
 			}
 
 			protected override void OnDestroy()
 			{
+				if (playeroue != null)
+                {
+					playeroue.OnRoomClearEvent -= this.RoomCleared;
+				}
 				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Remove(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
 				base.OnDestroy();
 			}
@@ -237,8 +242,8 @@ namespace Planetside
 				{
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, true);
 				}
+				Destroy(this);
 			}
-			private RoomHandler Microwave;
 			public PlayerController playeroue;
 
 		}
@@ -251,17 +256,16 @@ namespace Planetside
 			}
 			public void Start()
 			{
-				this.Microwave = base.GetComponent<RoomHandler>();
-				{
-					playeroue.OnRoomClearEvent += this.RoomCleared;
-					ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
-
-				}
-
+				playeroue.OnRoomClearEvent += this.RoomCleared;
+				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
 			}
 
 			protected override void OnDestroy()
 			{
+				if (playeroue != null)
+                {
+					playeroue.OnRoomClearEvent -= this.RoomCleared;
+				}
 				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Remove(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
 				base.OnDestroy();
 			}
@@ -299,8 +303,8 @@ namespace Planetside
 				{
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, true);
 				}
+				Destroy(this);
 			}
-			private RoomHandler Microwave;
 			public PlayerController playeroue;
 
 		}
@@ -313,13 +317,8 @@ namespace Planetside
 			}
 			public void Start()
 			{
-				this.Microwave = base.GetComponent<RoomHandler>();
-				{
-					playeroue.OnRoomClearEvent += this.RoomCleared;
-					ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
-
-				}
-
+				playeroue.OnRoomClearEvent += this.RoomCleared;
+				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
 			}
 			public void AIActorMods(AIActor target)
 			{
@@ -328,11 +327,16 @@ namespace Planetside
 					target.behaviorSpeculator.CooldownScale /= 0.25f;
 				}
 			}
-
-			public void Update()
+			protected override void OnDestroy()
 			{
-
+				if (playeroue != null)
+				{
+					playeroue.OnRoomClearEvent -= this.RoomCleared;
+				}
+				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Remove(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
+				base.OnDestroy();
 			}
+
 			private void RoomCleared(PlayerController obj)
 			{
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEBOLSTER, true);
@@ -357,10 +361,9 @@ namespace Planetside
 				{
 					AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, true);
 				}
+				Destroy(this);
 			}
-			private RoomHandler Microwave;
 			public PlayerController playeroue;
-
 		}
 
 	}

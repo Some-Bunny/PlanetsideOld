@@ -2375,8 +2375,8 @@ namespace Planetside
 						foreach (GameObject obj in Ophanaim.reticles)
 						{
 							tk2dSlicedSprite component2 = obj.GetComponent<tk2dSlicedSprite>();
-							float ix = component2.transform.localRotation.eulerAngles.x;// + base.BulletBank.aiActor.transform.position.x;
-							float wai = component2.transform.localRotation.eulerAngles.y;// + base.BulletBank.aiActor.transform.position.y;
+							float ix = component2.transform.localRotation.eulerAngles.x;
+							float wai = component2.transform.localRotation.eulerAngles.y;
 							if (base.BulletBank.aiActor != null)
                             {
 								ix = component2.transform.localRotation.eulerAngles.x + base.BulletBank.aiActor.transform.localRotation.x;

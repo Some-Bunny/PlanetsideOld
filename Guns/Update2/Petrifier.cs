@@ -68,6 +68,7 @@ namespace Planetside
 			gun.reloadTime = 1.9f;
 			gun.SetBaseMaxAmmo(80);
 			gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(370) as Gun).muzzleFlashEffects;
+			gun.gunClass = GunClass.SHOTGUN;
 
 			gun.quality = PickupObject.ItemQuality.B;
 			gun.encounterTrackable.EncounterGuid = "Fear.";

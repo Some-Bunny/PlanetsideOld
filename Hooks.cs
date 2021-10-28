@@ -10,10 +10,8 @@ using SaveAPI;
 
 namespace Planetside
 {
-    // Token: 0x02000018 RID: 24
     public static class Hooks
     {
-        // Token: 0x060000B7 RID: 183 RVA: 0x00008CE4 File Offset: 0x00006EE4
         public static void Init()
         {
             try
@@ -29,9 +27,9 @@ namespace Planetside
                 Hook OuroborousGunfairyScaler = new Hook(typeof(MinorBreakable).GetMethod("OnBreakAnimationComplete", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Ouroborous).GetMethod("DoFairy"));
                 Hook AngerTheGods = new Hook(typeof(PlayerController).GetMethod("DoSpinfallSpawn", BindingFlags.Instance | BindingFlags.Public), typeof(PlanetsideModule).GetMethod("RunStartHook"));
 
-                //Hook GalaxyChestReward = new Hook(typeof(RoomHandler).GetMethod("HandleRoomClearReward", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("GalaxyChestReward"));
+                Hook GalaxyChestReward = new Hook(typeof(RoomHandler).GetMethod("HandleRoomClearReward", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("GalaxyChestReward"));
 
-                //Hook GalaxyChestRoom = new Hook(typeof(Chest).GetMethod("Initialize", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Hooks).GetMethod("GalaxyChestPls"));
+                Hook GalaxyChestRoom = new Hook(typeof(Chest).GetMethod("Initialize", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Hooks).GetMethod("GalaxyChestPls"));
 
                 Hook MACHOOOOOO = new Hook(typeof(PlayerController).GetMethod("OnDidDamage", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("DamageHook"));
 
@@ -45,9 +43,20 @@ namespace Planetside
                 Hook TabelFlip = new Hook(typeof(FlippableCover).GetMethod("Interact", BindingFlags.Instance | BindingFlags.Public), typeof(Hooks).GetMethod("TableFlipOuroborous"));
 
                 //var StartHook = new Hook(
-               //typeof(BehaviorSpeculator).GetMethod("Start", BindingFlags.Instance | BindingFlags.NonPublic),
-               //typeof(Hooks).GetMethod("StartHookSB", BindingFlags.Static | BindingFlags.NonPublic));
+                //typeof(BehaviorSpeculator).GetMethod("Start", BindingFlags.Instance | BindingFlags.NonPublic),
+                //typeof(Hooks).GetMethod("StartHookSB", BindingFlags.Static | BindingFlags.NonPublic));
 
+                /*
+                var HookToWriteLogToTxtFile2 = new Hook(typeof(PixelCollider).GetMethods().Single(
+                    m =>
+                        m.Name == "Overlaps" &&
+                        m.GetParameters().Length == 1 &&
+                        m.GetParameters()[0].ParameterType == typeof(object)),
+                    typeof(Hooks).GetMethod("endme", BindingFlags.Static | BindingFlags.Public));
+                */
+                //Hook helpme = new Hook(typeof(ResourcefulRatMazeSystemController).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic), typeof(Hooks).GetMethod("endme"));
+
+                //Hook streeteor = new Hook(typeof(PlayerController).GetMethod("HandlePlayerInput", BindingFlags.NonPublic | BindingFlags.Instance), typeof(Hooks).GetMethod("Hook_PlayerController_HandlePlayerInput"));
 
             }
             catch (Exception e)
@@ -56,7 +65,23 @@ namespace Planetside
             }
         }
 
+        public static Vector2 Hook_PlayerController_HandlePlayerInput(Func<PlayerController, Vector2> orig, PlayerController self)
+        {
+            ETGModConsole.Log("Pepsi");
+            Vector2 vec = orig(self);
+            return vec;
+        }
 
+        public static void endme(Action<ResourcefulRatMazeSystemController> orig, ResourcefulRatMazeSystemController self)
+        {
+            orig(self);
+            Type type = typeof(ResourcefulRatMazeSystemController); FieldInfo _property = type.GetField("m_centralRoomSeries", BindingFlags.NonPublic | BindingFlags.Instance); _property.GetValue(self);
+            List<RoomHandler> uses = (List<RoomHandler>)_property.GetValue(self);
+            foreach(RoomHandler handler in uses)
+            {
+                ETGModConsole.Log(handler.GetRoomName().ToString());
+            }
+        }
 
         public static void OuroborousRoomDrop(Action<RoomHandler> orig, RoomHandler self)
         {
@@ -406,10 +431,6 @@ namespace Planetside
             }
         }
 
-
-
-
-
         public static void DamageHook(Action<PlayerController, float, bool, HealthHaver> orig, PlayerController self, float damagedone, bool fatal, HealthHaver target)
         {
             orig(self, damagedone, fatal, target);
@@ -583,30 +604,12 @@ namespace Planetside
                 chest2.lootTable.multipleItemDropChances.elements = new WeightedInt[1];
                 chest2.lootTable.overrideItemLootTables = new List<GenericLootTable>();
                 chest2.lootTable.lootTable = GameManager.Instance.RewardManager.GunsLootTable;
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
+
+                for (int i = 0; i < 12; i++)
+                {
+                    chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
+                    chest2.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
+                }
                 WeightedInt weightedInt = new WeightedInt();
                 weightedInt.value = 24;
                 weightedInt.weight = 1f;
@@ -651,30 +654,11 @@ namespace Planetside
                 self.lootTable.multipleItemDropChances.elements = new WeightedInt[1];
                 self.lootTable.overrideItemLootTables = new List<GenericLootTable>();
                 self.lootTable.lootTable = GameManager.Instance.RewardManager.GunsLootTable;
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
-                self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
+                for (int i = 0; i < 12; i++)
+                {
+                    self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.GunsLootTable);
+                    self.lootTable.overrideItemLootTables.Add(GameManager.Instance.RewardManager.ItemsLootTable);
+                }
                 WeightedInt weightedInt = new WeightedInt();
                 weightedInt.value = 24;
                 weightedInt.weight = 1f;

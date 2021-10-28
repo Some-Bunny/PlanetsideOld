@@ -48,9 +48,9 @@ namespace Planetside
                 mod.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
                 mod.cooldownTime = 0.001f;
                 mod.numberOfShotsInClip = 50;
-                mod.ammoType = GameUIAmmoType.AmmoType.BEAM;
 
-                List<string> BeamAnimPaths = new List<string>()
+
+            List<string> BeamAnimPaths = new List<string>()
             {
                 "Planetside/Resources/Beams/Colossus/colossusbeam_mid_001",
                 "Planetside/Resources/Beams/Colossus/colossusbeam_mid_002",
@@ -172,6 +172,10 @@ namespace Planetside
             gun.SetBaseMaxAmmo(300);
             gun.ammo = 300;
             gun.PreventNormalFireAudio = true;
+            gun.gunClass = GunClass.BEAM;
+
+            gun.DefaultModule.ammoType = GameUIAmmoType.AmmoType.CUSTOM;
+            gun.DefaultModule.customAmmoType = CustomClipAmmoTypeToolbox.AddCustomAmmoType("Colossus Red", "Planetside/Resources/GunClips/Colossus/colossusfull", "Planetside/Resources/GunClips/Colossus/colossusempty");
 
             gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).wrapMode = tk2dSpriteAnimationClip.WrapMode.LoopSection;
             gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).loopStart = 1;

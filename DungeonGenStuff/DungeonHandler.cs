@@ -227,8 +227,23 @@ namespace GungeonAPI
                         if (p.requireTileset)
                             try
                             {
-                                //ETGModConsole.Log("Attempting To Add This Room" + room.name);
-                                StaticReferences.GetRoomTable(p.requiredTileset).includedRooms.Add(wRoom);
+                                if (p.requiredTileset == GlobalDungeonData.ValidTilesets.RATGEON)
+                                {
+                                    if (wRoom.room.Height == 24 && wRoom.room.Width == 34)
+                                    {
+                                        wRoom.room.IsLostWoodsRoom = true;
+                                        wRoom.room.subCategorySpecial = PrototypeDungeonRoom.RoomSpecialSubCategory.NPC_STORY;
+                                        StaticReferences.GetRoomTable(p.requiredTileset).includedRooms.Add(wRoom);
+                                    }
+                                    else
+                                    {
+                                        Tools.PrintError($"Room name: " + wRoom.room.name.ToString() + " is of an INVALID height/width, and will NOT be added to the pool! Rat floor rooms should always be 34x | 24y to prevent issues!");
+                                    }
+                                }
+                                else
+                                {
+                                    StaticReferences.GetRoomTable(p.requiredTileset).includedRooms.Add(wRoom);
+                                }
                             }
                             catch (Exception e)
                             {

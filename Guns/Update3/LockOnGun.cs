@@ -60,6 +60,7 @@ namespace Planetside
 			explosiveModifier.doExplosion = true;
 			explosiveModifier.explosionData = StaticExplosionDatas.explosiveRoundsExplosion;
 
+			gun.gunClass = GunClass.EXPLOSIVE;
 
 			PierceProjModifier spook = projectile.gameObject.AddComponent<PierceProjModifier>();
 			spook.penetration = 0;

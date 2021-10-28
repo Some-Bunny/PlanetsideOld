@@ -10,6 +10,19 @@ namespace Planetside
 {
     static class BeamToolbox
     {
+
+        public static bool PosIsNearAnyBoneOnBeam(this BasicBeamController beam, Vector2 positionToCheck, float distance)
+        {
+            LinkedList<BasicBeamController.BeamBone> bones;
+            bones = ReflectionHelper.ReflectGetField<LinkedList<BasicBeamController.BeamBone>>(typeof(BasicBeamController), "m_bones", beam);
+            foreach (BasicBeamController.BeamBone bone in bones)
+            {
+                Vector2 bonepos = beam.GetBonePosition(bone);
+                if (Vector2.Distance(positionToCheck, bonepos) < distance) return true;
+            }
+            return false;
+        }
+
         public static int GetBoneCount (this BasicBeamController beam)
         {
             if (!beam.UsesBones)

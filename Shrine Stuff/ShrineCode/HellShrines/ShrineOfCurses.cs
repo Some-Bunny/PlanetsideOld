@@ -27,8 +27,6 @@ namespace Planetside
 				modID = "psog",
 				text = "A shrine with an icon of the Jammed. Do you dare?",
 				spritePath = "Planetside/Resources/Shrines/HellShrines/shrineofthejammed.png",
-				//room = RoomFactory.BuildFromResource("Planetside/ShrineRooms/ShrineOfEvilShrineRoomHell.room").room,
-				//RoomWeight = 200f,
 				acceptText = "Dare.",
 				declineText = "Leave",
 				OnAccept = Accept,
@@ -72,20 +70,19 @@ namespace Planetside
 			}
 			public void Start()
 			{
-				this.Microwave = base.GetComponent<RoomHandler>();
-				//this.playeroue = base.GetComponent<PlayerController>();
-				{
-					//PlayerController player = GameManager.Instance.PrimaryPlayer;
-					playeroue.OnRoomClearEvent += this.RoomCleared;
-					//playeroue.OnEnteredCombat += this.EnteredCombat;
-					ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
-				}
-
+				playeroue.OnRoomClearEvent += this.RoomCleared;
+				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
 			}
-
+			public void RemoveSelf()
+			{
+				Destroy(this);
+			}
 			protected override void OnDestroy()
 			{
-				playeroue.OnRoomClearEvent -= this.RoomCleared;
+				if (playeroue != null)
+				{
+					playeroue.OnRoomClearEvent -= this.RoomCleared;
+				}
 				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Remove(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
 				base.OnDestroy();
 			}
@@ -103,10 +100,6 @@ namespace Planetside
 					}
 				}
 			}
-			public void Update()
-			{
-
-			}
 			private void RoomCleared(PlayerController obj)
 			{
 				if (UnityEngine.Random.value <= 0.03f)
@@ -116,7 +109,7 @@ namespace Planetside
 					chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
 				}
 			}
-			private RoomHandler Microwave;
+			//private RoomHandler Microwave;
 			public PlayerController playeroue;
 		}
 	}

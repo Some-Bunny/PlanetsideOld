@@ -32,8 +32,8 @@ namespace Planetside
             lockpicker.SetCooldownType(ItemBuilder.CooldownType.Timed, 1f);
             lockpicker.consumable = true;
             lockpicker.quality = PickupObject.ItemQuality.D;
-            ItemBuilder.AddPassiveStatModifier(lockpicker, PlayerStats.StatType.Damage, 0.85f, StatModifier.ModifyMethod.MULTIPLICATIVE);
-            ItemBuilder.AddPassiveStatModifier(lockpicker, PlayerStats.StatType.MovementSpeed, 0.9f, StatModifier.ModifyMethod.MULTIPLICATIVE);
+            ItemBuilder.AddPassiveStatModifier(lockpicker, PlayerStats.StatType.Damage, 0.95f, StatModifier.ModifyMethod.MULTIPLICATIVE);
+            ItemBuilder.AddPassiveStatModifier(lockpicker, PlayerStats.StatType.MovementSpeed, 0.95f, StatModifier.ModifyMethod.MULTIPLICATIVE);
             ItemBuilder.AddPassiveStatModifier(lockpicker, PlayerStats.StatType.Curse, 1, StatModifier.ModifyMethod.ADDITIVE);
             ItemBuilder.AddPassiveStatModifier(lockpicker, PlayerStats.StatType.AdditionalItemCapacity, 1, StatModifier.ModifyMethod.ADDITIVE);
             BloodIdol.BloodIdolID = lockpicker.PickupObjectId;
@@ -48,7 +48,7 @@ namespace Planetside
         }
         public override void Pickup(PlayerController player)
         {
-            if (SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.BLODD_IDOL_KILLS) >= 299)
+            if (SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.BLODD_IDOL_KILLS) >= 249)
             {
                 BllodCanBeUsed = true;
             }
@@ -73,7 +73,7 @@ namespace Planetside
         }
         public override void Update()
         {
-            if (SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.BLODD_IDOL_KILLS) >= 299)
+            if (SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.BLODD_IDOL_KILLS) >= 249)
             {
                 BllodCanBeUsed = true;
             }
@@ -99,8 +99,8 @@ namespace Planetside
             Chest chest2 = GameManager.Instance.RewardManager.SpawnRewardChestAt(bestRewardLocation, -1f, PickupObject.ItemQuality.EXCLUDED);
             chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
             chest2.IsLocked = false;
-            float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.BLODD_IDOL_KILLS);
-            SaveAPIManager.RegisterStatChange(CustomTrackedStats.BLODD_IDOL_KILLS, -300);
+            //float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.BLODD_IDOL_KILLS);
+            SaveAPIManager.RegisterStatChange(CustomTrackedStats.BLODD_IDOL_KILLS, -250);
             //ETGModConsole.Log("Current Kills: " + SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.BLODD_IDOL_KILLS).ToString());
 
         }

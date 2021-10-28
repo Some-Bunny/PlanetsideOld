@@ -71,6 +71,7 @@ namespace Planetside
             projectile.gameObject.AddComponent<RiftakerProjectile>();
             projectile.SetProjectileSpriteRight("bloopky_projectile_001", 15, 7, false, tk2dBaseSprite.Anchor.MiddleCenter, 15, 7);
             projectile.shouldRotate = true;
+            gun.gunClass = GunClass.RIFLE;
 
             gun.sprite.usesOverrideMaterial = true;
 
@@ -114,7 +115,6 @@ namespace Planetside
             ItemIDs.AddToList(gun.PickupObjectId);
         }
         public static int RiftakerID;
-        //private static Gun RiftTakerGun;
 
 
         private bool HasReloaded;

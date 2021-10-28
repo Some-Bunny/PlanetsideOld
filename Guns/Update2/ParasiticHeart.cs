@@ -59,6 +59,7 @@ namespace Planetside
             projectile.sprite.renderer.enabled = false;
             projectile.hitEffects.suppressMidairDeathVfx = true;
             projectile.AdditionalScaleMultiplier = .0005f;
+            gun.gunClass = GunClass.NONE;
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
             ParasiticHeart.HeartID = gun.PickupObjectId;
@@ -99,11 +100,9 @@ namespace Planetside
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Play_ENM_beholster_intro_01", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
-
-            }
-            if (gun.ClipShotsRemaining == 0 && gun.CurrentAmmo != 0)
-            {
-                var list = new List<string> 
+                if (gun.ClipShotsRemaining == 0 && gun.CurrentAmmo != 0)
+                {
+                    var list = new List<string>
                 {
                 "8bb5578fba374e8aae8e10b754e61d62",
                 "b67ffe82c66742d1985e5888fd8e6a03",
@@ -111,20 +110,22 @@ namespace Planetside
                 "b54d89f9e802455cbb2b8a96a31e8259",
                 "skullvenant"
                 };
-                string guid = BraveUtility.RandomElement<string>(list);
-                var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
-                AIActor mhm = AIActor.Spawn(Enemy.aiActor, player.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
-                CompanionController yup = mhm.gameObject.AddComponent<CompanionController>();
-                yup.companionID = CompanionController.CompanionIdentifier.NONE;
-                yup.Initialize(player);
+                    string guid = BraveUtility.RandomElement<string>(list);
+                    var Enemy = EnemyDatabase.GetOrLoadByGuid(guid);
+                    AIActor mhm = AIActor.Spawn(Enemy.aiActor, player.sprite.WorldCenter, GameManager.Instance.PrimaryPlayer.CurrentRoom, true, AIActor.AwakenAnimationType.Default, true);
+                    CompanionController yup = mhm.gameObject.AddComponent<CompanionController>();
+                    yup.companionID = CompanionController.CompanionIdentifier.NONE;
+                    yup.Initialize(player);
 
-                Planetside.OtherTools.CompanionisedEnemyBulletModifiers yeehaw = mhm.gameObject.AddComponent<Planetside.OtherTools.CompanionisedEnemyBulletModifiers>();
-                yeehaw.jammedDamageMultiplier *= 3;
-                yeehaw.baseBulletDamage = 10f;
-                yeehaw.TintBullets = true;
-                yeehaw.TintColor = new Color(1f, 1f, 1f);
-                mhm.gameObject.AddComponent<FriendlyGhostEnemyComponent>();
+                    Planetside.OtherTools.CompanionisedEnemyBulletModifiers yeehaw = mhm.gameObject.AddComponent<Planetside.OtherTools.CompanionisedEnemyBulletModifiers>();
+                    yeehaw.jammedDamageMultiplier *= 3;
+                    yeehaw.baseBulletDamage = 10f;
+                    yeehaw.TintBullets = true;
+                    yeehaw.TintColor = new Color(1f, 1f, 1f);
+                    mhm.gameObject.AddComponent<FriendlyGhostEnemyComponent>();
+                }
             }
+            
         }
 
 

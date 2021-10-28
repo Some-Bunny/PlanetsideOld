@@ -5,10 +5,8 @@ using ItemAPI;
 using UnityEngine;
 namespace GungeonAPI
 {
-	// Token: 0x02000006 RID: 6
 	public class OldShrineFactory
 	{
-		// Token: 0x06000016 RID: 22 RVA: 0x00003624 File Offset: 0x00001824
 		public static void Init()
 		{
 			bool initialized = OldShrineFactory.m_initialized;
@@ -38,7 +36,6 @@ namespace GungeonAPI
 			}
 		}
 
-		// Token: 0x06000017 RID: 23 RVA: 0x00003680 File Offset: 0x00001880
 		public GameObject Build()
 		{
 			GameObject result;
@@ -64,6 +61,7 @@ namespace GungeonAPI
 					this.colliderSize = new IntVector2(intVector.x, intVector.y / 2);
 				}
 				SpeculativeRigidbody speculativeRigidbody = component.SetUpSpeculativeRigidbody(this.colliderOffset, this.colliderSize);
+
 
 				speculativeRigidbody.PixelColliders.Add(new PixelCollider
 				{
@@ -156,7 +154,7 @@ namespace GungeonAPI
 					ManualRightX = 0,
 					ManualRightY = 0,
 				});
-
+				
 				OldShrineFactory.CustomShrineController customShrineController = gameObject.AddComponent<OldShrineFactory.CustomShrineController>();
 				customShrineController.ID = text;
 				customShrineController.roomStyles = this.roomStyles;

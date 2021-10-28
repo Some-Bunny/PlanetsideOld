@@ -252,16 +252,16 @@ namespace Planetside
 				}
 			};
 				bs.OtherBehaviors = new List<BehaviorBase>() {
-				new PowderSkullSpinBulletsBehavior() {
+				new CustomSpinBulletsBehavior() {
 					ShootPoint = m_CachedGunAttachPoint,
 					OverrideBulletName = "sweep",
 				NumBullets = 7,
 					BulletMinRadius = 1,
-					BulletMaxRadius = 5,
-					BulletCircleSpeed = 120,
+					BulletMaxRadius = 4,
+					BulletCircleSpeed = 105,
 					BulletsIgnoreTiles = true,
 					RegenTimer = 0.25f,
-
+					AmountOFLines = 3,
 				}
 				};
 				bs.MovementBehaviors = new List<MovementBehaviorBase>

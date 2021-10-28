@@ -56,6 +56,10 @@ namespace Planetside
 			projectile.AdditionalScaleMultiplier *= 1f;
 			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
+			gun.gunClass = GunClass.EXPLOSIVE;
+
+			gun.DefaultModule.ammoType = GameUIAmmoType.AmmoType.CUSTOM;
+			gun.DefaultModule.customAmmoType = CustomClipAmmoTypeToolbox.AddCustomAmmoType("Funcannon", "Planetside/Resources/GunClips/Funcannon/funcannonfull", "Planetside/Resources/GunClips/Funcannon/funcannonempty");
 
 			FuncannonProjectileComponent crossbowHandler = projectile.gameObject.AddComponent<FuncannonProjectileComponent>();
 			crossbowHandler.projectileToSpawn = (PickupObjectDatabase.GetById(197) as Gun).DefaultModule.projectiles[0];

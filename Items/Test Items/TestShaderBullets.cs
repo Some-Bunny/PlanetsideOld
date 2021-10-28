@@ -46,7 +46,7 @@ namespace Planetside
 
 				TemplateMovementModule mod = new TemplateMovementModule();
 				//mod.ForceInvert = (UnityEngine.Random.value > 0.5f) ? false : true;
-				sourceProjectile.OverrideMotionModule = mod;
+				sourceProjectile.OverrideMotionModule = mod;	
 
 				sourceProjectile.sprite.usesOverrideMaterial = true;
 				sourceProjectile.sprite.renderer.material.shader = Shader.Find("Brave/Internal/SimpleAlphaFadeUnlit");

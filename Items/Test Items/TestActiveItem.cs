@@ -75,6 +75,28 @@ namespace Planetside
         //GoopDefinition goop;
         private Projectile beamProjectile = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").GetComponent<BossFinalRogueGunController>().GetComponent<BossFinalRogueLaserGun>().beamProjectile;
 
+        public float Hell;
+        public override void Update()
+        {
+            if (base.LastOwner != null)
+            {
+              
+                /*
+                RoomHandler absoluteRoom = base.LastOwner.transform.position.GetAbsoluteRoom();
+                List<AIActor> activeEnemies = absoluteRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
+                bool flag = activeEnemies != null;
+                if (flag)
+                {
+                    foreach (AIActor enemy in activeEnemies)
+                    {
+                        enemy.sprite.transform.localRotation = Quaternion.Euler(0f, 0f, Hell);
+                    }
+                }
+                */
+            }
+
+            base.Update();
+        }
         protected override void DoEffect(PlayerController user)
         {
 
@@ -86,11 +108,40 @@ namespace Planetside
             //CustomTrailRenderer red =  user.gameObject.AddComponent<CustomTrailRenderer>();
             //red.CopyFrom<CustomTrailRenderer>(TrailRendererobj);
 
+            GameObject reaper = UnityEngine.Object.Instantiate<GameObject>(SomethingWickedEnemy.SomethingWickedObject, user.gameObject.transform.position - new Vector3(10, 0), Quaternion.identity);
+
+            //GameObject original;
+            //original = RandomPiecesOfStuffToInitialise.SomethingWicked;
+            //GameObject component = UnityEngine.Object.Instantiate<GameObject>(RandomPiecesOfStuffToInitialise.SomethingWicked, user.specRigidbody.UnitCenter, Quaternion.identity);
+            //component.transform.position.WithZ(transform.position.z + 99999);
+            //component.GetComponent<tk2dBaseSprite>().PlaceAtPositionByAnchor(user.CenterPosition, tk2dBaseSprite.Anchor.MiddleCenter);
+            //component.PlaceAtPositionByAnchor(base.LastOwner.sprite.WorldTopCenter, tk2dBaseSprite.Anchor.LowerCenter);
+            //component.GetComponent<tk2dSprite>().scale = Vector3.one;
+            //SomethingWicked wispCont = component.gameObject.AddComponent<SomethingWicked>();
+
+
+            /*
             var enemy = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec");
             if (!enemy)
             {
                 ETGModConsole.Log("enemy null");
             }
+
+            ETGModConsole.Log("Room name: " + user.CurrentRoom.GetRoomName()+ "\nLength: " + user.CurrentRoom.area.dimensions.x.ToString() + "\nWidth: " + user.CurrentRoom.area.dimensions.y.ToString());
+            */
+            /*
+            WeightedRoomCollection ballin = GungeonAPI.OfficialFlows.GetDungeonPrefab("base_resourcefulrat").PatternSettings.flows[0].AllNodes[18].overrideRoomTable.includedRooms;
+            List<WeightedRoom> yes = ballin.elements;
+            foreach(WeightedRoom fuck in yes)
+            {
+                List<PrototypePlacedObjectData> place = fuck.room.placedObjects;
+                foreach(PrototypePlacedObjectData prototypePlacedObjectData in place)
+                {
+                    ETGModConsole.Log(prototypePlacedObjectData.GetType().ToString());
+                }
+                ETGModConsole.Log("================");
+            }
+            */
 
             //GameObject obj = AdvancedDragunPrefab.GetComponentInChildren<CustomTrailRenderer>().gameObject;
             //user.gameObject.AddComponent<TrailRendereryeah>();
@@ -103,6 +154,10 @@ namespace Planetside
             //yes.SetFields(particle, true, true);
             //yes.name = "fucka you lol";
 
+
+
+
+            /*
             ParticleSystem yes = user.gameObject.AddComponent<ParticleSystem>();
             //yes.CopyFrom<ParticleSystem>(particle);
             yes.Play();
@@ -124,8 +179,9 @@ namespace Planetside
             var particleRenderer = yes.gameObject.GetComponent<ParticleSystemRenderer>();
             particleRenderer.material = new Material(Shader.Find("Sprites/Default"));
             particleRenderer.material.mainTexture = particleTexture;
-           //particleRenderer.material.shader = ShaderCache.Acquire("Brave/Internal/RainbowChestShader");
-            
+            */
+            //particleRenderer.material.shader = ShaderCache.Acquire("Brave/Internal/RainbowChestShader");
+
             /*
             foreach (Component item in enemy.GetComponentsInChildren(typeof(Component)))
             {

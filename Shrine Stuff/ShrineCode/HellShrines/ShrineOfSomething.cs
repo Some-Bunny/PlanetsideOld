@@ -72,19 +72,15 @@ namespace Planetside
 			}
 			public void Start()
 			{
-				this.Microwave = base.GetComponent<RoomHandler>();
-				//this.playeroue = base.GetComponent<PlayerController>();
-				{
-					//PlayerController player = GameManager.Instance.PrimaryPlayer;
-					playeroue.OnRoomClearEvent += this.RoomCleared;
-					ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
-
-				}
-
+				playeroue.OnRoomClearEvent += this.RoomCleared;
+				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Combine(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
 			}
 			protected override void OnDestroy()
 			{
-				playeroue.OnRoomClearEvent -= this.RoomCleared;
+				if (playeroue != null)
+                {
+					playeroue.OnRoomClearEvent -= this.RoomCleared;
+				}
 				ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Remove(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
 				base.OnDestroy();
 			}
@@ -95,11 +91,10 @@ namespace Planetside
 					target.behaviorSpeculator.CooldownScale /= 0.70f;
 				}
 			}
-
-			public void Update()
-			{
-
-			}
+			public void RemoveSelf()
+            {
+				Destroy(this);
+            }
 			private void RoomCleared(PlayerController obj)
 			{
 				if (UnityEngine.Random.value <= 0.03f)
@@ -109,9 +104,7 @@ namespace Planetside
 					chest2.RegisterChestOnMinimap(chest2.GetAbsoluteParentRoom());
 				}
 			}
-			private RoomHandler Microwave;
 			public PlayerController playeroue;
-
 		}
 	}
 }

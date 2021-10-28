@@ -379,6 +379,7 @@ namespace Planetside
                                         SuperReaperController scythe = reaper.GetComponent<SuperReaperController>();
                                         scythe.ShootTimer *= 0.75f;
 
+                                        /*
                                         Dungeon Dung = GameManager.Instance.Dungeon as Dungeon;
                                         Type type = typeof(Dungeon); FieldInfo _property = type.GetField("CurseReaperActive", BindingFlags.Public | BindingFlags.Instance); _property.GetValue(Dung);
                                         bool uses = (bool)_property.GetValue(Dung);
@@ -386,7 +387,7 @@ namespace Planetside
                                         {
                                             uses = true;
                                         }
-                                        
+                                        */
                                         DebrisObject item = GameManager.Instance.RewardManager.SpawnTotallyRandomItem(debrisObject.gameObject.transform.position + new Vector3(1.75f, 1), ItemQuality.B, ItemQuality.S);
                                         bool flag = item;
                                         PickupObject result;
@@ -670,6 +671,7 @@ namespace Planetside
 
         List<int> CursedID = new List<int>
         {
+            WitherLance.WitherLanceID,
             BloodIdol.BloodIdolID,
             403,
             571,

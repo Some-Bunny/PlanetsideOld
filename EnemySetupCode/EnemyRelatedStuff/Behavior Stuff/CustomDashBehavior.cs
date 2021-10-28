@@ -5,8 +5,6 @@ using FullInspector;
 using UnityEngine;
 
 
-
-// Token: 0x02000D1E RID: 3358
 public class CustomDashBehavior : BasicAttackBehavior
 {
 	public CustomDashBehavior()

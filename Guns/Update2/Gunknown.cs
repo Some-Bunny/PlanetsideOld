@@ -74,10 +74,12 @@ namespace Planetside
 			gun.gunHandedness = GunHandedness.NoHanded;
 			gun.preventRotation = true;
 			gun.muzzleFlashEffects = new VFXPool { type = VFXPoolType.None, effects = new VFXComplex[0] };
+			gun.gunClass = GunClass.CHARGE;
 
-	
+			gun.DefaultModule.ammoType = GameUIAmmoType.AmmoType.CUSTOM;
+			gun.DefaultModule.customAmmoType = CustomClipAmmoTypeToolbox.AddCustomAmmoType("Gunknown", "Planetside/Resources/GunClips/Gunknown/gunknownclipfull", "Planetside/Resources/GunClips/Gunknown/gunknownclipemptyl");
 
-			
+
 			gun.quality = PickupObject.ItemQuality.A;
 			gun.encounterTrackable.EncounterGuid = "I. AM. ETERNAL.";
 			ETGMod.Databases.Items.Add(gun, null, "ANY");

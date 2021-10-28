@@ -178,6 +178,7 @@ namespace GungeonAPI
                 {
                     AddPlaceableToRoom(room, roomData.placeablePositions[i], roomData.placeableGUIDs[i]);
                 }
+
             }
 
             if (roomData.floors != null)

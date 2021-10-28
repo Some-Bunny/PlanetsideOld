@@ -222,8 +222,9 @@ namespace Planetside
 
 						component.synergyobject = ResourceGuonMaker.HoleObject.objectToSpawn;
 						BlackHoleDoer component2 = this.synergyobject.GetComponent<BlackHoleDoer>();
-						this.gameObject1 = UnityEngine.Object.Instantiate<GameObject>(component2.HellSynergyVFX, new Vector3(base.transform.position.x + 1f, base.transform.position.y, base.transform.position.z + 5f), Quaternion.Euler(0f, 0f, 0f));
-						MeshRenderer component3 = this.gameObject1.GetComponent<MeshRenderer>();
+
+						GameObject onj = UnityEngine.Object.Instantiate<GameObject>(component2.HellSynergyVFX, new Vector3(base.transform.position.x + 1f, base.transform.position.y, base.transform.position.z + 5f), Quaternion.Euler(0f, 0f, 0f));
+						MeshRenderer component3 = onj.GetComponent<MeshRenderer>();
 						base.StartCoroutine(this.HoldPortalOpen(component3, pick.transform.position, user));
 						UnityEngine.Object.Destroy(pick.gameObject);
 						var texture = ItemAPI.ResourceExtractor.GetTextureFromResource("Planetside\\Resources\\nebula_reducednoise.png");
@@ -251,8 +252,6 @@ namespace Planetside
 							AmmoPickup component2 = debrisObject2.GetComponent<AmmoPickup>();
 							KeyBulletPickup component3 = debrisObject2.GetComponent<KeyBulletPickup>();
 							SilencerItem component4 = debrisObject2.GetComponent<SilencerItem>();
-							//IounStoneOrbitalItem guon = debrisObject2.GetComponent<PickupObject>() as IounStoneOrbitalItem;
-
 
 							bool flag7 = (component && component.armorAmount == 0 && (component.healAmount == 0.5f || component.healAmount == 1f)) || component2 || component3 || component4 || component && component.armorAmount >= 0;// | guon.PickupObjectId == 565 && guon.GetComponent<IounStoneOrbitalItem>() != null;
 							if (flag7)
@@ -286,6 +285,7 @@ namespace Planetside
 							GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.HalfheartGuon, false);
 							PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
 							pick.IsHalfHeart = true;
+							pick.player = user;
 							if (user.PlayerHasActiveSynergy("More To Hearts"))
 							{
 								pick.HitsBeforeDeath = 54;
@@ -305,6 +305,7 @@ namespace Planetside
 								GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.HeartGuon, false);
 								PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
 								pick.IsHeart = true;
+								pick.player = user;
 								if (user.PlayerHasActiveSynergy("More To Hearts"))
 								{
 									pick.HitsBeforeDeath = 108;
@@ -322,8 +323,10 @@ namespace Planetside
 								{
 									LootEngine.DoDefaultItemPoof(component5.transform.position, false, false);
 									GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.ArmorGuon, false);
+
 									PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
 									pick.IsArmor = true;
+									pick.player = user;
 									if (user.PlayerHasActiveSynergy("More To Armor"))
 									{
 										pick.HitsBeforeDeath = 180;
@@ -348,6 +351,7 @@ namespace Planetside
 								GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.AmmoGuon, false);
 								PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
 								pick.IsAmmo = true;
+								pick.player = user;
 
 								if (user.PlayerHasActiveSynergy("More To Ammo"))
 								{
@@ -365,6 +369,7 @@ namespace Planetside
 								LootEngine.DoDefaultItemPoof(component6.transform.position, false, false);
 								GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.HalfAmmoGuon, false);
 								PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
+								pick.player = user;
 								pick.IsHalfAmmo = true;
 								if (user.PlayerHasActiveSynergy("More To Ammo"))
 								{
@@ -386,6 +391,8 @@ namespace Planetside
 								LootEngine.DoDefaultItemPoof(component7.transform.position, false, false);
 								GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.KeyGuon, false);
 								PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
+								pick.player = user;
+								pick.IsKey = true;
 								if (user.PlayerHasActiveSynergy("More To Keys"))
 								{
 									pick.HitsBeforeDeath = 144;
@@ -404,6 +411,7 @@ namespace Planetside
 									LootEngine.DoDefaultItemPoof(component8.transform.position, false, false);
 									GameObject orb = PlayerOrbitalItem.CreateOrbital(user, RandomPiecesOfStuffToInitialise.BlankGuon, false);
 									PickupGuonComponent pick = orb.AddComponent<PickupGuonComponent>();
+									pick.player = user;
 									pick.IsBlank = true;
 									if (user.PlayerHasActiveSynergy("More To Blanks"))
 									{
@@ -430,43 +438,50 @@ namespace Planetside
 			float t = 0f;
 			while (elapsed < duration)
 			{
-				elapsed += BraveTime.DeltaTime;
-				t = Mathf.Clamp01(elapsed / 1.25f);
-				portal.material.SetFloat("_UVDistCutoff", Mathf.Lerp(0.0f + elapsed*1.3f, 0f, t));
-				float Rad = portal.material.GetFloat("_UVDistCutoff");
+				if (portal != null)
+                {
+					t = Mathf.Clamp01(elapsed / 1.25f);
+					portal.material.SetFloat("_UVDistCutoff", Mathf.Lerp(0.0f + elapsed * 1.3f, 0f, t));
+					float Rad = portal.material.GetFloat("_UVDistCutoff");
 
-				float num = (player.stats.GetStatValue(PlayerStats.StatType.Damage));
+					float num = (player.stats.GetStatValue(PlayerStats.StatType.Damage));
 
 
-				List<AIActor> activeEnemies = player.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
-				Vector2 centerPosition = pos;
-				if (activeEnemies != null)
-				{
-					foreach (AIActor aiactor in activeEnemies)
+					List<AIActor> activeEnemies = player.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
+					Vector2 centerPosition = pos;
+					if (activeEnemies != null)
 					{
-						bool ae = Vector2.Distance(aiactor.CenterPosition, centerPosition) < Rad * 20 && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
-						if (ae)
+						foreach (AIActor aiactor in activeEnemies)
 						{
-							aiactor.healthHaver.ApplyDamage((500f * num) * BraveTime.DeltaTime, Vector2.zero, "fwomp", CoreDamageTypes.Electric, DamageCategory.Normal, false, null, false);
-							if (!aiactor.healthHaver.IsBoss)
+							bool ae = Vector2.Distance(aiactor.CenterPosition, centerPosition) < Rad * 20 && aiactor.healthHaver.GetMaxHealth() > 0f && aiactor != null && aiactor.specRigidbody != null && player != null;
+							if (ae)
 							{
-								aiactor.knockbackDoer.weight = 150f;
-								Vector2 a = aiactor.transform.position - portal.transform.position;
-								aiactor.knockbackDoer.ApplyKnockback(-a, 1.33f * (Vector2.Distance(portal.transform.position, aiactor.transform.position) + 0.005f), false);
+								aiactor.healthHaver.ApplyDamage((500f * num) * BraveTime.DeltaTime, Vector2.zero, "fwomp", CoreDamageTypes.Electric, DamageCategory.Normal, false, null, false);
+								if (!aiactor.healthHaver.IsBoss)
+								{
+									aiactor.knockbackDoer.weight = 150f;
+									Vector2 a = aiactor.transform.position - portal.transform.position;
+									aiactor.knockbackDoer.ApplyKnockback(-a, 1.33f * (Vector2.Distance(portal.transform.position, aiactor.transform.position) + 0.005f), false);
+								}
 							}
 						}
 					}
 				}
+				elapsed += BraveTime.DeltaTime;
+				
 				yield return null;
 			}
-			Destroy(portal.gameObject);
+			if (portal != null)
+            {
+				Destroy(portal.gameObject);
+			}
 			yield break;
 		}
+
 
 		MeshRenderer hole;
 		private GameObject synergyobject;
 		private static SpawnObjectPlayerItem HoleObject;
-		private GameObject gameObject1;
 
 		public float distortionMaxRadius = 30f;
 		public float distortionDuration = 2f;

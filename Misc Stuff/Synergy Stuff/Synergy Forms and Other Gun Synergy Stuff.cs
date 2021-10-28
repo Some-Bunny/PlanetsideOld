@@ -60,6 +60,13 @@ namespace Planetside
 			eae.SynergyGunId = OscillatoSynergyForme.AeID;
 			eae.SynergyToCheck = "Reverberation";
 
+			
+			AdvancedTransformGunSynergyProcessor eaejhaek = (PickupObjectDatabase.GetById(DivineLight.DivineLightID) as Gun).gameObject.AddComponent<AdvancedTransformGunSynergyProcessor>();
+			eaejhaek.NonSynergyGunId = DivineLight.DivineLightID;
+			eaejhaek.SynergyGunId = HellLight.HellLightID;
+			eaejhaek.SynergyToCheck = "BLASPHEMY AGAINST THE SPIRIT";
+			
+
 			AdvancedTransformGunSynergyProcessor colos = (PickupObjectDatabase.GetById(Colossus.ColossusID) as Gun).gameObject.AddComponent<AdvancedTransformGunSynergyProcessor>();
 			colos.NonSynergyGunId = Colossus.ColossusID;
 			colos.SynergyGunId = PerfectedColossus.PerfectedColossusID;
@@ -78,6 +85,9 @@ namespace Planetside
 
 			RevenantSynergyPlus fart = (PickupObjectDatabase.GetById(Revenant.RevenantID) as Gun).gameObject.AddComponent<RevenantSynergyPlus>();
 			fart.SynergyNameToCheck = "Boring Eternity";
+
+			BSGSynergy afaf = (PickupObjectDatabase.GetById(21) as Gun).gameObject.AddComponent<BSGSynergy>();
+			afaf.SynergyNameToCheck = "Big Shocking Gun 9000";
 
 		}
 	}

@@ -130,6 +130,7 @@ namespace Planetside
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_OPHANAIM, true);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER, true);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, true);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.HAS_COMPLETED_SOMETHING_WICKED, true);
 
 
 
@@ -148,6 +149,8 @@ namespace Planetside
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_OPHANAIM, false);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER, false);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK, false);
+				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.HAS_COMPLETED_SOMETHING_WICKED, false);
+
 
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEJAM, false);
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEPETRIFY, false);
@@ -191,8 +194,9 @@ namespace Planetside
 				string i = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_OPHANAIM) ? " Done!\n" : " -Defeat The Eternal Eye Of The Abbey.\n";
 				string j = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DEFEAT_ANNIHICHAMBER) ? " Done!\n" : " -Defeat A Ravenous, Violent Chamber.\n";
 				string k = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.DECURSE_HELL_SHRINE_UNLOCK) ? " Done!\n" : " -Remove Each Hell-Bound Curse At Least Once.\n";
+				string l = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.HAS_COMPLETED_SOMETHING_WICKED) ? " Done!\n" : " -Survive An Encounter With Something Wicked.\n";
 				string color1 = "9006FF";
-				OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g + h+i+j+k, color1);
+				OtherTools.PrintNoID("Unlock List:\n" + a + b + c + d + e + f + g + h+i+j+k+l, color1);
 			});
 
 			ETGModConsole.Commands.GetGroup("psog").AddUnit("help", delegate (string[] args)
@@ -312,8 +316,9 @@ namespace Planetside
             {
 				float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
 				float DownScaler = Loop / 50f;
-				float InitialScale = 0.4f;
+				//float InitialScale = 0.4f;
 
+				/*
 				if (LoopingOn == true)
                 {
 					Projectile.BaseEnemyBulletSpeedMultiplier = 1.1f + ((Loop / 10f));
@@ -322,17 +327,18 @@ namespace Planetside
                 {
 					Projectile.BaseEnemyBulletSpeedMultiplier = 1;
 				}
+				*/
 				if (Loop == 50 || Loop >= 50)
                 {
-					target.MovementSpeed *= 3f + ((Loop / 33f)+InitialScale) - DownScaler;
+					target.MovementSpeed *= 3f + ((Loop / 33f)) - DownScaler;
 				}
 				else
                 {
-					target.MovementSpeed *= 1 + ((Loop / 15f)+InitialScale)-DownScaler;
+					target.MovementSpeed *= 1 + ((Loop / 25f))-DownScaler;
 				}
-				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/20f)+InitialScale)- DownScaler);
-				target.knockbackDoer.weight *= 1 + ((Loop / 1.5f)+InitialScale)- -DownScaler;
-				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/2.5f)) + InitialScale)-DownScaler;
+				target.healthHaver.SetHealthMaximum(target.healthHaver.GetMaxHealth() * ((1 + Loop/10f))- DownScaler);
+				target.knockbackDoer.weight *= 1 + ((Loop / 1.5f))- -DownScaler;
+				target.behaviorSpeculator.CooldownScale *= ((1f+(Loop/2f)))-DownScaler;
 				//target.behaviorSpeculator.CooldownScale *= 0;
 				float random = UnityEngine.Random.Range(0.0f, 1.0f);
 				if (random <= Loop/15)
@@ -439,71 +445,75 @@ namespace Planetside
 		public static void DoFairy(Action<MinorBreakable> orig, MinorBreakable self)
 		{
 			orig(self);
-			PlayerController player = GameManager.Instance.GetActivePlayerClosestToPoint(self.CenterPoint);
-			if (player.HasPickupID(GildedPots.GildedPotsID) && player != null)
+			if (self != null)
             {
-				float coinchance = 0.04f;
-				bool flagA = player.PlayerHasActiveSynergy("Expert Demolitionist");
-				if (flagA)
+				PlayerController player = GameManager.Instance.GetActivePlayerClosestToPoint(self.transform.PositionVector2());
+				if (player.HasPickupID(GildedPots.GildedPotsID) && player != null && self != null)
 				{
-					coinchance *= 2;
+					float coinchance = 0.04f;
+					bool flagA = player.PlayerHasActiveSynergy("Expert Demolitionist");
+					if (flagA)
+					{
+						coinchance *= 2;
+					}
+					float num = UnityEngine.Random.Range(0f, 1f);
+					bool flag2 = (double)num < coinchance;
+					if (flag2)
+					{
+						LootEngine.SpawnItem(PickupObjectDatabase.GetById(68).gameObject, self.transform.PositionVector2(), Vector2.zero, 1f, false, false, false);
+					}
 				}
-				float num = UnityEngine.Random.Range(0f, 1f);
-				bool flag2 = (double)num < coinchance;
-				if (flag2)
-				{
-					LootEngine.SpawnItem(PickupObjectDatabase.GetById(68).gameObject, self.sprite.WorldCenter, Vector2.zero, 1f, false, false, false);
-				}
-			}
 
-			bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
-			if (LoopOn == true)
-            {
-				float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
-				int GoopScaler;
-				GoopScaler = (int)UnityEngine.Random.Range(0, 25 - Loop);
-				if (GoopScaler == 1)
-                {
-					Ouroborous yes = new Ouroborous();
-					bool bankName = (UnityEngine.Random.value > 0.50f) ? true : false;
-					if (bankName == true && self != null)
-                    {
-						yes.DoPoisonGoop(self.transform.position);
-					}
-					if (bankName == false && self != null)
-					{
-						yes.DoFireGoop(self.transform.position);
-					}
-				}
-				bool flag = !self.name.ToLower().Contains("pot");
-				if (!flag && self != null)
+				bool LoopOn = AdvancedGameStatsManager.Instance.GetFlag(CustomDungeonFlags.LOOPING_ON);
+				if (LoopOn == true)
 				{
-					if (Loop == 75 | Loop >= 75)
+					float Loop = SaveAPIManager.GetPlayerStatValue(CustomTrackedStats.TIMES_LOOPED);
+					int GoopScaler;
+					GoopScaler = (int)UnityEngine.Random.Range(0, 25 - Loop);
+					if (GoopScaler == 1)
 					{
-						int FairyScaler;
-						FairyScaler = UnityEngine.Random.Range(0, 50);
-						if (FairyScaler == 1)
+						Ouroborous yes = new Ouroborous();
+						bool bankName = (UnityEngine.Random.value > 0.50f) ? true : false;
+						if (bankName == true && self != null)
 						{
-							PotFairyEngageDoer.InstantSpawn = true;
-							PlayerController primaryPlayer = GameManager.Instance.PrimaryPlayer;
-							AIActor prefabActor = Game.Enemies["pot_fairy"];
-							AIActor.Spawn(prefabActor, self.sprite.WorldCenter, primaryPlayer.CurrentRoom, false, AIActor.AwakenAnimationType.Default, true);
+							yes.DoPoisonGoop(self.transform.position);
+						}
+						if (bankName == false && self != null)
+						{
+							yes.DoFireGoop(self.transform.position);
 						}
 					}
-					else
+					bool flag = self.name.ToLower().Contains("pot");
+					if (flag && self != null)
 					{
-						int FairyScaler;
-						FairyScaler = (int)UnityEngine.Random.Range(0, 100 - (Loop / 5));
-						if (FairyScaler == 1)
+						if (Loop == 75 | Loop >= 75)
 						{
-							PotFairyEngageDoer.InstantSpawn = true;
-							PlayerController primaryPlayer = GameManager.Instance.PrimaryPlayer;
-							AIActor prefabActor = Game.Enemies["pot_fairy"];
-							AIActor.Spawn(prefabActor, self.sprite.WorldCenter, primaryPlayer.CurrentRoom, false, AIActor.AwakenAnimationType.Default, true);
+							int FairyScaler;
+							FairyScaler = UnityEngine.Random.Range(0, 50);
+							if (FairyScaler == 1)
+							{
+								PotFairyEngageDoer.InstantSpawn = true;
+								PlayerController primaryPlayer = GameManager.Instance.PrimaryPlayer;
+								AIActor prefabActor = Game.Enemies["pot_fairy"];
+								AIActor.Spawn(prefabActor, self.sprite.WorldCenter, primaryPlayer.CurrentRoom, false, AIActor.AwakenAnimationType.Default, true);
+							}
+						}
+						else
+						{
+							int FairyScaler;
+							FairyScaler = (int)UnityEngine.Random.Range(0, 100 - (Loop / 5));
+							if (FairyScaler == 1)
+							{
+								PotFairyEngageDoer.InstantSpawn = true;
+								PlayerController primaryPlayer = GameManager.Instance.PrimaryPlayer;
+								AIActor prefabActor = Game.Enemies["pot_fairy"];
+								AIActor.Spawn(prefabActor, self.sprite.WorldCenter, primaryPlayer.CurrentRoom, false, AIActor.AwakenAnimationType.Default, true);
+							}
 						}
 					}
 				}
 			}
+			
 		}
 		public void DoPoisonGoop(Vector2 v)
 		{

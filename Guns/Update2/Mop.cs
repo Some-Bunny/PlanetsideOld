@@ -67,6 +67,7 @@ namespace Planetside
 			gun.Volley.projectiles[1].cooldownTime = 0.5f;
 			gun.Volley.projectiles[1].angleVariance = 10f;
 			gun.Volley.projectiles[1].numberOfShotsInClip = -1;
+			gun.gunClass = GunClass.SILLY;
 
 			Projectile projectile1 = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[1].projectiles[0]);
 			projectile1.gameObject.SetActive(false);

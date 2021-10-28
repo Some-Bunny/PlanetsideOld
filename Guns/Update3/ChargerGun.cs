@@ -46,21 +46,15 @@ namespace Planetside
 			for (int i = 0; i < 20; i++)
 			{
 				gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(88) as Gun, true, false);
-
 			}
-			float projspeed = 0;
-
 			foreach (ProjectileModule projectileModule in gun.Volley.projectiles)
 			{
-				projspeed += 0.0125f;
 				projectileModule.ammoCost = 1;
 				projectileModule.shootStyle = ProjectileModule.ShootStyle.Charged;
 				projectileModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
 				projectileModule.cooldownTime = 0.1f;
 				projectileModule.angleVariance = 0;
 				projectileModule.numberOfShotsInClip = 1;
-
-
 				Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
 				projectile.gameObject.SetActive(false);
 				projectileModule.projectiles[0] = projectile;
@@ -93,6 +87,8 @@ namespace Planetside
 			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.chargeAnimation).wrapMode = tk2dSpriteAnimationClip.WrapMode.LoopSection;
 			gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.chargeAnimation).loopStart = 5;
 			gun.gunSwitchGroup = "Railgun";
+			gun.gunClass = GunClass.CHARGE;
+
 
 			gun.barrelOffset.transform.localPosition = new Vector3(1.875f, 0.5f, 0f);
 			gun.reloadTime = 1.1f;
@@ -129,6 +125,9 @@ namespace Planetside
 			sharedMaterials[sharedMaterials.Length - 1] = material;
 			component.sharedMaterials = sharedMaterials;
 
+			AssetBundle bundle = ResourceManager.LoadAssetBundle("brave_resources_001");
+			LaserReticle = bundle.LoadAsset("assets/resourcesbundle/global vfx/vfx_lasersight.prefab") as GameObject;
+			bundle = null;
 
 			/*
 			tk2dSpriteAnimationClip animationClip = new tk2dSpriteAnimationClip();
@@ -169,8 +168,8 @@ namespace Planetside
 		private static List<GameObject> Chargerreticles = new List<GameObject>();
 		private bool VFXActive;
 		private float elapsed;
-		private static AssetBundle bundle = ResourceManager.LoadAssetBundle("brave_resources_001");
-		private GameObject LaserReticle = bundle.LoadAsset("assets/resourcesbundle/global vfx/vfx_lasersight.prefab") as GameObject;
+		//private static AssetBundle bundle = ResourceManager.LoadAssetBundle("brave_resources_001");
+		private static GameObject LaserReticle;
 
 
 		public void CleanupReticles()
@@ -200,9 +199,7 @@ namespace Planetside
 						}
 						if (VFXActive != true)
                         {
-							VFXActive = true;
-							ChargerGun vfx = gun.GetComponent<ChargerGun>();
-							
+							VFXActive = true;							
 							for (int i = 0; i < 7; i++)
 							{
 								float num2 = 16f;
@@ -211,7 +208,7 @@ namespace Planetside
 								{
 									num2 = (zero - new Vector2(this.gun.barrelOffset.transform.position.x, this.gun.barrelOffset.transform.position.y)).magnitude;
 								}
-								GameObject gameObject = SpawnManager.SpawnVFX(vfx.LaserReticle, false);
+								GameObject gameObject = SpawnManager.SpawnVFX(ChargerGun.LaserReticle, false);
 								tk2dTiledSprite component2 = gameObject.GetComponent<tk2dTiledSprite>();
 								component2.transform.position = new Vector3(this.gun.barrelOffset.transform.position.x, this.gun.barrelOffset.transform.position.y, 99999);
 								component2.transform.localRotation = Quaternion.Euler(0f, 0f, player.CurrentGun.CurrentAngle);
@@ -224,7 +221,6 @@ namespace Planetside
 							}
 						}
 						float Accuracy = player.stats.GetStatValue(PlayerStats.StatType.Accuracy) * 15;
-
 						for (int i = -3; i < 4; i++)
                         {
 							GameObject obj = Chargerreticles[i + 3];
@@ -267,7 +263,7 @@ namespace Planetside
 							Projectile proj = projectileModule.GetCurrentProjectile();
 							float dmg = player.stats.GetStatValue(PlayerStats.StatType.Damage);
 							float spd = player.stats.GetStatValue(PlayerStats.StatType.ProjectileSpeed);
-							proj.baseData.damage = ((elapsed * 5.75f) + 2)*dmg;
+							proj.baseData.damage = ((elapsed * 8) + 4)*dmg;
 							proj.baseData.speed = UnityEngine.Random.Range(22f, 28f) * spd; 
 						}
 					}

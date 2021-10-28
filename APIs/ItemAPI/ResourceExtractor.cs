@@ -148,6 +148,7 @@ namespace ItemAPI
                 return null;
             }
             Texture2D texture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+            
             ImageConversion.LoadImage(texture, bytes);
             texture.filterMode = FilterMode.Point;
 

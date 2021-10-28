@@ -50,7 +50,7 @@ namespace Planetside
             projectile.baseData.speed = 3f;
             projectile.baseData.range = 1f;
             projectile.baseData.force = 5;
-            projectile.name = "slash";
+            projectile.name = "as weeng";
             projectile.gameObject.AddComponent<PlanetBladeProjectile>();
 
             gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.shootAnimation).frames[0].eventAudio = "Play_OBJ_katana_slash_01";
@@ -132,13 +132,14 @@ namespace Planetside
             var enemy = PickupObjectDatabase.GetById(436) as BlinkPassiveItem;
             ScarfObject = enemy.ScarfPrefab;
 
-
+            AssetBundle bundle = ResourceManager.LoadAssetBundle("brave_resources_001");
+            LaserReticle = bundle.LoadAsset("assets/resourcesbundle/global vfx/vfx_lasersight.prefab") as GameObject;
+            bundle = null;
         }
         public static ScarfAttachmentDoer ScarfObject;
 
         private static List<GameObject> Chargerreticles = new List<GameObject>();
-        private static AssetBundle bundle = ResourceManager.LoadAssetBundle("brave_resources_001");
-        private GameObject LaserReticle = bundle.LoadAsset("assets/resourcesbundle/global vfx/vfx_lasersight.prefab") as GameObject;
+        private static GameObject LaserReticle;
         private bool VFXActive;
         public void CleanupReticles()
         {
@@ -167,8 +168,6 @@ namespace Planetside
         private bool HasReloaded;
         public void OnDestroy()
         {
-
-
             ETGMod.AIActor.OnPreStart = (Action<AIActor>)Delegate.Remove(ETGMod.AIActor.OnPreStart, new Action<AIActor>(this.AIActorMods));
             GameManager.Instance.OnNewLevelFullyLoaded -= this.OnNewFloor;
             CleanupReticles();
@@ -207,7 +206,6 @@ namespace Planetside
                         expandWeatherController.name = "PlanetsideRainC";
                     }
                     VFXActive = true;
-                    PlanetBlade vfx = gun.GetComponent<PlanetBlade>();
                     for (int i = -2; i < 3; i++)
                     {
                         float num2 = 2f;
@@ -216,7 +214,7 @@ namespace Planetside
                         {
                             num2 = (zero - new Vector2(player.transform.position.x, player.transform.position.y)).magnitude;
                         }
-                        GameObject gameObject = SpawnManager.SpawnVFX(vfx.LaserReticle, false);
+                        GameObject gameObject = SpawnManager.SpawnVFX(PlanetBlade.LaserReticle, false);
                         tk2dTiledSprite component2 = gameObject.GetComponent<tk2dTiledSprite>();
 
 
