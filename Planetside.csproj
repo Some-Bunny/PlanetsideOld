@@ -149,7 +149,6 @@
     <Compile Include="NPC Stuff\NPCAPI 2\Hooks.cs" />
     <Compile Include="NPC Stuff\NPCAPI 2\ItsDaFuckinShopApi.cs" />
     <Compile Include="NPC Stuff\NPCAPI 2\NpcTools.cs" />
-    <Compile Include="NPC Stuff\NPCAPI.cs" />
     <Compile Include="Shrine Stuff\ShrineCode\TooLate.cs" />
     <Compile Include="Shrine Stuff\ShrineCode\SWQuest\RedShrine.cs" />
     <Compile Include="Shrine Stuff\ShrineCode\SWQuest\BlueShrine.cs" />

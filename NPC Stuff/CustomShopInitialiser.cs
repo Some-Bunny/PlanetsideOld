@@ -47,11 +47,7 @@ namespace Planetside
                , baseFilepath + "carpet.png");
                  
                  
-                 
-                 
-
-
-               
+                             
             /*
             string baseFilepath = "Planetside/Resources/NPCs/TimeTrader/timetrader";
             ETGMod.Databases.Strings.Core.Set("#TIMETRADER_RUNBASEDMULTILINE_GENERIC", "Been a while since I seen ya!");
