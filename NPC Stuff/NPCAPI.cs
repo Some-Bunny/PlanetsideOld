@@ -11,9 +11,11 @@ using System.Reflection;
 using UnityEngine;
 using System.Collections;
 
+
+
 namespace Planetside
 {
-    class ItsDaFuckinShopApi
+    class ItsDaFuckinOldShopApi
     {
 
         /// <summary>
@@ -260,7 +262,7 @@ namespace Planetside
                     carpetObj.layer = 20;
                 }
 
-                ItsDaFuckinShopApi.builtShops.Add(prefix + ":" + name, shopObj.gameObject);
+                ItsDaFuckinOldShopApi.builtShops.Add(prefix + ":" + name, shopObj.gameObject);
 
                 return shopObj.gameObject;
             }
@@ -454,3 +456,6 @@ namespace Planetside
 
     }
 }
+
+
+

@@ -84,15 +84,14 @@ namespace Planetside
 				if (sourceProjectile.baseData.range >= 3)
 				{
 					PlayerController player = base.Owner;
-
 					AoEDamageComponent Values = sourceProjectile.gameObject.AddComponent<AoEDamageComponent>();
-					Values.DamageperDamageEvent = ((projectile.baseData.damage /5)+0.5f);
+					Values.DamageperDamageEvent = ((sourceProjectile.baseData.damage * 0.2f)+0.5f);
 					Values.Radius = 2;
 					Values.TimeBetweenDamageEvents = 0.2f;
 					Values.DealsDamage = true;
 					Values.AreaIncreasesWithProjectileSizeStat = true;
 					Values.DamageValuesAlsoScalesWithDamageStat = true;
-					Values.EffectProcChance = 0.15f;
+					Values.EffectProcChance = 0.05f;
 					bool flagA = player.PlayerHasActiveSynergy("Khh..k k k k");
 					if (flagA)
 					{

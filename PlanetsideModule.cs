@@ -24,7 +24,7 @@ namespace Planetside
     public class PlanetsideModule : ETGModule
     {
         public static readonly string MOD_NAME = "Planetside Of Gunymede";
-        public static readonly string VERSION = "1.2";
+        public static readonly string VERSION = "1.2.3";
         public static readonly string TEXT_COLOR = "#9006FF";
 
         public static string ZipFilePath;
@@ -39,10 +39,6 @@ namespace Planetside
 
         public override void Start()
         {
-
- 
-
-
             var forgeDungeon = DungeonDatabase.GetOrLoadByName("Base_Forge");
             PlanetsideModule.hellDrag = forgeDungeon.PatternSettings.flows[0].AllNodes.Where(node => node.overrideExactRoom != null && node.overrideExactRoom.name.Contains("EndTimes")).First().overrideExactRoom.placedObjects.Where(ppod => ppod != null && ppod.nonenemyBehaviour != null).First().nonenemyBehaviour.gameObject.GetComponentsInChildren<HellDragZoneController>()[0];
             forgeDungeon = null;
@@ -54,6 +50,11 @@ namespace Planetside
 
             metadata = this.Metadata;
             ZipFilePath1 = this.Metadata.Archive;
+
+            ETGModMainBehaviour.Instance.gameObject.AddComponent<NevernamedsDarknessHandler>();
+            //ETGModMainBehaviour.Instance.gameObject.AddComponent<PlanetsideWeatherController>();
+
+
 
             ItemIDs.MakeCommand();
 
@@ -114,7 +115,6 @@ namespace Planetside
             HullBreakerBullets.Init();
             //Unlocked By Killing Jammed Guard
             ShelltansBlessing.Init();
-
             EcholocationAmmolet.Init();
             GildedPots.Init();
             GunPrinter.Init();
@@ -129,19 +129,15 @@ namespace Planetside
             NetheriteChamber.Init();
             TableTechNullReferenceException.Init();
             WispInABottle.Init();
-
             //Unlocked by killing Shellrax
             Shellheart.Init();
-
             SoulboundSkull.Init();
             DiasukesPolymorphine.Init();
             //Unlocked by beating Dragun at 15+ Curse
             FrailtyRounds.Init();
             FrailtyAmmolet.Init();
-
             OffWorldMedicine.Init();
             BabyGoodCandleKin.Init();
-
             ShellsnakeOil.Init();
             TableTechDevour.Init();
             UnstableTeslaCoil.Init();
@@ -160,7 +156,6 @@ namespace Planetside
             Revenant.Add();
             //Unlocked By Beating Bullet Banker
             SoulLantern.Add();
-
             VeteranShotgun.Add();
             VeteranerShotgun.Add();
             GTEE.Add();
@@ -169,23 +164,17 @@ namespace Planetside
             Immateria.Add();
             //Unlocked By Beating Loop 1
             ArmWarmer.Add();
-
             Oscillato.Add();
             OscillatoSynergyForme.Add();
-
             RebarPuncher.Add();
             LaserChainsaw.Add();
             ExecutionersCrossbow.Add();
             ExecutionersCrossbowSpecial.Init();
-
             ForgiveMePlease.Init();
             ForgiveMePlease.BuildPrefab();
-
             PortablePylon.Init();
             LoaderPylonController.Init();
-
             LoaderPylonSynergyFormeController.Init();
-
             DeadKingsDesparation.Init();
             DeadKingsDesparation.BuildPrefab();
 
@@ -199,10 +188,7 @@ namespace Planetside
             LeSackPickup.Init();
             NullPickupInteractable.Init();
 
-            //=================
-
-
-            
+            //=================      
             KineticStrike.Init();
             ShellsOfTheMountain.Init();
             InjectorRounds.Init();
@@ -226,20 +212,12 @@ namespace Planetside
             HeresyHammer.Init();
             Colossus.Add();
             PerfectedColossus.Add();
-            ResourceGuonMaker.Init();
-            
-
-            
-            
+            ResourceGuonMaker.Init();     
             ChargerGun.Add();
-
             //FIX THIS SWORD TO NOT CAUSE MASSIVE EXCEPTIONS WITH EXPAND ON LOAD
             //PlanetBlade.Add();
-
             //TestShaderBullets.Init();
-            
             DerpyBullets.Init();
-            
             PrayerAmulet.Init();
             LockOnGun.Add();
             CoinTosser.Init();
@@ -249,6 +227,9 @@ namespace Planetside
             Preigniter.Init();
             AttractorBeam.Add();
             LilPew.Add();
+
+            //VengefulShell.Init();
+
 
             Ophanaim.Init();
             Fungannon.Init();
@@ -297,10 +278,7 @@ namespace Planetside
             Wailer.Init();
 
             CelBullet.Init();
-            
-            //Grenadier.Init();
-            
-            
+                        
             InitialiseSynergies.DoInitialisation();
             SynergyFormInitialiser.AddSynergyForms();
             InitialiseGTEE.DoInitialisation();
@@ -329,7 +307,7 @@ namespace Planetside
             DungeonHooks.OnPostDungeonGeneration += this.PlaceOtherHellShrines;
 
 
-            //TestActiveItem.Init();
+            TestActiveItem.Init();
             OuroborousShrine.Add();
 
             ShrineFactory.PlaceBreachShrines();
@@ -341,6 +319,11 @@ namespace Planetside
             CustomLootTableInitialiser.InitialiseCustomLootTables();
             CustomShopInitialiser.InitialiseCustomShops();
             FlowInjectionInitialiser.InitialiseFlows();
+
+
+            //TackShooter.Init();
+
+            //InfantryGrenade.Init();
 
             //AdvancedLogging.Log($"{MOD_NAME} v{VERSION} started successfully.", new Color(144, 6, 255, 255), false, true, null);
             PlanetsideModule.Log($"{MOD_NAME} v{VERSION} started successfully.", TEXT_COLOR);

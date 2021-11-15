@@ -132,7 +132,7 @@ namespace Planetside
 			bool flag2 = flag;
 			if (!flag2)
 			{
-				prefab = EnemyBuilder.BuildPrefab("Fodder Enemy", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
+				prefab = EnemyBuilder.BuildPrefab("Something Wicked", guid, spritePaths[0], new IntVector2(0, 0), new IntVector2(8, 9), false);
 				var companion = prefab.AddComponent<EnemyBehavior>();
 				companion.aiActor.knockbackDoer.weight = 800;
 				companion.aiActor.MovementSpeed = 0f;

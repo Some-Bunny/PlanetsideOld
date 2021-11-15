@@ -125,6 +125,8 @@
     <Compile Include="Guns\Update3\ChargerGunProjectile.cs" />
     <Compile Include="Guns\Update3\ChargerGun.cs" />
     <Compile Include="ItemIDs.cs" />
+    <Compile Include="Items\Test Items\balls.cs" />
+    <Compile Include="Items\Update4\VengefulShell.cs" />
     <Compile Include="Items\Update3\Thing.cs" />
     <Compile Include="Items\Update3\Preigniter.cs" />
     <Compile Include="Items\Update3\KnuckleBlaster.cs" />
@@ -134,11 +136,19 @@
     <Compile Include="Items\Test Items\TestShaderBullets.cs" />
     <Compile Include="Items\Test Items\TestShaderItem.cs" />
     <Compile Include="Items\Update3\DerpyBullets.cs" />
+    <Compile Include="Misc Stuff\CrossModShopComponents.cs" />
     <Compile Include="Misc Stuff\LabelablePlayeItem.cs" />
+    <Compile Include="Misc Stuff\NevernamedsDarknessController.cs" />
     <Compile Include="Misc Stuff\StaticExplosions.cs" />
     <Compile Include="Misc Stuff\SlashBehavior.cs" />
     <Compile Include="Misc Stuff\Synergy Stuff\BSGSynergy.cs" />
     <Compile Include="NPC Stuff\CustomShopInitialiser.cs" />
+    <Compile Include="NPC Stuff\NPCAPI 2\CustomShopController.cs" />
+    <Compile Include="NPC Stuff\NPCAPI 2\CustomShopItemController.cs" />
+    <Compile Include="NPC Stuff\NPCAPI 2\Examples.cs" />
+    <Compile Include="NPC Stuff\NPCAPI 2\Hooks.cs" />
+    <Compile Include="NPC Stuff\NPCAPI 2\ItsDaFuckinShopApi.cs" />
+    <Compile Include="NPC Stuff\NPCAPI 2\NpcTools.cs" />
     <Compile Include="NPC Stuff\NPCAPI.cs" />
     <Compile Include="Shrine Stuff\ShrineCode\TooLate.cs" />
     <Compile Include="Shrine Stuff\ShrineCode\SWQuest\RedShrine.cs" />
@@ -2265,6 +2275,7 @@
     <EmbeddedResource Include="Resources\Shellrax\shellrax_fireeye_003.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\vengefulshell.png" />
     <EmbeddedResource Include="Resources\Shrines\toolatesign.png" />
     <EmbeddedResource Include="Resources\Shrines\SWMines\RedShrine.png" />
     <EmbeddedResource Include="Resources\Shrines\SWMines\RedShrineEmpty.png" />
@@ -2376,6 +2387,15 @@
     <EmbeddedResource Include="Resources\Ammocom\SomethingWickedAmmonomiconSheet.png" />
     <EmbeddedResource Include="Resources\GunClips\Lilpew\lilpew_clipempty.png" />
     <EmbeddedResource Include="Resources\GunClips\Lilpew\lilpew_clipfull.png" />
+    <EmbeddedResource Include="Resources2\testturret\testturret_idle_001.png" />
+    <EmbeddedResource Include="Resources2\testturret\testturret_idle_002.png" />
+    <EmbeddedResource Include="Resources2\testturret\testturret_shoot_001.png" />
+    <EmbeddedResource Include="Resources2\testturret\testturret_shoot_002.png" />
+    <EmbeddedResource Include="Resources2\testturret\testturret_spawn_001.png" />
+    <EmbeddedResource Include="Resources2\testturret\testturret_spawn_002.png" />
+    <EmbeddedResource Include="Resources2\testturret\testturret_spawn_003.png" />
+    <EmbeddedResource Include="Resources2\testturret\testturret_spawn_004.png" />
+    <EmbeddedResource Include="Resources2\testturret\testturret_spawn_005.png" />
     <Content Include="Resources\Shellrax\shellrax_intro_019.png" />
     <EmbeddedResource Include="Resources\VFX\LockOnVFX\lockonvfx1.png" />
     <EmbeddedResource Include="Resources\VFX\LockOnVFX\lockonvfx2.png" />

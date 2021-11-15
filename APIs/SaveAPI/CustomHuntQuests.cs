@@ -54,9 +54,9 @@ namespace SaveAPI
             {
                 return;
             }
-            if(addedOrderedQuests != null)
+            if (addedOrderedQuests != null)
             {
-                foreach(MonsterHuntQuest q in addedOrderedQuests)
+                foreach (MonsterHuntQuest q in addedOrderedQuests)
                 {
                     if (HuntData.OrderedQuests.Contains(q))
                     {
@@ -199,7 +199,7 @@ namespace SaveAPI
             if (self.ActiveQuest is CustomHuntQuest)
             {
                 (self.ActiveQuest as CustomHuntQuest).Complete();
-                if(self.ActiveQuest.QuestFlag == GungeonFlags.NONE)
+                if (self.ActiveQuest.QuestFlag == GungeonFlags.NONE)
                 {
                     self.ActiveQuest.QuestFlag = GungeonFlags.INTERNALDEBUG_HAS_SEEN_DEMO_TEXT;
                 }
@@ -220,7 +220,7 @@ namespace SaveAPI
 
         public static bool HuntProgressQuestCompleteHook(Func<MonsterHuntProgress, bool> orig, MonsterHuntProgress self)
         {
-            if(self.ActiveQuest is CustomHuntQuest)
+            if (self.ActiveQuest is CustomHuntQuest)
             {
                 return (self.ActiveQuest as CustomHuntQuest).IsQuestComplete();
             }
@@ -311,7 +311,7 @@ namespace SaveAPI
             bool cachedFlagValue = GameStatsManager.Instance.GetFlag(GungeonFlags.FRIFLE_CORE_HUNTS_COMPLETE);
             foreach (MonsterHuntQuest quest in HuntData.OrderedQuests)
             {
-                if (quest != null && !quest.IsQuestComplete())
+                if (quest != null && !quest.IsReallyCompleted())
                 {
                     lastUncompletedQuest = quest;
                 }
@@ -388,7 +388,7 @@ namespace SaveAPI
         /// <param name="validTargetCheck">Custom check function that will be used to check if a kill is valid</param>
         /// <returns>The built quest</returns>
         /// <returns></returns>
-        public static MonsterHuntQuest AddProceduralQuest(List<string> questIntroConversation, string targetEnemyName, List<string> targetEnemyGuids, int numberKillsRequired, JammedEnemyState requiredState = JammedEnemyState.NoCheck, 
+        public static MonsterHuntQuest AddProceduralQuest(List<string> questIntroConversation, string targetEnemyName, List<string> targetEnemyGuids, int numberKillsRequired, JammedEnemyState requiredState = JammedEnemyState.NoCheck,
             Func<AIActor, MonsterHuntProgress, bool> validTargetCheck = null, List<GungeonFlags> rewardFlags = null, List<CustomDungeonFlags> customRewardFlags = null)
         {
             string questStringPrefix = "#CUSTOMQUEST_PROCEDURAL_" + Guid.NewGuid().ToString().ToUpper() + "_" + Guid.NewGuid().ToString().ToUpper();
@@ -396,7 +396,7 @@ namespace SaveAPI
             string questTargetEnemyString = questStringPrefix + "_TARGET";
             ETGMod.Databases.Strings.Core.SetComplex(questIntroString, questIntroConversation.ToArray());
             ETGMod.Databases.Strings.Core.Set(questTargetEnemyString, targetEnemyName);
-            return AddProceduralQuest(new CustomHuntQuest() 
+            return AddProceduralQuest(new CustomHuntQuest()
             {
                 QuestFlag = GungeonFlags.NONE,
                 QuestIntroString = questIntroString,
@@ -437,7 +437,7 @@ namespace SaveAPI
                 QuestFlag = GungeonFlags.NONE,
                 QuestIntroString = questIntroString,
                 TargetStringKey = questTargetEnemyString,
-                ValidTargetMonsterGuids = targetEnemies.Convert(delegate(AIActor enemy) { return enemy.EnemyGuid; }),
+                ValidTargetMonsterGuids = targetEnemies.Convert(delegate (AIActor enemy) { return enemy.EnemyGuid; }),
                 FlagsToSetUponReward = rewardFlags != null ? SaveTools.CloneList(rewardFlags) : new List<GungeonFlags>(),
                 CustomFlagsToSetUponReward = customRewardFlags != null ? SaveTools.CloneList(customRewardFlags) : new List<CustomDungeonFlags>(),
                 NumberKillsRequired = numberKillsRequired,
@@ -498,7 +498,7 @@ namespace SaveAPI
         /// <param name="validTargetCheck">Custom check function that will be used to check if a kill is valid</param>
         /// <param name="index">Index to add the quest at</param>
         /// <returns>The built quest</returns>
-        public static MonsterHuntQuest AddQuest(GungeonFlags questFlag, List<string> questIntroConversation, string targetEnemyName, List<string> targetEnemyGuids, int numberKillsRequired, List<GungeonFlags> rewardFlags = null, 
+        public static MonsterHuntQuest AddQuest(GungeonFlags questFlag, List<string> questIntroConversation, string targetEnemyName, List<string> targetEnemyGuids, int numberKillsRequired, List<GungeonFlags> rewardFlags = null,
             List<CustomDungeonFlags> customRewardFlags = null, JammedEnemyState requiredState = JammedEnemyState.NoCheck, Func<AIActor, MonsterHuntProgress, bool> validTargetCheck = null, int? index = null)
         {
             string questStringPrefix = "#CUSTOMQUEST_" + questFlag.ToString() + "_" + Guid.NewGuid().ToString().ToUpper();
@@ -597,7 +597,7 @@ namespace SaveAPI
 
         public static MonsterHuntQuest AddQuest(MonsterHuntQuest quest, int? index = null)
         {
-            if(HuntData == null)
+            if (HuntData == null)
             {
                 DoSetup();
             }
@@ -629,7 +629,7 @@ namespace SaveAPI
                     AdvancedGameStatsManager.Save();
                 }
                 GameStatsManager.Load();
-                if(cachedHuntIndex != null && AdvancedGameStatsManager.HasInstance)
+                if (cachedHuntIndex != null && AdvancedGameStatsManager.HasInstance)
                 {
                     AdvancedGameStatsManager.Instance.cachedHuntIndex = cachedHuntIndex.Value;
                 }
@@ -667,7 +667,7 @@ namespace SaveAPI
                     AdvancedGameStatsManager.Instance.cachedHuntIndex = cachedHuntIndex.Value;
                 }
             }
-            if(addedProceduralQuests == null)
+            if (addedProceduralQuests == null)
             {
                 addedProceduralQuests = new List<MonsterHuntQuest>();
             }

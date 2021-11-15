@@ -29,12 +29,12 @@ namespace Planetside
 
             gun.isAudioLoop = true;
 
-            gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.reloadAnimation).frames[0].eventAudio = "Play_WPN_mailbox_reload_01";
+            gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.reloadAnimation).frames[0].eventAudio = "Play_WPN_blackhole_impact_01";
             gun.GetComponent<tk2dSpriteAnimator>().GetClipByName(gun.reloadAnimation).frames[0].triggerEvent = true;
 
             for (int i = 0; i < 1; i++)
             {
-                gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(86) as Gun, true, false);
+                gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(180) as Gun, true, false);
             }
             foreach (ProjectileModule mod in gun.Volley.projectiles)
             {
@@ -87,7 +87,7 @@ namespace Planetside
                     new Vector2(10, 2),
                     new Vector2(0, 4),
                     BeamAnimPaths,
-                    12,
+                    48,
                     //Beam Impact
                     ImpactAnimPaths,
                     12,
@@ -115,8 +115,8 @@ namespace Planetside
                 projectile.specRigidbody.CollideWithOthers = false;
                 
                 EmmisiveBeams emiss = beamComp.gameObject.AddComponent<EmmisiveBeams>();
-                emiss.EmissiveColorPower = 1.1f;
-                emiss.EmissivePower = 50;
+                emiss.EmissiveColorPower = 10f;
+                emiss.EmissivePower = 10f;
 
                 beamComp.boneType = BasicBeamController.BeamBoneType.Straight;
 
@@ -160,6 +160,7 @@ namespace Planetside
         {
             if (gun.IsReloading && this.HasReloaded)
             {
+                gun.PreventNormalFireAudio = true;
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Play_WPN_blackhole_reload_01", player.gameObject);

@@ -89,6 +89,7 @@ namespace Planetside
 				if (target != null && !OtherTools.BossBlackList.Contains(target.aiActor.encounterTrackable.EncounterGuid))// && UnityEngine.Random.value <= 0.25f)
 				{
 					target.behaviorSpeculator.CooldownScale /= 0.70f;
+					target.MovementSpeed *= 1.2f;
 				}
 			}
 			public void RemoveSelf()

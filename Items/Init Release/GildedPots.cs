@@ -33,6 +33,7 @@ namespace Planetside
 			CustomSynergies.Add("Expert Demolitionist", mandatoryConsoleIDs, optionalConsoleIDs, true);
 			GildedPots.GildedPotsID = warVase.PickupObjectId;
 			ItemIDs.AddToList(warVase.PickupObjectId);
+			warVase.gameObject.AddComponent<RustyItemPool>();
 
 		}
 		public static int GildedPotsID;

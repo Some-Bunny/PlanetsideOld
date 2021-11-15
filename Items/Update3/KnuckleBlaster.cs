@@ -503,7 +503,6 @@ namespace Planetside
 
         public float Angle;
         public float Range;
-        //public GameObject FistObject;
         public tk2dTiledSprite FistTether;
         public PlayerController Player;
 
@@ -566,9 +565,6 @@ namespace Planetside
 }
 
 
-
-
-//Code that controls the size of the Text Sprite object
 namespace Planetside
 {
     public class ShrikeADoodle : MonoBehaviour

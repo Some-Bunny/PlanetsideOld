@@ -138,8 +138,15 @@ namespace Planetside
 					}
 					if (advancedAdvancedPrerequisiteType == AdvancedAdvancedPrerequisiteType.SPEEDRUN_TIMER_AFTER)
                     {
-
-                    }
+						if (GameStatsManager.Instance.GetSessionStatValue(TrackedStats.TIME_PLAYED) >= AfterTimeInSeconds)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					}
 				}
 				else
 				{

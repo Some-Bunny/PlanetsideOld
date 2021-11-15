@@ -58,6 +58,44 @@ namespace SaveAPI
             }
         }
 
+        public static bool IsReallyCompleted(this MonsterHuntQuest quest)
+        {
+            bool allRewardsUnlocked = true;
+            foreach (GungeonFlags flag in quest.FlagsToSetUponReward)
+            {
+                if (flag != GungeonFlags.NONE && !GameStatsManager.Instance.GetFlag(flag))
+                {
+                    allRewardsUnlocked = false;
+                    break;
+                }
+            }
+            if (quest is CustomHuntQuest custom)
+            {
+                if (allRewardsUnlocked)
+                {
+                    foreach (CustomDungeonFlags flag in custom.CustomFlagsToSetUponReward)
+                    {
+                        if (flag != CustomDungeonFlags.NONE && !AdvancedGameStatsManager.Instance.GetFlag(flag))
+                        {
+                            allRewardsUnlocked = false;
+                            break;
+                        }
+                    }
+                }
+                bool anyQuestFlagCompleted = false;
+                if (quest.QuestFlag != GungeonFlags.NONE)
+                {
+                    anyQuestFlagCompleted = GameStatsManager.Instance.GetFlag(quest.QuestFlag);
+                }
+                else if (custom.CustomQuestFlag != CustomDungeonFlags.NONE)
+                {
+                    anyQuestFlagCompleted = AdvancedGameStatsManager.Instance.GetFlag(custom.CustomQuestFlag);
+                }
+                return anyQuestFlagCompleted && allRewardsUnlocked;
+            }
+            return GameStatsManager.Instance.GetFlag(quest.QuestFlag) && allRewardsUnlocked;
+        }
+
         /// <summary>
         /// Converts a List{<typeparamref name="T"/>} to List{<typeparamref name="T2"/>} using <paramref name="convertor"/>
         /// </summary>
@@ -69,7 +107,7 @@ namespace SaveAPI
         public static List<T2> Convert<T, T2>(this List<T> self, Func<T, T2> convertor)
         {
             List<T2> result = new List<T2>();
-            foreach(T element in self)
+            foreach (T element in self)
             {
                 result.Add(convertor(element));
             }
@@ -104,11 +142,11 @@ namespace SaveAPI
         public static void SetCustomFlagToSetOnDeath(this AIActor enemy, CustomDungeonFlags flag)
         {
             SpecialAIActor aiactor = enemy.gameObject.GetOrAddComponent<SpecialAIActor>();
-            if(flag == CustomDungeonFlags.NONE)
+            if (flag == CustomDungeonFlags.NONE)
             {
                 aiactor.SetsCustomFlagOnDeath = false;
             }
-            else if(flag != CustomDungeonFlags.NONE)
+            else if (flag != CustomDungeonFlags.NONE)
             {
                 aiactor.SetsCustomFlagOnDeath = true;
             }
@@ -171,7 +209,7 @@ namespace SaveAPI
         /// <returns>Custom character-specific flag that will be set on <paramref name="enemy"/>'s death.</returns>
         public static CustomCharacterSpecificGungeonFlags GetCustomCharacterSpecificFlagToSetOnDeath(this AIActor enemy)
         {
-            return (enemy.GetComponent<SpecialAIActor>() != null && enemy.GetComponent<SpecialAIActor>().SetsCustomCharacterSpecificFlagOnDeath) ? enemy.GetComponent<SpecialAIActor>().CustomCharacterSpecificFlagToSetOnDeath : 
+            return (enemy.GetComponent<SpecialAIActor>() != null && enemy.GetComponent<SpecialAIActor>().SetsCustomCharacterSpecificFlagOnDeath) ? enemy.GetComponent<SpecialAIActor>().CustomCharacterSpecificFlagToSetOnDeath :
                 CustomCharacterSpecificGungeonFlags.NONE;
         }
 
@@ -216,7 +254,7 @@ namespace SaveAPI
         /// <returns>The <see cref="DungeonPrerequisite"/> that was added to the list of <see cref="DungeonPrerequisite"/>s</returns>
         public static DungeonPrerequisite SetupUnlockOnFlag(this PickupObject self, GungeonFlags flag, bool requiredFlagValue)
         {
-            if(self.encounterTrackable == null)
+            if (self.encounterTrackable == null)
             {
                 return null;
             }
@@ -233,11 +271,11 @@ namespace SaveAPI
         /// <returns>The <see cref="DungeonPrerequisite"/> that was added to the list of <see cref="DungeonPrerequisite"/>s</returns>
         public static DungeonPrerequisite SetupUnlockOnFlag(this EncounterTrackable self, GungeonFlags flag, bool requiredFlagValue)
         {
-            return self.AddPrerequisite(new DungeonPrerequisite 
-            { 
-                prerequisiteType = DungeonPrerequisite.PrerequisiteType.FLAG, 
-                saveFlagToCheck = flag, 
-                requireFlag = requiredFlagValue 
+            return self.AddPrerequisite(new DungeonPrerequisite
+            {
+                prerequisiteType = DungeonPrerequisite.PrerequisiteType.FLAG,
+                saveFlagToCheck = flag,
+                requireFlag = requiredFlagValue
             });
         }
 
@@ -270,12 +308,12 @@ namespace SaveAPI
         /// <returns>The <see cref="DungeonPrerequisite"/> that was added to the list of <see cref="DungeonPrerequisite"/>s</returns>
         public static DungeonPrerequisite SetupUnlockOnStat(this EncounterTrackable self, TrackedStats stat, float comparisonValue, DungeonPrerequisite.PrerequisiteOperation comparisonOperation)
         {
-            return self.AddPrerequisite(new DungeonPrerequisite 
-            { 
-                prerequisiteType = DungeonPrerequisite.PrerequisiteType.COMPARISON, 
-                statToCheck = stat, 
-                prerequisiteOperation = comparisonOperation, 
-                comparisonValue = comparisonValue 
+            return self.AddPrerequisite(new DungeonPrerequisite
+            {
+                prerequisiteType = DungeonPrerequisite.PrerequisiteType.COMPARISON,
+                statToCheck = stat,
+                prerequisiteOperation = comparisonOperation,
+                comparisonValue = comparisonValue
             });
         }
 
@@ -308,8 +346,8 @@ namespace SaveAPI
         /// <returns>The <see cref="DungeonPrerequisite"/> that was added to the list of <see cref="DungeonPrerequisite"/>s</returns>
         public static DungeonPrerequisite SetupUnlockOnMaximum(this EncounterTrackable self, TrackedMaximums maximum, float comparisonValue, DungeonPrerequisite.PrerequisiteOperation comparisonOperation)
         {
-            return self.AddPrerequisite(new DungeonPrerequisite 
-            { 
+            return self.AddPrerequisite(new DungeonPrerequisite
+            {
                 prerequisiteType = DungeonPrerequisite.PrerequisiteType.MAXIMUM_COMPARISON,
                 maxToCheck = maximum,
                 prerequisiteOperation = comparisonOperation,
@@ -405,7 +443,7 @@ namespace SaveAPI
         /// <param name="requiredNumberOfEncounters">The value to compare the amount of times the player encountered the object with <paramref name="encounterObjectGuid"/> GUID to</param>
         /// <param name="comparisonOperation">Comparison operation</param>
         /// <returns>The <see cref="DungeonPrerequisite"/> that was added to the list of <see cref="DungeonPrerequisite"/>s</returns>
-        public static DungeonPrerequisite SetupUnlockOnEncounterOrFlag(this PickupObject self, GungeonFlags flag, bool requiredFlagValue, string encounterObjectGuid, int requiredNumberOfEncounters, 
+        public static DungeonPrerequisite SetupUnlockOnEncounterOrFlag(this PickupObject self, GungeonFlags flag, bool requiredFlagValue, string encounterObjectGuid, int requiredNumberOfEncounters,
             DungeonPrerequisite.PrerequisiteOperation comparisonOperation)
         {
             if (self.encounterTrackable == null)
@@ -427,7 +465,7 @@ namespace SaveAPI
         /// <param name="requiredNumberOfEncounters">The value to compare the amount of times the player encountered the object with <paramref name="encounterObjectGuid"/> GUID to</param>
         /// <param name="comparisonOperation">Comparison operation</param>
         /// <returns>The <see cref="DungeonPrerequisite"/> that was added to the list of <see cref="DungeonPrerequisite"/>s</returns>
-        public static DungeonPrerequisite SetupUnlockOnEncounterOrFlag(this EncounterTrackable self, GungeonFlags flag, bool requiredFlagValue, string encounterObjectGuid, int requiredNumberOfEncounters, 
+        public static DungeonPrerequisite SetupUnlockOnEncounterOrFlag(this EncounterTrackable self, GungeonFlags flag, bool requiredFlagValue, string encounterObjectGuid, int requiredNumberOfEncounters,
             DungeonPrerequisite.PrerequisiteOperation comparisonOperation)
         {
             return self.AddPrerequisite(new DungeonPrerequisite
@@ -475,7 +513,7 @@ namespace SaveAPI
         /// <param name="requiredNumberOfEncounters">The value to compare the amount of times the player encountered <paramref name="encounterRoom"/> to</param>
         /// <param name="comparisonOperation">Comparison operation</param>
         /// <returns>The <see cref="DungeonPrerequisite"/> that was added to the list of <see cref="DungeonPrerequisite"/>s</returns>
-        public static DungeonPrerequisite SetupUnlockOnEncounterOrFlag(this EncounterTrackable self, GungeonFlags flag, bool requiredFlagValue, PrototypeDungeonRoom encounterRoom, int requiredNumberOfEncounters, 
+        public static DungeonPrerequisite SetupUnlockOnEncounterOrFlag(this EncounterTrackable self, GungeonFlags flag, bool requiredFlagValue, PrototypeDungeonRoom encounterRoom, int requiredNumberOfEncounters,
             DungeonPrerequisite.PrerequisiteOperation comparisonOperation)
         {
             return self.AddPrerequisite(new DungeonPrerequisite
@@ -858,7 +896,9 @@ namespace SaveAPI
             }
             else
             {
-                self.prerequisites = self.prerequisites.Concat(new DungeonPrerequisite[] { prereq } ).ToArray();
+                DungeonPrerequisite[] prereqs = self.prerequisites;
+                Add(ref prereqs, prereq);
+                self.prerequisites = prereqs;
             }
             EncounterDatabaseEntry databaseEntry = EncounterDatabase.GetEntry(self.EncounterGuid);
             if (!string.IsNullOrEmpty(databaseEntry.ProxyEncounterGuid))
@@ -871,9 +911,24 @@ namespace SaveAPI
             }
             else
             {
-                databaseEntry.prerequisites = databaseEntry.prerequisites.Concat(new DungeonPrerequisite[] { prereq }).ToArray();
+                DungeonPrerequisite[] prereqs = databaseEntry.prerequisites;
+                Add(ref prereqs, prereq);
+                databaseEntry.prerequisites = prereqs;
             }
             return prereq;
+        }
+
+        /// <summary>
+		/// Adds <paramref name="element"/> to <paramref name="array"/>.
+		/// </summary>
+		/// <typeparam name="T">The type of the element to add.</typeparam>
+		/// <param name="array">The array to which <paramref name="element"/> will be added.</param>
+		/// <param name="element">The element to add to <paramref name="array"/>.</param>
+		public static void Add<T>(ref T[] array, T element)
+        {
+            List<T> list = array.ToList();
+            list.Add(element);
+            array = list.ToArray();
         }
 
         public static string ListToString<T>(List<T> list)
@@ -894,7 +949,7 @@ namespace SaveAPI
 
         public static void InsertOrAdd<T>(this List<T> self, int index, T toAdd)
         {
-            if (index < 0 || index > self.Count)
+            if (index < 0 || index >= self.Count)
             {
                 self.Add(toAdd);
             }
@@ -906,7 +961,7 @@ namespace SaveAPI
 
         public static void LogSmart(string text, bool debuglog = false)
         {
-            if(ETGModConsole.Instance != null)
+            if (ETGModConsole.Instance != null)
             {
                 ETGModConsole.Log(text, debuglog);
             }

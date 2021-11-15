@@ -137,6 +137,9 @@ namespace Planetside
 				TemplateMovementModule mod = new TemplateMovementModule();
 				//mod.ForceInvert = (UnityEngine.Random.value > 0.5f) ? false : true;
 				obj.projectile.OverrideMotionModule = mod;
+
+				ETGModConsole.Log(obj.projectile.sprite.renderer.material.shader.ToString());
+
 			}
 			catch (Exception ex)
 			{

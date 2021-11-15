@@ -118,7 +118,7 @@ namespace Planetside
                 projectile.specRigidbody.CollideWithOthers = false;
 
                 EmmisiveBeams emiss = beamComp.gameObject.AddComponent<EmmisiveBeams>();
-                emiss.EmissiveColorPower = 1.1f;
+                emiss.EmissiveColorPower = 10f;
                 emiss.EmissivePower = 100;
 
                 beamComp.boneType = BasicBeamController.BeamBoneType.Projectile;
@@ -129,12 +129,6 @@ namespace Planetside
                 beamComp.penetration = 1;
                 beamComp.reflections = 0;
                 beamComp.IsReflectedBeam = false;
-                //beamComp.specRigidbody.CollideWithOthers = false;
-
-                //beamComp.ReflectedFromRigidbody = true;
-                //beamComp.interpolateStretchedBones = false;
-                //beamComp.HitsEnemies = true;
-                //beamComp.HitsPlayers = false;
                 mod.projectiles[0] = projectile;
 
                 gun.sprite.usesOverrideMaterial = true;

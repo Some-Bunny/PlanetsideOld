@@ -27,7 +27,7 @@ namespace Planetside
 			Game.Items.Rename("outdated_gun_mods:divine_light", "psog:divine_light");
 			gun.gameObject.AddComponent<DivineLight>();
 			GunExt.SetShortDescription(gun, "You Dare Defy The Father?");
-			GunExt.SetLongDescription(gun, "Fires spears that return to its master.\n\nCarried by a prideful, religious Gungeoneer seeking to convert the Gundead to Christianity. He was promptly shot but did put up a good fight.");
+			GunExt.SetLongDescription(gun, "Fires shots that return to their master.\n\nCarried by a prideful, religious Gungeoneer seeking to convert the Gundead to Christianity. He was promptly shot but did put up a good fight.");
 			GunExt.SetupSprite(gun, null, "divinelight_idle_001", 8);
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 24);
 			GunExt.SetAnimationFPS(gun, gun.reloadAnimation, 5);
@@ -65,7 +65,7 @@ namespace Planetside
 			gun.DefaultModule.projectiles[0] = projectile;
 			projectile.transform.parent = gun.barrelOffset;
 			projectile.gameObject.AddComponent<DivineLightProjectile>();
-			projectile.SetProjectileSpriteRight("divinelightprojectile_001", 15, 5, false, tk2dBaseSprite.Anchor.MiddleCenter, 15, 5);
+			projectile.SetProjectileSpriteRight("divinelightprojectile_001", 9, 9, false, tk2dBaseSprite.Anchor.MiddleCenter, 9, 9);
 
 			ImprovedAfterImage yes = projectile.gameObject.AddComponent<ImprovedAfterImage>();
 			yes.spawnShadows = true;
@@ -73,10 +73,9 @@ namespace Planetside
 			yes.shadowTimeDelay = 0.01f;
 			yes.dashColor = new Color(1f, 1f, 1f, 0.08f);
 
-			projectile.AdditionalScaleMultiplier *= 1.4f;
+			projectile.AdditionalScaleMultiplier *= 0.6f;
 			projectile.baseData.damage = 10f;
 			projectile.baseData.speed *= 4;
-			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
 			projectile.hitEffects.alwaysUseMidair = true;
 			projectile.hitEffects.overrideMidairDeathVFX = (PickupObjectDatabase.GetById(178) as Gun).DefaultModule.projectiles[0].hitEffects.overrideMidairDeathVFX;
@@ -92,7 +91,7 @@ namespace Planetside
 			projectile1.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile1.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile1);
-			projectile1.SetProjectileSpriteRight("divinelightprojectile_001", 15, 5, false, tk2dBaseSprite.Anchor.MiddleCenter, 15, 5);
+			projectile1.SetProjectileSpriteRight("divinelightprojectile_001", 9, 9, false, tk2dBaseSprite.Anchor.MiddleCenter, 9, 9);
 
 			ImprovedAfterImage yes1 = projectile1.gameObject.AddComponent<ImprovedAfterImage>();
 			yes1.spawnShadows = true;
@@ -100,7 +99,7 @@ namespace Planetside
 			yes1.shadowTimeDelay = 0.01f;
 			yes1.dashColor = new Color(1f, 1f, 1f, 0.08f);
 
-			projectile1.AdditionalScaleMultiplier *= 1.4f;
+			projectile1.AdditionalScaleMultiplier *= 0.6f;
 			projectile1.baseData.damage = 10f;
 			projectile1.baseData.speed *= 4;
 			projectile1.shouldRotate = true;

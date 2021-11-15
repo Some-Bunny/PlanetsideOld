@@ -91,7 +91,7 @@ namespace Planetside
 			}
 			public void AIActorMods(AIActor target)
 			{
-				if (target != null && !OtherTools.BossBlackList.Contains(target.aiActor.encounterTrackable.EncounterGuid) && UnityEngine.Random.value <= 0.25f)
+				if (target != null && !OtherTools.BossBlackList.Contains(target.aiActor.encounterTrackable.EncounterGuid))
 				{
 					target.gameObject.AddComponent<PetrifyThing>();
 				}

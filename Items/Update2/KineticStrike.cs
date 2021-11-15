@@ -16,6 +16,8 @@ using MonoMod;
 
 namespace Planetside
 {
+
+
     public class KineticStrike : PlayerItem
     {
 
@@ -34,6 +36,7 @@ namespace Planetside
             lockpicker.quality = PickupObject.ItemQuality.S;
             lockpicker.AddToSubShop(ItemBuilder.ShopType.Trorc, 1f);
 
+            lockpicker.gameObject.AddComponent<BoomhildrItemPool>();
 
             GameObject gameObject = SpriteBuilder.SpriteFromResource("Planetside/Resources/VFX/KineticStrike/redmarksthespot", null, true);
             gameObject.SetActive(false);

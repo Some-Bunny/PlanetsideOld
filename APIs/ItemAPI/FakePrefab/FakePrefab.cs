@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using NpcApi;
 using UnityEngine;
 namespace ItemAPI
 {
@@ -72,10 +72,24 @@ namespace ItemAPI
             if (o is GameObject && ExistingFakePrefabs.Contains((GameObject)o))
             {
                 ((GameObject)new_o).SetActive(true);
+                if ((new_o as GameObject).GetComponent<CustomShopController>() != null)
+                {
+                    (new_o as GameObject).GetComponent<CustomShopController>().customCanBuy = (o as GameObject).GetComponent<CustomShopController>().customCanBuy;
+                    (new_o as GameObject).GetComponent<CustomShopController>().customPrice = (o as GameObject).GetComponent<CustomShopController>().customPrice;
+                    (new_o as GameObject).GetComponent<CustomShopController>().removeCurrency = (o as GameObject).GetComponent<CustomShopController>().removeCurrency;
+                }
             }
             else if (o is Component && ExistingFakePrefabs.Contains(((Component)o).gameObject))
             {
                 ((Component)new_o).gameObject.SetActive(true);
+                if ((new_o is CustomShopController))
+                {
+                    (new_o as CustomShopController).customCanBuy = (o as CustomShopController).customCanBuy;
+                    (new_o as CustomShopController).customPrice = (o as CustomShopController).customPrice;
+                    (new_o as CustomShopController).removeCurrency = (o as CustomShopController).removeCurrency;
+                }
+
+
             }
             return new_o;
         }

@@ -41,14 +41,12 @@ namespace GungeonAPI
                             foreach (var roomsData in roomData)
                             {
                                 string name = roomsData.room.name;
-                                //Tools.PrintNoID($"Found room: \"{name}\"");
+                                //OtherTools.PrintNoID($"Found room: \"{name}\"");
                                 DungeonHandler.Register(roomsData);
                                 rooms.Add(roomsData.room.name, roomsData);
 
                             }
-
                         }
-
                     }
             }
             else

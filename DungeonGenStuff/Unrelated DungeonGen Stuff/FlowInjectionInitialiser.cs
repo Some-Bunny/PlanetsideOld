@@ -292,14 +292,14 @@ namespace Planetside
 				name = "EmergencyAnnotationName";
 			}
 
-			Vector2 offset = new Vector2(-0.75f, -0.75f);
+			Vector2 offset = new Vector2(-2.25f, -1.25f);
 			Vector2 vector = new Vector2((float)(RequiredRoom.Width / 2) + offset.x, (float)(RequiredRoom.Height / 2) + offset.y);
 
 			RequiredRoom.placedObjectPositions.Add(vector);
 			DungeonPrerequisite[] array = new DungeonPrerequisite[0];
 
 			GameObject original;
-			ItsDaFuckinShopApi.builtShops.TryGetValue("psog:timedshop", out original);
+			NpcApi.ItsDaFuckinShopApi.builtShops.TryGetValue("psog:timedshop", out original);
 			RequiredRoom.placedObjects.Add(new PrototypePlacedObjectData
 			{
 

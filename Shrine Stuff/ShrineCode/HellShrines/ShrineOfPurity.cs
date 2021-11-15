@@ -142,8 +142,10 @@ namespace Planetside
 			}
 			private void EnteredCombat()
             {
-				RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
-				absoluteRoom.BecomeTerrifyingDarkRoom(1f, 0.15f, 0.3f, "Play_ENM_darken_world_01");
+				AkSoundEngine.PostEvent("Play_ENM_darken_world_01", base.gameObject);
+				NevernamedsDarknessHandler.EnableDarkness(15f, 1.5f);
+				//RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
+				//absoluteRoom.BecomeTerrifyingDarkRoom(1f, 0.15f, 0.3f, "Play_ENM_darken_world_01");
 			}
 
 			protected override void OnDestroy()
@@ -159,8 +161,10 @@ namespace Planetside
 			private void RoomCleared(PlayerController obj)
 			{
 				AdvancedGameStatsManager.Instance.SetFlag(CustomDungeonFlags.DEDARKEN, true);
-				RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
-				absoluteRoom.EndTerrifyingDarkRoom();
+				AkSoundEngine.PostEvent("Play_ENM_lighten_world_01", base.gameObject);
+				NevernamedsDarknessHandler.DisableDarkness(1.5f);
+				//RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
+				//absoluteRoom.EndTerrifyingDarkRoom();
 				OtherTools.Notify("Curse Of Darkness cleansed", "You are free now.", "Planetside/Resources/ShrineIcons/PurityIcon");
 				playeroue.OnRoomClearEvent -= this.RoomCleared;
 				playeroue.OnEnteredCombat -= this.EnteredCombat;
@@ -274,7 +278,7 @@ namespace Planetside
 				if (target != null && !OtherTools.BossBlackList.Contains(target.aiActor.encounterTrackable.EncounterGuid))
 				{
 					PetrifyThing pet = target.gameObject.AddComponent<PetrifyThing>();
-					pet.Time = 6f;
+					pet.Time = 17.5f;
 				}
 			}
 			private void RoomCleared(PlayerController obj)
@@ -325,6 +329,8 @@ namespace Planetside
 				if (target != null && !OtherTools.BossBlackList.Contains(target.aiActor.encounterTrackable.EncounterGuid))// && UnityEngine.Random.value <= 0.25f)
 				{
 					target.behaviorSpeculator.CooldownScale /= 0.25f;
+					target.MovementSpeed *= 1.45f;
+
 				}
 			}
 			protected override void OnDestroy()

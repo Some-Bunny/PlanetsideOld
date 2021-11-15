@@ -142,14 +142,6 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 			this.m_aiAnimator.PlayUntilCancelled(this.ChargeAnimation, true, null, -1f, false);
 
 		}
-		/*
-		for (int yeah = 0; yeah < this.m_currentBeamShooters.Count; yeah++)
-		{
-			AIBeamShooter2 aibeamShooter2 = this.m_currentBeamShooters[yeah];
-			ETGModConsole.Log(aibeamShooter2.name);
-		}
-		*/
-		//ETGModConsole.Log("ENDED PRECHARGE");
 		return BehaviorResult.RunContinuous;
 	}
 
@@ -157,7 +149,6 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 	{
 
 		base.ContinuousUpdate();
-		//Vector2 b = base.m_aiActor.sprite.WorldCenter;
 		if (this.m_state == CustomBeholsterLaserBehavior.State.PreCharging)
 		{
 			if (!this.LaserActive)
@@ -187,7 +178,6 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 					this.HasTriggeredScript = true;
 					if (this.BulletScript != null && !this.BulletScript.IsNull)
 					{
-						//ETGModConsole.Log(this.BulletScript.ToString());
 						if (!this.m_bulletSource)
 						{
 							this.m_bulletSource = this.ShootPoint.gameObject.GetOrAddComponent<BulletScriptSource>();
@@ -294,19 +284,12 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 	public void PrechargeFiringLaser()
 	{
 		this.m_aiActor.aiAnimator.LockFacingDirection = true;
-		//AkSoundEngine.PostEvent(EnemyChargeSound, base.gameObject);
 		if (EnemyChargeSound != null) { AkSoundEngine.PostEvent(EnemyChargeSound, base.m_aiActor.gameObject); }
 		else if (UsesBaseSounds == true) { AkSoundEngine.PostEvent("Play_ENM_beholster_charging_01", base.m_aiActor.gameObject); }
-
-		//this.m_laserActive = true;
-
-		
-		//base.aiAnimator.PlayUntilCancelled("charge", true, null, -1f, false);
 	}
 
 	public void ChargeFiringLaser(float time)
 	{
-		//AkSoundEngine.PostEvent(BeamChargingSound, base.gameObject);
 		if (BeamChargingSound != null) { AkSoundEngine.PostEvent(BeamChargingSound, base.m_aiActor.gameObject); }
 		else if (UsesBaseSounds == true) { AkSoundEngine.PostEvent("Play_ENM_beholster_charging_01", base.m_aiActor.gameObject); }
 		this.m_laserActive = true;
@@ -319,20 +302,10 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 		this.SetLaserAngle(facingDirection);
 		this.m_aiActor.aiAnimator.LockFacingDirection = true;
 
-		//ETGModConsole.Log("1", false);
-		//float facingDirection = base.m_aiActor.aiAnimator.FacingDirection;
-		//ETGModConsole.Log("2", false);
 		AkSoundEngine.PostEvent("Play_ENM_deathray_shot_01", base.m_aiActor.gameObject);
-		//ETGModConsole.Log("3", false);
-		//this.m_laserActive = true;
 		this.IsfiringLaser = true;
-		//ETGModConsole.Log("4", false);
-		//ETGModConsole.Log("5", false);
 		base.m_aiActor.aiAnimator.LockFacingDirection = true;
-		//ETGModConsole.Log("6", false);
-		//base.aiAnimator.PlayUntilCancelled("eyelaser", true, null, -1f, false);
 		MonoBehaviour yes = this.m_aiActor.GetComponent<MonoBehaviour>();
-
 		for (int i = 0; i < this.m_currentBeamShooters.Count; i++)
 		{
 			AIBeamShooter2 aibeamShooter2 = this.m_currentBeamShooters[i];
@@ -354,7 +327,6 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 			this.m_aiAnimator.PlayUntilFinished(this.PostFireAnimation, true, null, -1f, false);
 
 		}
-		//AkSoundEngine.PostEvent(StopLaserFiringSound, base.gameObject);
 		if (StopLaserFiringSound != null) {	AkSoundEngine.PostEvent(StopLaserFiringSound, base.m_aiActor.gameObject);}
 		else if (UsesBaseSounds == true) {	AkSoundEngine.PostEvent("Stop_ENM_deathray_loop_01", base.m_aiActor.gameObject);}
 		this.m_laserActive = false;
@@ -365,18 +337,11 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 
 	protected IEnumerator FireBeam(AIBeamShooter2 aibeamShooter2)
 	{
-		//AIActor actor = EnemyDatabase.GetOrLoadByGuid("4b992de5b4274168a8878ef9bf7ea36b");
-		//ProjectileModule fuck = actor.gameObject.GetComponent<BeholsterController>().beamModule;
-		//controller.startAudioEvent = "Play_WPN_demonhead_shot_01";
-		//controller.endAudioEvent = "Stop_WPN_demonhead_loop_01";
-
 		GameObject beamObject = UnityEngine.Object.Instantiate<GameObject>(aibeamShooter2.beamModule.GetCurrentProjectile().gameObject);
 		if (UsesBeamProjectileWithoutModule)
         {
 			beamObject = UnityEngine.Object.Instantiate<GameObject>(aibeamShooter2.beamProjectile.gameObject);
 		}
-
-
 		BasicBeamController beamCont = beamObject.GetComponent<BasicBeamController>();
 
 		List<AIActor> activeEnemies = base.m_aiActor.ParentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
@@ -391,7 +356,6 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 		beamCont.Owner = base.m_aiActor;
 		beamCont.HitsPlayers = true;
 		beamCont.HitsEnemies = true;
-		//bool facingNorth = BraveMathCollege.ClampAngle180(base.m_aiActor.aiAnimator.FacingDirection) > 0f;
 
 		beamCont.HeightOffset = 0f;
 		beamCont.RampHeightOffset = 0;
@@ -439,7 +403,6 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 		bool firstFrame = true;
 		while (beamCont != null && this.IsfiringLaser)
 		{
-			//ETGModConsole.Log(aibeamShooter2.LaserAngle.ToString());
 			enemyTickCooldown = Mathf.Max(enemyTickCooldown - BraveTime.DeltaTime, 0f);
 			bool flag4 = this.UsesCustomAngle == true && this.FiresDirectlyTowardsPlayer == true;
 			float clampedAngle;
@@ -494,10 +457,6 @@ public class CustomBeholsterLaserBehavior : BasicAttackBehavior
 			}
 			else
 			{
-				//beamCont.Direction = dirVec2;
-
-				//facingNorth = (BraveMathCollege.ClampAngle180(base.m_aiActor.aiAnimator.FacingDirection) > 0f);
-				//beamCont.RampHeightOffset = (float)((!facingNorth) ? 0 : 0);
 				beamCont.LateUpdatePosition(startingPoint);
 				yield return null;
 				if (this.IsfiringLaser && !beamCont)

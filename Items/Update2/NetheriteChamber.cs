@@ -20,7 +20,7 @@ namespace Planetside
 			NetheriteChamber chamber = gameObject.AddComponent<NetheriteChamber>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
 			string shortDesc = "Forged From Bullet Hells Metals";
-			string longDesc = "A diamond-encrusted chamber plated with a metal unique to Bullet Hell. It's reinforced power calls upon the Guardians of Kaliber to your aid.";
+			string longDesc = "A diamond-encrusted chamber plated with a metal unique to Bullet Hell. Its reinforced power calls upon the Guardians of Kaliber to your aid.";
 			ItemBuilder.SetupItem(chamber, shortDesc, longDesc, "psog");
 			chamber.quality = PickupObject.ItemQuality.EXCLUDED;
 			NetheriteChamber.ChaamberID = chamber.PickupObjectId;

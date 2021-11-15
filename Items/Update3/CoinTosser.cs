@@ -28,7 +28,7 @@ namespace Planetside
             CoinTosser lockpicker = obj.AddComponent<CoinTosser>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
             string shortDesc = "Version One";
-            string longDesc = "Toss a coin out of your own pocket. Thrown coins can be interracted with in many ways to greatly increase damage output!\n\nOriginally carried by a robot seeking to find Bullet Hell to fuel itself for all of eternity.";
+            string longDesc = "Toss a coin out of your own pocket. Thrown coins can be interracted with in many ways (such as shooting them) to greatly increase damage output!\n\nOriginally carried by a robot seeking to find Bullet Hell to fuel itself for all of eternity.";
             lockpicker.SetupItem(shortDesc, longDesc, "psog");
             lockpicker.SetCooldownType(ItemBuilder.CooldownType.Timed, 0.333f);
             lockpicker.consumable = false;

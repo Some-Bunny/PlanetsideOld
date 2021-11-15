@@ -45,9 +45,16 @@ namespace Planetside
 		{
 			try
 			{
-				sourceProjectile.AppliesPoison = true;
-				sourceProjectile.PoisonApplyChance = 0.2f;
-				sourceProjectile.healthEffect = DebuffLibrary.Frailty;
+
+				float procChance = 0.25f;
+				procChance *= effectChanceScalar;
+				if (UnityEngine.Random.value <= procChance)
+				{
+					sourceProjectile.AdjustPlayerProjectileTint(new Color(0.5f, 0 ,0.5f), 2, 0f);
+					sourceProjectile.AppliesPoison = true;
+					sourceProjectile.PoisonApplyChance = 1f;
+					sourceProjectile.healthEffect = DebuffLibrary.Frailty;
+				}
 			}
 			catch (Exception ex)
 			{
@@ -57,12 +64,6 @@ namespace Planetside
 
 		private void PostProcessBeamTick(BeamController beam, SpeculativeRigidbody hitRigidBody, float tickrate)
 		{
-			/*
-            foreach (Component item in beam.GetComponentsInChildren(typeof(Component)))
-            {
-                ETGModConsole.Log(item.GetType().ToString());
-            }
-			*/
 			float procChance = 0.25f; //Chance per second or some shit idk
 			GameActor gameActor = hitRigidBody.gameActor;
 			if (!gameActor)

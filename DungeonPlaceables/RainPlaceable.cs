@@ -12,7 +12,6 @@ namespace Planetside
 	// Token: 0x0200008A RID: 138
 	public class PlanetsideRainPlaceable : DungeonPlaceableBehaviour, IPlaceConfigurable
 	{
-		// Token: 0x060004C7 RID: 1223 RVA: 0x000B226C File Offset: 0x000B046C
 		private PlanetsideRainPlaceable()
 		{
 			this.RainIntensity = 100f;
@@ -21,17 +20,14 @@ namespace Planetside
 			this.isSecretFloor = true;
 		}
 
-		// Token: 0x060004C8 RID: 1224 RVA: 0x00003F3D File Offset: 0x0000213D
 		public void Start()
 		{
 		}
 
-		// Token: 0x060004C9 RID: 1225 RVA: 0x00003F3D File Offset: 0x0000213D
 		public void Update()
 		{
 		}
 
-		// Token: 0x060004CA RID: 1226 RVA: 0x000B2294 File Offset: 0x000B0494
 		public void ConfigureOnPlacement(RoomHandler room)
 		{
 			PlanetsideWeatherController expandWeatherController = GameManager.Instance.Dungeon.gameObject.AddComponent<PlanetsideWeatherController>();
@@ -41,22 +37,13 @@ namespace Planetside
 			expandWeatherController.isSecretFloor = this.isSecretFloor;
 		}
 
-		// Token: 0x060004CB RID: 1227 RVA: 0x00002570 File Offset: 0x00000770
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
 		}
-
-		// Token: 0x04000666 RID: 1638
 		public bool useCustomIntensity;
-
-		// Token: 0x04000667 RID: 1639
 		public float RainIntensity;
-
-		// Token: 0x04000668 RID: 1640
 		public bool enableLightning;
-
-		// Token: 0x04000669 RID: 1641
 		public bool isSecretFloor;
 	}
 }
@@ -92,7 +79,6 @@ namespace Planetside
 			this.m_lightningTimer = UnityEngine.Random.Range(this.MinTimeBetweenLightningStrikes, this.MaxTimeBetweenLightningStrikes);
 		}
 
-		// Token: 0x060004CD RID: 1229 RVA: 0x000B23C4 File Offset: 0x000B05C4
 		private void Start()
 		{
 			GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(DungeonDatabase.GetOrLoadByName("finalscenario_guide").PatternSettings.flows[0].AllNodes[0].overrideExactRoom.placedObjects[0].nonenemyBehaviour.gameObject.transform.Find("Rain").gameObject);
@@ -147,7 +133,10 @@ namespace Planetside
 			}
 		}
 
-		private void CheckForWeatherFX(PlayerController player, float RainIntensity)
+
+
+
+		public void CheckForWeatherFX(PlayerController player, float RainIntensity)
 		{
 			try
 			{
@@ -156,15 +145,6 @@ namespace Planetside
 			catch (Exception exception)
 			{
 				ETGModConsole.Log(exception.ToString());
-				/*
-				if (ExpandStats.debugMode)
-				{
-					Debug.Log("[WARNING] Exception caught while checking room for WeatherFX toggle!...");
-					Debug.LogException(exception);
-					ETGModConsole.Log("[WARNING] Exception caught while checking room for WeatherFX toggle!...", false);
-					ETGModConsole.Log("Exception has been logged.", false);
-				}
-				*/
 			}
 		}
 

@@ -227,7 +227,8 @@ namespace Planetside
 							if (obj != null)
                             {
 								tk2dTiledSprite component2 = obj.GetComponent<tk2dTiledSprite>();
-								if (i == -3 | i == 0 | i == 3)
+
+								if (i == -3 | i == 0 | i == 3)	
 								{
 									component2.dimensions = new Vector2((16) * 2f, 1f);
 								}

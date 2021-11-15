@@ -214,6 +214,8 @@ namespace Planetside
             {
                 Minimap.Instance.PreventAllTeleports = true;
                 Minimap.Instance.TemporarilyPreventMinimap = true;
+                NevernamedsDarknessHandler.EnableDarkness(0, 0);
+
                 GameManager.Instance.StartCoroutine(DelaySW());
                 IsHollow = true;
                 FloorChanged = false;
@@ -313,6 +315,7 @@ namespace Planetside
         {
             if (this != null)
             {
+                NevernamedsDarknessHandler.DisableDarkness(0);
                 Minimap.Instance.TemporarilyPreventMinimap = false;
                 FloorChanged = true;
                 GameManager.Instance.OnNewLevelFullyLoaded -= this.DisableSW;
@@ -399,24 +402,16 @@ namespace Planetside
                 }
             }
         }
-        private bool ReturnShouldBeDark()
-        {
-            if (shouldBeDark.Value && !shouldBeLightOverride.Value)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+       
         private void Update()
         {
             if(IsHollow == true)
             {
                 AkSoundEngine.PostEvent("Stop_MUS_All", base.gameObject);
-                if (DarknessEffectShader != null && Pixelator.Instance != null)
+                
+                //if (DarknessEffectShader != null && Pixelator.Instance != null)
                 {
+                    /*
                     if (Pixelator.Instance.AdditionalCoreStackRenderPass == null && Pixelator.Instance != null)
                     {
                         m_material = new Material(DarknessEffectShader);
@@ -454,7 +449,9 @@ namespace Planetside
                         m_material.SetVector("_Player1ScreenPosition", centerPointInScreenUV);
                         m_material.SetVector("_Player2ScreenPosition", vector);
                     }
+                    */
                 }
+                
             }
         }
         private static Vector4 GetCenterPointInScreenUV(Vector2 centerPoint)
@@ -464,6 +461,6 @@ namespace Planetside
         }
         public static bool isDark = false;
         public static Shader DarknessEffectShader;
-        private static Material m_material;
+        //private static Material m_material;
     }
 }

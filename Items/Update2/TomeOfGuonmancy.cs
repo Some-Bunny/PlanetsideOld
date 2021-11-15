@@ -37,6 +37,8 @@ namespace Planetside
             testActive.SetCooldownType(ItemBuilder.CooldownType.Damage, 300f);
             testActive.consumable = false;
             testActive.quality = PickupObject.ItemQuality.B;
+            testActive.gameObject.AddComponent<IronsideItemPool>();
+
             List<string> TimeGuon = new List<string>
             {
                 "psog:tome_of_guonmancy",

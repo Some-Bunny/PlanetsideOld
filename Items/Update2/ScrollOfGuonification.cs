@@ -41,6 +41,8 @@ namespace Planetside
             testActive.SetCooldownType(ItemBuilder.CooldownType.Timed, 0.25f);
             testActive.consumable = false;
             testActive.quality = PickupObject.ItemQuality.C;
+			testActive.gameObject.AddComponent<IronsideItemPool>();
+
 			List<string> mandatoryConsoleIDs = new List<string>
 			{
 				"psog:scroll_of_guonification",

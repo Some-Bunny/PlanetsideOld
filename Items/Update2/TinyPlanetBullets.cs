@@ -36,6 +36,7 @@ namespace Planetside
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.RangeMultiplier, 5f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 			item.quality = PickupObject.ItemQuality.D;
 			item.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+			item.gameObject.AddComponent<RustyItemPool>();
 
 			TinyPlanetBullets.CorruptBulletsID = item.PickupObjectId;
 			ItemIDs.AddToList(item.PickupObjectId);

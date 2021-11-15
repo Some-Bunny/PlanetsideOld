@@ -24,60 +24,71 @@ namespace Planetside
 	{
 		public PetrifyThing()
         {
-			this.Time = 4f;
+			this.Time = 10f;
 		}
 
 		public bool HasTriggered;
 		public void Start()
 		{
-			//UnityEngine.Object.Destroy(cm); 
 			base.healthHaver.OnPreDeath += this.OnPreDeath;
-			//base.healthHaver.minimumHealth += this.CheatDeath;
 		}
 		private void OnPreDeath(Vector2 obj)
 		{
-			base.StartCoroutine(this.LaunchWave(base.aiActor.sprite.WorldCenter));
-		}
-		public GameObject EyesVFX;
-
-		private IEnumerator LaunchWave(Vector2 startPoint)
-		{
-			AkSoundEngine.PostEvent("Play_ENM_gorgun_gaze_01", base.gameObject);
-			float m_prevWaveDist = 0f;
-			float distortionMaxRadius = 20f;
-			float distortionDuration = 1f;
-			float distortionIntensity = 0.5f;
-			float distortionThickness = 0.04f;
-			Exploder.DoDistortionWave(startPoint, distortionIntensity, distortionThickness, distortionMaxRadius, distortionDuration);
-			float waveRemaining = distortionDuration - (BraveTime.DeltaTime);
-			while (waveRemaining > 0f)
+			AkSoundEngine.PostEvent("Play_BOSS_wall_slam_01", base.gameObject);
+			GameObject dragunBoulder = EnemyDatabase.GetOrLoadByGuid("05b8afe0b6cc4fffa9dc6036fa24c8ec").GetComponent<DraGunController>().skyBoulder;
+			foreach (Component item in dragunBoulder.GetComponentsInChildren(typeof(Component)))
 			{
-				waveRemaining -= BraveTime.DeltaTime;
-				float waveDist = BraveMathCollege.LinearToSmoothStepInterpolate(0f, distortionMaxRadius, 1f - waveRemaining / distortionDuration);
-				for (int i = 0; i < GameManager.Instance.AllPlayers.Length; i++)
+				if (item is SkyRocket laser)
 				{
-					PlayerController playerController = GameManager.Instance.AllPlayers[i];
-					if (!playerController.healthHaver.IsDead)
+					ExplosionData explosionData = laser.ExplosionData;	
+					UnityEngine.Object.Instantiate<GameObject>(explosionData.effect, base.transform.position, Quaternion.identity);
+					foreach (Component item2 in UnityEngine.Object.Instantiate<GameObject>(laser.SpawnObject, base.transform.position, Quaternion.identity).GetComponentsInChildren(typeof(Component)))
 					{
-						if (!playerController.spriteAnimator.QueryInvulnerabilityFrame() && playerController.healthHaver.IsVulnerable)
+						if (item2 is DraGunBoulderController laser2)
 						{
-							Vector2 unitCenter = playerController.specRigidbody.GetUnitCenter(ColliderType.HitBox);
-							float num = Vector2.Distance(unitCenter, startPoint);
-							if (num >= m_prevWaveDist - 3f && num <= waveDist +3)
+							laser2.LifeTime = base.aiActor != null ? (base.aiActor.healthHaver.GetMaxHealth()/75)* Time : Time;
+							float ZoneSize = (base.aiActor.healthHaver.GetMaxHealth() / 50)+0.33f;
+							GameManager.Instance.Dungeon.StartCoroutine(this.IncraeseInSize(laser2.CircleSprite, ZoneSize >= 2 ? 2 : ZoneSize));
+
+							SpeculativeRigidbody body = laser2.GetComponentInChildren<SpeculativeRigidbody>();
+							if (body) 
 							{
-								playerController.CurrentStoneGunTimer = Time;
+								List <PixelCollider> colliders = body.PixelColliders.ToList();
+								foreach (PixelCollider collider in colliders)
+								{
+									int X = (int)(collider.ManualOffsetX * (ZoneSize >= 2 ? 2 : ZoneSize));
+									int Y = (int)(collider.ManualOffsetY * (ZoneSize >= 2 ? 2 : ZoneSize));
+									collider.ManualOffsetX = X;
+									collider.ManualOffsetY = Y;
+									collider.ManualDiameter = (int)(collider.ManualDiameter * (ZoneSize >= 2 ? 2 : ZoneSize));
+									collider.ManualHeight = (int)(collider.ManualHeight * (ZoneSize >= 2 ? 2 : ZoneSize));
+								}
 							}
 						}
 					}
 				}
-				m_prevWaveDist = waveDist;
-				yield return null;
 			}
 		}
-		public void Update()
+		public GameObject EyesVFX;
+
+		private IEnumerator IncraeseInSize(tk2dSprite CircleSprite, float SizeMultiplier=1)
 		{
-			
+			float elapsed = 0f;
+			float duration = 0.75f;
+			while (elapsed < duration)
+			{
+				elapsed += BraveTime.DeltaTime;
+				float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+				if (CircleSprite)
+				{
+					CircleSprite.scale = Vector3.Lerp(Vector3.zero, Vector3.one * SizeMultiplier, t);
+				}
+				yield return null;
+			}
+			UnityEngine.Object.Destroy(this.gameObject);
+			yield break;
 		}
+
 		public float Time;
 		public float minimumHealth;
 		public float CheatDeath = 2f;

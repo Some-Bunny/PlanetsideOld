@@ -52,7 +52,7 @@ namespace Planetside
 			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile);
 			gun.DefaultModule.projectiles[0] = projectile;
-			projectile.baseData.damage = 5f;
+			projectile.baseData.damage = 4.5f;
 			projectile.baseData.speed *= 1f;
 			projectile.AdditionalScaleMultiplier *= 1.1f;
 			projectile.shouldRotate = true;
@@ -270,6 +270,7 @@ namespace Planetside
 				this.gun.SetBaseMaxAmmo(Ammo + AmmoRegained);
 				Ammo += AmmoRegained;
 				player.BloopItemAboveHead(ahfuck, "");
+				this.gun.ammo += ae;
 				bool ee = player.PlayerHasActiveSynergy("Recycling");
 				if (ee)
                 {

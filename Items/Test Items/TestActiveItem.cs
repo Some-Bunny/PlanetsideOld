@@ -42,12 +42,15 @@ namespace Planetside
             testActive.SetCooldownType(ItemBuilder.CooldownType.Timed, 1f);
             testActive.consumable = false;
             testActive.quality = PickupObject.ItemQuality.EXCLUDED;
-            particle = AdvancedDragunPrefab.GetComponentInChildren<ParticleSystem>();
+            //particle = AdvancedDragunPrefab.GetComponentInChildren<ParticleSystem>();
 
-            particleTexture = ResourceExtractor.GetTextureFromResource("Planetside/Resources/blashshower.png");
+            // particleTexture = ResourceExtractor.GetTextureFromResource("Planetside/Resources/blashshower.png");
 
+
+            AssetBundle bundle = ResourceManager.LoadAssetBundle("brave_resources_001");
+            LaserReticle = bundle.LoadAsset("assets/resourcesbundle/global vfx/vfx_lasersight.prefab") as GameObject;
+            bundle = null;
         }
-        public static Texture2D particleTexture;
 
 
         public override void Pickup(PlayerController player)
@@ -64,7 +67,7 @@ namespace Planetside
         //private BasicBeamController mean = LaserReticle.get
 
         private static GameObject AdvancedDragunPrefab = bundle.LoadAsset("assets/data/enemies/bosses/dragun.prefab") as GameObject;
-        private static ParticleSystem particle;
+        //private static ParticleSystem particle;
 
 
         //WORKS
@@ -74,6 +77,11 @@ namespace Planetside
         public GameObject objectToSpawn;
         //GoopDefinition goop;
         private Projectile beamProjectile = EnemyDatabase.GetOrLoadByGuid("b98b10fca77d469e80fb45f3c5badec5").GetComponent<BossFinalRogueGunController>().GetComponent<BossFinalRogueLaserGun>().beamProjectile;
+
+
+        private static GameObject LaserReticle;
+        private tk2dTiledSprite ExtantLaserReticle;
+
 
         public float Hell;
         public override void Update()
@@ -99,6 +107,92 @@ namespace Planetside
         }
         protected override void DoEffect(PlayerController user)
         {
+            Vector2 vector = ReflectionHelper.ReflectGetField<Vector2>(typeof(Gun), "m_localAimPoint", user.CurrentGun) -user.specRigidbody.HitboxPixelCollider.UnitCenter;
+            if (this.ExtantLaserReticle == null)
+            {
+                string path = "Global VFX/VFX_LaserSight";
+                if (!(user is PlayerController))
+                {
+                    path = ((!this.ExtantLaserReticle) ? "Global VFX/VFX_LaserSight_Enemy" : "Global VFX/VFX_LaserSight_Enemy_Green");
+                }
+                this.ExtantLaserReticle = SpawnManager.SpawnVFX(LaserReticle, false).GetComponent<tk2dTiledSprite>();
+                this.ExtantLaserReticle.IsPerpendicular = false;
+                this.ExtantLaserReticle.HeightOffGround = 22;
+                this.ExtantLaserReticle.renderer.enabled = true;
+                //this.ExtantLaserReticle.transform.parent = user.CurrentGun.barrelOffset;
+            }
+            //this.ExtantLaserReticle.transform.localPosition = Vector3.zero;
+            //this.ExtantLaserReticle.transform.rotation = Quaternion.Euler(0f, 0f, user.CurrentGun.CurrentAngle);
+
+
+
+            if (this.ExtantLaserReticle.renderer.enabled)
+            {
+                Func<SpeculativeRigidbody, bool> rigidbodyExcluder = (SpeculativeRigidbody otherRigidbody) => otherRigidbody.minorBreakable && !otherRigidbody.minorBreakable.stopsBullets;
+                bool flag2 = false;
+                float num9 = float.MaxValue;
+                {
+                    CollisionLayer layer2 = (!(user is PlayerController)) ? CollisionLayer.PlayerHitBox : CollisionLayer.EnemyHitBox;
+                    int rayMask2 = CollisionMask.LayerToMask(CollisionLayer.HighObstacle, CollisionLayer.BulletBlocker, layer2, CollisionLayer.BulletBreakable);
+                    RaycastResult raycastResult2;
+                    if (PhysicsEngine.Instance.Raycast(user.CurrentGun.barrelOffset.position.XY(), vector, 1000, out raycastResult2, true, true, rayMask2, null, false, rigidbodyExcluder, null))
+                    {
+                        flag2 = true;
+                        num9 = raycastResult2.Distance;
+                        /*
+                        if (raycastResult2.SpeculativeRigidbody && raycastResult2.SpeculativeRigidbody.aiActor)
+                        {
+                            user.CurrentGun.HandleEnemyHitByLaserSight(raycastResult2.SpeculativeRigidbody.aiActor);
+                        }
+                        */
+                    }
+                    RaycastResult.Pool.Free(ref raycastResult2);
+                }
+                this.ExtantLaserReticle.dimensions = new Vector2((!flag2) ? 480f : (num9 / 0.0625f), 1f);
+                this.ExtantLaserReticle.ForceRotationRebuild();
+                this.ExtantLaserReticle.UpdateZDepth();
+            }
+
+
+
+
+
+
+            /*
+            SpawnObjectPlayerItem Molotv = PickupObjectDatabase.GetById(366).GetComponent<SpawnObjectPlayerItem>();
+            Vector3 vector = user.unadjustedAimPoint - user.LockedApproximateSpriteCenter;
+            Vector3 vector2 = user.specRigidbody.UnitCenter;
+            if (vector.y > 0f)
+            {
+                vector2 += Vector3.up * 0.25f;
+            }
+            GameObject gameObject2 = UnityEngine.Object.Instantiate<GameObject>(Molotv.objectToSpawn, vector2, Quaternion.identity);
+            tk2dBaseSprite component4 = gameObject2.GetComponent<tk2dBaseSprite>();
+            if (component4)
+            {
+                component4.PlaceAtPositionByAnchor(vector2, tk2dBaseSprite.Anchor.MiddleCenter);
+            }
+            this.spawnedPlayerObject = gameObject2;
+            Vector2 vector3 = user.unadjustedAimPoint - user.LockedApproximateSpriteCenter;
+            vector3 = Quaternion.Euler(0f, 0f, 0) * vector3;
+            DebrisObject debrisObject = LootEngine.DropItemWithoutInstantiating(gameObject2, gameObject2.transform.position, vector3, Molotv.tossForce, false, false, true, false);
+            if (gameObject2.GetComponent<BlackHoleDoer>())
+            {
+                debrisObject.PreventFallingInPits = true;
+                debrisObject.PreventAbsorption = true;
+            }
+            if (vector.y > 0f && debrisObject)
+            {
+                debrisObject.additionalHeightBoost = -1f;
+                if (debrisObject.sprite)
+                {
+                    debrisObject.sprite.UpdateZDepth();
+                }
+            }
+            debrisObject.IsAccurateDebris = true;
+            debrisObject.Priority = EphemeralObject.EphemeralPriority.Critical;
+            debrisObject.bounceCount = ((!Molotv.canBounce) ? 0 : 1);
+        */
 
             base.DoEffect(user);
 
@@ -108,7 +202,7 @@ namespace Planetside
             //CustomTrailRenderer red =  user.gameObject.AddComponent<CustomTrailRenderer>();
             //red.CopyFrom<CustomTrailRenderer>(TrailRendererobj);
 
-            GameObject reaper = UnityEngine.Object.Instantiate<GameObject>(SomethingWickedEnemy.SomethingWickedObject, user.gameObject.transform.position - new Vector3(10, 0), Quaternion.identity);
+            //GameObject reaper = UnityEngine.Object.Instantiate<GameObject>(SomethingWickedEnemy.SomethingWickedObject, user.gameObject.transform.position - new Vector3(10, 0), Quaternion.identity);
 
             //GameObject original;
             //original = RandomPiecesOfStuffToInitialise.SomethingWicked;

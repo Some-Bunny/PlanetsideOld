@@ -27,7 +27,7 @@ namespace Planetside
 			Game.Items.Rename("outdated_gun_mods:hell_light", "psog:hell_light");
 			gun.gameObject.AddComponent<HellLight>();
 			GunExt.SetShortDescription(gun, "You Dare Defy The Father?");
-			GunExt.SetLongDescription(gun, "Fires spears that return to its master.\n\nCarried by a prideful, religious Gungeoneer seeking to convert the Gundead to Christianity. He was promptly shot but did put up a good fight.");
+			GunExt.SetLongDescription(gun, "this is a synergy form, nerd.");
 			GunExt.SetupSprite(gun, null, "helllight_idle_001", 8);
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 24);
 			GunExt.SetAnimationFPS(gun, gun.reloadAnimation, 6);
@@ -64,12 +64,11 @@ namespace Planetside
 			UnityEngine.Object.DontDestroyOnLoad(projectile);
 			gun.DefaultModule.projectiles[0] = projectile;
 			projectile.transform.parent = gun.barrelOffset;
-			projectile.SetProjectileSpriteRight("helllightprojectile_001", 15, 5, false, tk2dBaseSprite.Anchor.MiddleCenter, 15, 5);
+			projectile.SetProjectileSpriteRight("helllightprojectile_001", 9, 9, false, tk2dBaseSprite.Anchor.MiddleCenter, 9, 9);
 
-			projectile.AdditionalScaleMultiplier *= 1.4f;
+			projectile.AdditionalScaleMultiplier *= 0.6f;
 			projectile.baseData.damage = 10f;
 			projectile.baseData.speed *= 4;
-			projectile.shouldRotate = true;
 			projectile.pierceMinorBreakables = true;
 			projectile.hitEffects.alwaysUseMidair = true;
 			projectile.hitEffects.overrideMidairDeathVFX = (PickupObjectDatabase.GetById(384) as Gun).DefaultModule.projectiles[0].hitEffects.overrideMidairDeathVFX;
@@ -92,11 +91,11 @@ namespace Planetside
 			projectile1.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile1.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile1);
-			projectile1.SetProjectileSpriteRight("helllightprojectile_001", 15, 5, false, tk2dBaseSprite.Anchor.MiddleCenter, 15, 5);
+			projectile1.SetProjectileSpriteRight("helllightprojectile_001", 9, 9, false, tk2dBaseSprite.Anchor.MiddleCenter, 9, 9);
 
 			projectile1.collidesWithPlayer = false;
 
-			projectile1.AdditionalScaleMultiplier *= 1.4f;
+			projectile1.AdditionalScaleMultiplier *= 0.6f;
 			projectile1.baseData.damage = 10f;
 			projectile1.baseData.speed *= 4;
 			projectile1.shouldRotate = true;

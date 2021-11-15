@@ -26,7 +26,7 @@ namespace Planetside
 			{
 				name = "TooLate",
 				modID = "psog",
-				text = "The note says \"Shop is closed, come back sooner!\"",
+				text = "The note says \"Shop is closed, come back earlier!\"",
 				spritePath = "Planetside/Resources/Shrines/toolatesign.png",
 				acceptText = "Kick it!",
 				declineText = "Leave.",

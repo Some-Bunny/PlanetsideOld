@@ -38,6 +38,7 @@ namespace Planetside
             ItemBuilder.AddPassiveStatModifier(lockpicker, PlayerStats.StatType.AdditionalItemCapacity, 1, StatModifier.ModifyMethod.ADDITIVE);
             BloodIdol.BloodIdolID = lockpicker.PickupObjectId;
             lockpicker.AddToSubShop(ItemBuilder.ShopType.Cursula, 1f);
+            lockpicker.gameObject.AddComponent<RustyItemPool>();
 
             ItemIDs.AddToList(lockpicker.PickupObjectId);
         }

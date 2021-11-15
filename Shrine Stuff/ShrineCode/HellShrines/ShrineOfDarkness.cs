@@ -95,9 +95,11 @@ namespace Planetside
 				{
 					RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
 					//AIActor randomActiveEnemy;
-					if (UnityEngine.Random.value <= 0.5f)
+					if (UnityEngine.Random.value <= 0.66f)
 					{
-						absoluteRoom.BecomeTerrifyingDarkRoom(2f, 0.5f, 0.5f, "Play_ENM_darken_world_01");
+						AkSoundEngine.PostEvent("Play_ENM_darken_world_01", base.gameObject);
+						NevernamedsDarknessHandler.EnableDarkness(37.5f, 2);
+						//absoluteRoom.BecomeTerrifyingDarkRoom(2f, 0.5f, 0.5f, "Play_ENM_darken_world_01");
 						IsDark = true;
 					}
 				}
@@ -106,14 +108,21 @@ namespace Planetside
 					IsDark = false;
                 }
 			}
+
+			private void Update()
+            {
+				if (IsDark == true && playeroue != null && playeroue.IsInCombat !=true)
+                {
+					IsDark = false;
+					NevernamedsDarknessHandler.DisableDarkness(1);
+				}
+			}
 			private void RoomCleared(PlayerController obj)
 			{
 				RoomHandler absoluteRoom = base.transform.position.GetAbsoluteRoom();
-				if (IsDark == true)
-                {
-					IsDark = false;
-					absoluteRoom.EndTerrifyingDarkRoom();
-				}
+				AkSoundEngine.PostEvent("Play_ENM_lighten_world_01", base.gameObject);
+
+				NevernamedsDarknessHandler.DisableDarkness(2);
 				if (UnityEngine.Random.value <= 0.03f)
 				{
 					IntVector2 bestRewardLocation = playeroue.CurrentRoom.GetBestRewardLocation(IntVector2.One * 3, RoomHandler.RewardLocationStyle.PlayerCenter, true);

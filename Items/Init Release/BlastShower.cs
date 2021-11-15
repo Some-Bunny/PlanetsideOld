@@ -33,6 +33,8 @@ namespace Planetside
             lockpicker.consumable = false;
             lockpicker.quality = PickupObject.ItemQuality.C;
             lockpicker.AddToSubShop(ItemBuilder.ShopType.Goopton, 1f);
+            lockpicker.gameObject.AddComponent<RustyItemPool>();
+
             List<string> mandatoryConsoleIDs = new List<string>
             {
                 "psog:blast_shower",

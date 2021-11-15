@@ -31,16 +31,16 @@ namespace Planetside
             this.projectile = base.GetComponent<Projectile>();
 
 			Projectile projectile = this.projectile;
-			Gun pol = projectile.PossibleSourceGun as Gun;
-			Polarity polar = pol.GetComponent<Polarity>();
+			//Gun pol = projectile.PossibleSourceGun as Gun;
+			//Polarity polar = pol.GetComponent<Polarity>();
 			PlayerController playerController = projectile.Owner as PlayerController;
             Projectile component = base.gameObject.GetComponent<Projectile>();
             bool flag = component != null;
             bool flag2 = flag;
             if (flag2)
             {
-				PlayerController player = playerController as PlayerController;
-				bool flagA = player.PlayerHasActiveSynergy("Refridgeration");
+				//PlayerController player = playerController as PlayerController;
+				bool flagA = playerController.PlayerHasActiveSynergy("Refridgeration") && playerController != null;
 				if (flagA)
 				{
 					bool flag6 = IsUp == true;
@@ -66,12 +66,7 @@ namespace Planetside
 						projectile.gameObject.AddComponent<Polarity.EyeProjDown>();
 					}
 				}
-				else
-				{
-					polar.HalfOFClip(player);
-				}
 			}
-
         }
 		public bool IsUp;
 		public bool IsDown;

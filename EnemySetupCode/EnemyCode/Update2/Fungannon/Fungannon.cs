@@ -1299,14 +1299,10 @@ namespace Planetside
 						log.Add(angle);
 					}
 					List<float> list = log.Shuffle<float>();
-
 					for (int i = 0; i < Amount; i++)
 					{
 						float num2 = 20f;
-
 						Vector2 zero = Vector2.zero;
-
-
 						if (BraveMathCollege.LineSegmentRectangleIntersection(this.Position, this.Position + BraveMathCollege.DegreesToVector(list[i], 60f), area.UnitBottomLeft, area.UnitTopRight, ref zero))
 						{
 							num2 = (zero - this.Position).magnitude;

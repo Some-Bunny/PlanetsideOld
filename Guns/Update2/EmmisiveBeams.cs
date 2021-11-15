@@ -27,48 +27,23 @@ namespace Planetside
         }
         public void Start()
         {
-            Transform trna = base.transform.Find("beam impact vfx");
-            if (trna != null)
-            {
-                tk2dSprite sproot = trna.GetComponent<tk2dSprite>();
-                if (sproot != null)
-                {
-                    sproot.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
-                    sproot.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
-                    sproot.renderer.material.SetFloat("_EmissivePower", EmissivePower);
-                    sproot.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
-                }
-            }
-            Transform trna1 = base.transform.Find("beam impact vfx 2");
-            if (trna1 != null)
-            {
-                tk2dSprite sproot1 = trna.GetComponent<tk2dSprite>();
-                if (sproot1 != null)
-                {
-                    sproot1.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
-                    sproot1.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
-                    sproot1.renderer.material.SetFloat("_EmissivePower", EmissivePower);
-                    sproot1.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
-                }
-            }
+            Shader glowshader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTiltedCutoutEmissive");
 
-            for (int i = 0; i < base.transform.childCount; i++)
+            foreach (Transform transform in base.transform)
             {
-                Transform child = base.transform.Find("Sprite");
-                if (child != null)
+                if (TransformList.Contains(transform.name))
                 {
-                    tk2dSprite sproot2 = child.GetComponent<tk2dSprite>();
-                    if (sproot2 != null)
+                    tk2dSprite sproot = transform.GetComponent<tk2dSprite>();
+                    if (sproot != null)
                     {
-                        sproot2.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
-                        sproot2.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
-                        sproot2.renderer.material.SetFloat("_EmissivePower", EmissivePower);
-                        sproot2.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
+                        sproot.usesOverrideMaterial = true;
+                        sproot.renderer.material.shader = glowshader;
+                        sproot.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
+                        sproot.renderer.material.SetFloat("_EmissivePower", EmissivePower);
+                        sproot.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
                     }
                 }
             }
-
-
             this.beamcont = base.GetComponent<BasicBeamController>();
             BasicBeamController beam = this.beamcont;
             beam.sprite.usesOverrideMaterial = true;
@@ -77,27 +52,39 @@ namespace Planetside
             bool flag2 = flag;
             if (flag2)
             {
-                component.sprite.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+                component.sprite.renderer.material.shader = glowshader;
                 component.sprite.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
                 component.sprite.renderer.material.SetFloat("_EmissivePower", EmissivePower);
                 component.sprite.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
-            }   
+            }
         }
+
+
+        private List<string> TransformList = new List<string>()
+        {
+            "Sprite",
+            "beam impact vfx 2",
+            "beam impact vfx",
+        };
+
 
         public void Update()
         {
+            
+            Shader glowshader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTiltedCutoutEmissive");
             Transform trna = base.transform.Find("beam pierce impact vfx");
             if (trna != null)
             {
                 tk2dSprite sproot = trna.GetComponent<tk2dSprite>();
                 if (sproot != null)
                 {
-                    sproot.renderer.material.shader = ShaderCache.Acquire("Brave/LitTk2dCustomFalloffTintableTiltedCutoutEmissive");
+                    sproot.renderer.material.shader = glowshader;
                     sproot.renderer.material.EnableKeyword("BRIGHTNESS_CLAMP_ON");
                     sproot.renderer.material.SetFloat("_EmissivePower", EmissivePower);
                     sproot.renderer.material.SetFloat("_EmissiveColorPower", EmissiveColorPower);
                 }
             }
+            
         }
 
         private BasicBeamController beamcont;

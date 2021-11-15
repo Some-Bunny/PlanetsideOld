@@ -152,6 +152,8 @@ namespace Planetside
                 }
             }
             PlanetBlade.Chargerreticles.Clear();
+            
+            /*
             PlanetsideWeatherController expandWeatherController = GameManager.Instance.Dungeon.gameObject.GetComponent<PlanetsideWeatherController>();
             foreach (Component item in GameManager.Instance.Dungeon.gameObject.GetComponents(typeof(Component)))
             {
@@ -163,6 +165,7 @@ namespace Planetside
                     }
                 }
             }
+            */
         }
 
         private bool HasReloaded;
@@ -185,6 +188,7 @@ namespace Planetside
                 if (VFXActive != true)
                 {
                     
+                    /*
                     bool HasMadeRain = false;
                     foreach (Component item in GameManager.Instance.Dungeon.gameObject.GetComponents(typeof(Component)))
                     {
@@ -205,6 +209,7 @@ namespace Planetside
                         expandWeatherController.isSecretFloor = false;
                         expandWeatherController.name = "PlanetsideRainC";
                     }
+                    */
                     VFXActive = true;
                     for (int i = -2; i < 3; i++)
                     {
